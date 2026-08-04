@@ -110,6 +110,31 @@ ratio = abs(sc[i_tip]) / max(abs(mdot[i_tip]), 1e-30)
 check("t08-sc05-order-of-magnitude", 0.05 < ratio < 50,
       f"SC05/track at RGB tip = {ratio:.2f}")
 
+# --- the shipped event table's capture radius must equal R(track) at the
+# event time BY DEFINITION of the terminal condition (the coarse-output-grid
+# readout bug reported 0.99 AU where the truth was 0.75 — caught by external
+# review against failure state 8)
+import json as _json  # noqa: E402
+
+etab = _json.loads((ROOT / "app/data/earth.json").read_text())
+for key in ("engulf_drag", "engulf_nodrag"):
+    ev2 = etab[key]
+    r_here = float(10 ** np.interp(ev2["t_yr"], tr.col("star_age"), tr.col("log_R"))
+                   * R_SUN_M / AU_M)
+    check(f"t09-{key}-capture-radius-is-track-R",
+          abs(ev2["a_au"] / r_here - 1) < 0.01,
+          f"table {ev2['a_au']:.4f} vs track R {r_here:.4f} AU")
+m = etab["meta"]
+check("t08-rgb-tip-radius-exported", abs(m["r_rgb_tip_au"] - 0.803) < 0.01,
+      f"{m['r_rgb_tip_au']}")
+check("t08-agb-exceeds-rgb-tip-recorded", m["r_agb_max_au"] > m["r_rgb_tip_au"],
+      "fork 14: the track's AGB outgrows its RGB tip")
+check("t09-nodrag-miss-and-overrun-positive",
+      m["nodrag_rgb_miss_au"] > 0 and m["nodrag_agb_overrun_au"] > 0,
+      str(m))
+print(f"      [no drag: clears the RGB tip by {m['nodrag_rgb_miss_au']:.3f} AU; "
+      f"the AGB reaches {m['nodrag_agb_overrun_au']:.3f} AU beyond the orbit anyway]")
+
 # --- Tier 1 mirror: the averaged mass-loss expansion against the harness's
 # direct vector integrator (v0.0), over a short window with an amplified
 # constant rate — two implementations, two formulations, one answer

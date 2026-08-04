@@ -278,8 +278,11 @@ async function boot() {
     const notes = [];
     if (mk.present_day && Math.abs(s - mk.present_day.s) < 0.0015) notes.push("here — the only frame that exists right now");
     if (ev && s >= ev.s) {
-      notes.push(dragOn ? "the Earth is gone — drawn in at the tip of the red giant branch"
-                        : "the Earth is gone — overrun on the asymptotic giant branch");
+      const m = earth?.meta;
+      notes.push(dragOn
+        ? "the Earth is gone — drawn in at the tip of the red giant branch"
+        : `the Earth is gone — it cleared the RGB tip by ${m ? m.nodrag_rgb_miss_au.toFixed(2) : "?"} AU, `
+          + `and the AGB reached ${m ? m.nodrag_agb_overrun_au.toFixed(2) : "?"} AU beyond its orbit anyway`);
     }
     if (mk.existence && s >= mk.existence.s) {
       notes.push("beyond here the object being rendered exists nowhere, and will not for a very long time");

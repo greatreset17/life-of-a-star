@@ -67,14 +67,37 @@ def build():
         if not res["engulfed"]:
             return None
         t = res["t_engulf_yr"]
+        # the capture radius is R(t_event) BY DEFINITION of the terminal
+        # condition a = R; reading a from the coarse output grid instead
+        # straddles the final tidal plunge and misreports it (0.99 vs the
+        # true 0.80 AU — caught by external review cross-checking failure
+        # state 8)
+        r_au = float(10 ** np.interp(t, ages, tr.col("log_R")) * R_SUN_M / AU_M)
         return {"t_yr": round(t, 1), "s": round(float(s_of_age(t)[0]), 6),
-                "a_au": round(float(np.interp(t, res["t_yr"], res["a_yr"])), 6)}
+                "a_au": round(r_au, 6)}
+
+    # the ruthless numbers for the toggle's honest meaning (fork 21): how
+    # much the no-drag Earth clears the RGB tip by — and how far the AGB
+    # then reaches beyond its orbit anyway
+    i_tip = int(np.argmax(10 ** tr.col("log_R")[:tr.anchors["tp_agb_begin"]]))
+    t_tip = float(ages[i_tip])
+    r_tip_au = float(10 ** tr.col("log_R")[i_tip] * R_SUN_M / AU_M)
+    a_nd_tip = float(np.interp(t_tip, res_n["t_yr"], res_n["a_yr"]))
+    i_max = int(np.argmax(10 ** tr.col("log_R")))
+    t_max = float(ages[i_max])
+    r_max_au = float(10 ** tr.col("log_R")[i_max] * R_SUN_M / AU_M)
+    a_nd_max = float(np.interp(t_max, res_n["t_yr"], res_n["a_yr"],
+                               right=res_n["a_yr"][-1]))
 
     out = {
         "meta": {
             "note": "fork 21: on MIST v1.2 the no-drag Earth is also engulfed (AGB, geometry); drag moves death to the RGB tip. S&CS 2008: 7.59 Gyr from present, RGB loss 0.332 Msun — divergence displayed.",
             "ledger_residual_frac": res_d["ledger"]["residual_frac"],
             "attributed_m": res_d["ledger"]["attributed"],
+            "r_rgb_tip_au": round(r_tip_au, 4),
+            "r_agb_max_au": round(r_max_au, 4),
+            "nodrag_rgb_miss_au": round(a_nd_tip - r_tip_au, 4),
+            "nodrag_agb_overrun_au": round(r_max_au - a_nd_max, 4),
         },
         "s_grid": rr(s_grid),
         "a_drag_au": rr(a_drag),
