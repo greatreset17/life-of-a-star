@@ -1,0 +1,13 @@
+<!doctype html>
+<!-- Gate smoke-test fixture: probe surface INCOMPLETE (no teff_k, no
+     chromaticity). The gate must refuse the capture. -->
+<meta charset="utf-8"><title>gate fixture: bad</title>
+<div id="panel">
+  <span data-q="s" data-value="0.5"></span>
+  <span data-q="data_state" data-value="tabulated"></span>
+</div>
+<script>
+  const r = document.createElement("span");
+  r.dataset.q = "ready"; r.dataset.value = "1";
+  document.getElementById("panel").append(r);
+</script>

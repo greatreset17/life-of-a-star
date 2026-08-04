@@ -1,0 +1,33 @@
+{
+  "_comment": [
+    "Every assumption the harness carries, stated absolutely. If the application's",
+    "defaults change, this file does NOT follow silently: the gate passes these values",
+    "explicitly on every run via URL parameters, so a divergence between harness and",
+    "application defaults cannot change what is measured.",
+    "Waypoint slider positions are resolved by NAME through the shipped",
+    "data/derived/events.json at gate time, and the resolved numeric s is recorded in",
+    "each capture's probe. The names are absolute; the numbers are derived data.",
+    "Re-verify this file whenever a feature is added (see harness/run.py assumptions-check)."
+  ],
+  "viewport": { "width": 1280, "height": 800, "deviceScaleFactor": 1 },
+  "quality_tier": "high",
+  "camera": { "mode": "framed", "distance_rphoto_multiples": 4.0, "azimuth_deg": 0.0, "altitude_deg": 0.0 },
+  "waypoints": [
+    "protostar_contraction",
+    "zams",
+    "present_day",
+    "subgiant",
+    "rgb_tip",
+    "agb_thermal_pulses",
+    "planetary_nebula_peak",
+    "wd_crystallisation"
+  ],
+  "probe_required_keys": [
+    "s", "age_yr", "teff_k", "log_g", "log_l", "r_rsun",
+    "chromaticity_srgb", "gamut_excursion",
+    "granules_derived", "granules_rendered", "instances_drawn",
+    "data_state", "phase"
+  ],
+  "gate_console_fail_patterns": ["error", "shader", "self-test fail", "unavailable:"],
+  "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]"
+}

@@ -1,0 +1,26 @@
+<!doctype html>
+<!-- Gate smoke-test fixture (harness code, not shipping source): a minimal
+     page with a complete instrument-panel probe surface. -->
+<meta charset="utf-8"><title>gate fixture: good</title>
+<div id="panel">
+  <span data-q="s" data-value="0.5"></span>
+  <span data-q="age_yr" data-value="4.57e9"></span>
+  <span data-q="teff_k" data-value="5772"></span>
+  <span data-q="log_g" data-value="4.438"></span>
+  <span data-q="log_l" data-value="0.0"></span>
+  <span data-q="r_rsun" data-value="1.0"></span>
+  <span data-q="chromaticity_srgb" data-value="1.000,0.977,0.947"></span>
+  <span data-q="gamut_excursion" data-value="0.0"></span>
+  <span data-q="granules_derived" data-value="1.2e6"></span>
+  <span data-q="granules_rendered" data-value="14000"></span>
+  <span data-q="instances_drawn" data-value="14000"></span>
+  <span data-q="data_state" data-value="tabulated"></span>
+  <span data-q="phase" data-value="main-sequence"></span>
+</div>
+<script>
+  const q = new URLSearchParams(location.search);
+  document.title += " " + q.get("wp");
+  const r = document.createElement("span");
+  r.dataset.q = "ready"; r.dataset.value = "1";
+  document.getElementById("panel").append(r);
+</script>
