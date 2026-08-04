@@ -59,6 +59,16 @@ const frag = /* glsl */ `
     float y = dot(lin, vec3(0.2126, 0.7152, 0.0722));
     float yT = y / (1.0 + y);
     lin *= (y > 0.0) ? yT / y : 1.0;
+    float mx = max(lin.r, max(lin.g, lin.b));
+    if (mx > 1.0) lin /= mx;
+    // 1-LSB integer-hash dither: the faint veil must never contour-band
+    uvec3 hsh = uvec3(uvec2(gl_FragCoord.xy), 13u);
+    hsh = hsh * 1664525u + 1013904223u;
+    hsh.x += hsh.y * hsh.z; hsh.y += hsh.z * hsh.x; hsh.z += hsh.x * hsh.y;
+    hsh ^= hsh >> 16u;
+    hsh.x += hsh.y * hsh.z;
+    float dth = (float(hsh.x) * (1.0 / 4294967295.0) - 0.5) / 255.0;
+    lin = max(lin + vec3(dth), 0.0);
     vec3 enc = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055,
                    step(0.0031308, lin));
     gl_FragColor = vec4(enc, 1.0);

@@ -103,7 +103,10 @@ for wp in ("rgb_tip", "agb_thermal_pulses"):
     if MEASURE:
         print(f"      [{wp}: lane p10/p90 {ratio:.3f}, std/mean {spread:.3f}]")
     else:
-        check(f"t41-{wp}-lane-depth", 0.35 <= ratio <= 0.75, f"p10/p90 = {ratio:.3f}")
+        # ceiling 0.78: camera-altitude changes legitimately move this by
+        # ~0.07 (measured 0.65-0.75 across gated views); the pre-fix flat
+        # build measured 0.90 and still fails
+        check(f"t41-{wp}-lane-depth", 0.45 <= ratio <= 0.78, f"p10/p90 = {ratio:.3f}")
         check(f"t41-{wp}-stroke-variation", spread >= 0.05, f"std/mean = {spread:.3f}")
 
 # ---- per-phase background luminance budget (attack-3 counter-test);
@@ -152,6 +155,77 @@ if png.exists():
         print(f"      [terminus block-16 std/mean {mot:.3f}]")
     else:
         check("t41-terminus-quiet", mot <= 0.35, f"block std/mean = {mot:.3f}")
+
+# ---- t43: pixel chromaticity (critic round-2 attack 1 counter-test) —
+# the DISK PIXELS must carry the table's chromaticity, not just the probe:
+# tone map and paint are hue-preserving by design, so the centre-crop mean
+# channel ratios must track the probe's declared linear-sRGB ratios
+def srgb_to_lin(v):
+    v = v / 255.0
+    return np.where(v <= 0.04045, v / 12.92, ((v + 0.055) / 1.055) ** 2.4)
+
+
+for wp in ("present_day", "rgb_tip", "agb_thermal_pulses",
+           "planetary_nebula_peak", "wd_crystallisation"):
+    png = cap / f"{wp}.png"
+    if not png.exists():
+        continue
+    p = probe(wp)
+    want = [float(v) for v in p["chromaticity_srgb"].split(",")]
+    a = np.asarray(Image.open(png).convert("RGB"), float)[400 - 70:400 + 70, 640 - 70:640 + 70]
+    lin = srgb_to_lin(a).mean(axis=(0, 1))
+    ok = True
+    detail = []
+    for c, name in ((0, "R"), (2, "B")):
+        wr = want[c] / max(want[1], 1e-9)
+        gr = lin[c] / max(lin[1], 1e-9)
+        detail.append(f"{name}/G want {wr:.3f} got {gr:.3f}")
+        ok &= abs(gr - wr) <= max(0.15 * wr, 0.06)
+    if MEASURE:
+        print(f"      [{wp}: {'; '.join(detail)}]")
+    else:
+        check(f"t43-{wp}-pixel-chromaticity", ok, "; ".join(detail))
+
+# ---- t42: point-source census (attack 2 counter-test) — when the probe
+# says the eye sees stars, the pixels must contain point sources
+try:
+    from scipy.ndimage import median_filter
+    for wp in ("black_dwarf_terminus", "wd_crystallisation"):
+        png = cap / f"{wp}.png"
+        if not png.exists():
+            continue
+        vis = float(probe(wp)["sky_visible"])
+        if vis < 30:
+            continue
+        L = lum(png)
+        med = median_filter(L, size=9)
+        prom = L - med
+        mask = np.zeros_like(L, bool)
+        mask[80:760, 30:950] = True          # outside UI cards
+        yy, xx = np.mgrid[0:800, 0:1280]
+        mask &= (yy - 400) ** 2 + (xx - 640) ** 2 > 340 ** 2  # outside disk
+        peaks = int(((prom > 3.0) & mask).sum())
+        if MEASURE:
+            print(f"      [{wp}: point-source pixels {peaks}, probe visible {vis:.0f}]")
+        else:
+            check(f"t42-{wp}-stars-actually-drawn", peaks >= 3,
+                  f"{peaks} point-source pixels with {vis:.0f} probe-visible stars")
+except ImportError:
+    check("t42-scipy-available", False, "scipy needed for the census")
+
+# ---- t44: band anisotropy at the terminus (attack 3 counter-test) — the
+# ending's light must be structured like the catalogue band, not a lamp
+png = cap / "black_dwarf_terminus.png"
+if png.exists():
+    reg = lum(png)[REGION]
+    h16 = reg[: reg.shape[0] // 16 * 16, : reg.shape[1] // 16 * 16]
+    blocks = h16.reshape(-1, 16, h16.shape[1] // 16, 16).mean(axis=(1, 3))
+    span = float(blocks.max() - blocks.min())
+    if MEASURE:
+        print(f"      [terminus block-mean span {span:.2f}/255]")
+    else:
+        check("t44-terminus-light-structured", span >= 1.2,
+              f"block-mean span {span:.2f}/255 — a flat lamp reads < 0.5")
 
 print(f"\nvisual-metrics suite: {'ALL GREEN' if not failures else f'{len(failures)} FAILURE(S)'}")
 sys.exit(1 if failures and not MEASURE else 0)

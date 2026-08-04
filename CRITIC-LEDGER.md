@@ -23,7 +23,25 @@ measurable target. Physics authority stayed with the suite throughout.
 - Void blotch + banding at the terminus → third octave rebalance + 1-LSB
   integer-hash dither in the star shader.
 
-## Open items (targets stand; not yet implemented)
+## Round 2 (final). Verification: 7/8 round-1 targets MET by measurement;
+the one NOT-MET (equatorial waist) was a geometry fact — the gate camera
+looked straight down the declared nebula axis — fixed by declaring camera
+altitude 25 deg in the harness assumptions. All 5 new defects fixed:
+nebula dither; waist framed (veil CV 0.103 -> 0.160); the PN disk's blue
+channel was being PER-CHANNEL CLIPPED by the display encode (98.4% of disk
+pixels — failure state 36 arriving at the last stage) -> hue-preserving
+highlight cap, after which disk pixels carry the table chromaticity to
+three decimals (B/G want 2.137, got 2.138); UI ink now dims with deep
+adaptation; HR annotations to 24 px. All 3 round-2 attacks closed with
+counter-tests: t43 pixel-chromaticity (shader hue skew), t42 point-source
+census (invisible starfield), t44 band-structure span + the luminance
+floor (galaxy swapped for a lamp). Suite: 270 checks green.
+
+Honest residuals: the granule-pitch autocorrelation is a x3-catcher, not a
+precision gauge (documented in-test); attack coverage is never provably
+exhaustive — the suite is as strong as its last successful attack round.
+
+## Round-1 open items — status after round 2
 1. **Paint character, deeper pass** (critic 1): intra-cell interior
    luminance range >= 12/255; lane-width CV >= 0.4. The strokes read better
    but are not yet "thick-bodied burning paint". File: app/src/star.js.

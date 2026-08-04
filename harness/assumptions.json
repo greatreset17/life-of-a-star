@@ -11,7 +11,8 @@
   ],
   "viewport": { "width": 1280, "height": 800, "deviceScaleFactor": 1 },
   "quality_tier": "high",
-  "camera": { "mode": "framed", "distance_rphoto_multiples": 4.0, "azimuth_deg": 0.0, "altitude_deg": 0.0 },
+  "camera": { "mode": "framed", "distance_rphoto_multiples": 4.0, "azimuth_deg": 0.0, "altitude_deg": 25.0,
+    "_altitude_note": "25 deg, not 0: the fork-5 nebula axis is scene z, and a camera looking straight down that axis can never frame the declared equatorial waist (critic round 2, NOT-MET 8)" },
   "waypoints": [
     "protostar_contraction",
     "zams",

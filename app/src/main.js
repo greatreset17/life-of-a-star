@@ -225,6 +225,11 @@ async function boot() {
     const magLimit = eye.magLimit();
     const rod = eye.rodFraction();
     if (skyField) skyField.update(ageYr, i, magLimit, rod);
+    // the chrome yields to the dark: at deep adaptation the instrument ink
+    // dims so the interface cannot outshine the sky it reports on
+    const uiDim = 0.45 + 0.55 * Math.min(adaptation / 0.2, 1);
+    document.getElementById("agepane").style.opacity = String(uiDim);
+    document.getElementById("controls").style.opacity = String(Math.max(uiDim, 0.6));
     if (milkyWay && sunOrbit) {
       const az = Math.atan2(sunOrbit[i * 3 + 1], sunOrbit[i * 3]) - Math.atan2(0, -1);
       milkyWay.update(adaptation, rod, az);

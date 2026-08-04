@@ -50,8 +50,8 @@ export class HrDiagram {
       ctx.fillText(`${kk}k`, x - 14, cv.height - 26);
     }
     ctx.fillStyle = this.inkDim;
-    ctx.fillText("L / L☉", 8, 14);
-    ctx.fillText("Teff (K) →  cooler", cv.width - 190, cv.height - 6);
+    ctx.fillText("L / L☉", 64, 20);
+    ctx.fillText("Teff (K) →  cooler", cv.width - 210, cv.height - 4);
     // the track — region B (beyond the data horizon) in a visibly lighter
     // weight; the join and the horizon are both marked
     const lt = this.track.log_Teff, ll = this.track.log_L;
@@ -79,7 +79,7 @@ export class HrDiagram {
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(x - 5, y + 5); ctx.lineTo(x + 5, y - 5); ctx.stroke();
-      ctx.font = "21px Georgia, serif";
+      ctx.font = "24px Georgia, serif";
       ctx.fillStyle = this.inkFaint;
       ctx.fillText(label, x + 7, y - 4);
     };

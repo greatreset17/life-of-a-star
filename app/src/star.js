@@ -152,6 +152,12 @@ const frag = /* glsl */ `
     lin *= (y > 0.0) ? yT / y : 1.0;
     // intergranular lanes ride post-tone so they survive high exposure
     lin *= lanePost;
+    // hue-preserving highlight cap: Reinhard bounds LUMINANCE but a saturated
+    // chromaticity can still push one channel past 1, and the encode would
+    // clip it per-channel — failure state 36 arriving through the display.
+    // Scaling the whole vector preserves the derived chromaticity exactly.
+    float mx = max(lin.r, max(lin.g, lin.b));
+    if (mx > 1.0) lin /= mx;
     // ~1 LSB dither (integer hash) so the deep fades never band
     float dth = (float(pcg3d(uvec3(uvec2(gl_FragCoord.xy), 7u)).x)
                  * (1.0 / 4294967295.0) - 0.5) / 255.0;
