@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Life of a Star</title>
+<style>
+  /* Instrument-panel UI ink. These variables style the INSTRUMENT (panel,
+     HR axes, slider) — they are not the star's render path, which takes
+     every colour from the Stage 0 table (fork 12 / static-check exemption
+     documented in harness/static_checks.py). */
+  :root {
+    --ink: rgba(214, 219, 228, 0.92);
+    --ink-dim: rgba(214, 219, 228, 0.55);
+    --ink-faint: rgba(214, 219, 228, 0.28);
+    --panel-bg: rgba(10, 12, 16, 0.72);
+    --hairline: rgba(214, 219, 228, 0.16);
+    --accent: rgba(214, 219, 228, 0.85);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: #000; overflow: hidden;
+    font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; }
+  #scene { position: absolute; inset: 0; }
+  #hr { position: absolute; top: 14px; right: 14px; width: 300px; height: 340px;
+    background: var(--panel-bg); border: 1px solid var(--hairline); }
+  #panel { position: absolute; top: 368px; right: 14px; width: 300px;
+    max-height: calc(100% - 460px); overflow: hidden auto;
+    background: var(--panel-bg); border: 1px solid var(--hairline);
+    color: var(--ink); font-size: 11.5px; line-height: 1.55; padding: 10px 12px; }
+  #panel .row { display: flex; justify-content: space-between; gap: 8px; }
+  #panel .row .k { color: var(--ink-dim); }
+  #panel .row .v { font-variant-numeric: tabular-nums; text-align: right; }
+  #panel .sect { border-top: 1px solid var(--hairline); margin-top: 7px; padding-top: 7px; }
+  #panel canvas { display: block; margin: 4px 0 2px; opacity: 0.85; }
+  #panel .note { color: var(--ink-faint); font-size: 10px; font-style: italic; }
+  #controls { position: absolute; left: 14px; right: 330px; bottom: 14px;
+    color: var(--ink); }
+  #timeline { width: 100%; appearance: none; height: 2px;
+    background: var(--hairline); outline: none; }
+  #timeline::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px;
+    border-radius: 50%; background: var(--accent); border: 1px solid #000;
+    cursor: ew-resize; }
+  #waypoints { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  #waypoints button { background: none; border: 1px solid var(--hairline);
+    color: var(--ink-dim); font: inherit; font-size: 10px; padding: 3px 8px;
+    cursor: pointer; letter-spacing: 0.04em; }
+  #waypoints button:hover { color: var(--ink); border-color: var(--ink-dim); }
+  #agepane { position: absolute; left: 14px; top: 14px; color: var(--ink);
+    font-size: 13px; letter-spacing: 0.03em; }
+  #agepane .big { font-size: 21px; font-variant-numeric: tabular-nums; }
+  #agepane .sub { color: var(--ink-dim); font-size: 11px; }
+  #err { position: absolute; inset: 30% 20%; color: var(--ink); display: none;
+    background: var(--panel-bg); border: 1px solid var(--hairline); padding: 18px;
+    font-size: 13px; white-space: pre-wrap; }
+</style>
+<script type="importmap">{ "imports": {
+  "three": "./vendor/three.module.js",
+  "three/addons/": "./vendor/addons/"
+} }</script>
+</head>
+<body>
+<div id="scene"></div>
+<canvas id="hr" width="600" height="680"></canvas>
+<div id="panel"></div>
+<div id="agepane">
+  <div class="big" id="age-big"></div>
+  <div class="sub" id="age-sub"></div>
+</div>
+<div id="controls">
+  <input id="timeline" type="range" min="0" max="1" step="0.00001" value="0">
+  <div id="waypoints"></div>
+</div>
+<div id="err"></div>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

@@ -97,10 +97,13 @@ def check_sin_hash(srcdir):
 
 
 def main(argv):
-    srcdir = Path(argv[1]) if len(argv) > 1 else DEFAULT_SRC
+    # argv: [script, ("all",) (srcdir,)] — "all" is the subcommand, not a dir
+    rest = [a for a in argv[1:] if a != "all"]
+    srcdir = Path(rest[0]) if rest else DEFAULT_SRC
     if not srcdir.exists():
-        print(f"static: source dir {srcdir} does not exist yet — nothing to check (not a pass)")
-        return 0
+        # measuring nothing must never read as success once the app exists
+        print(f"FAIL  static: source dir {srcdir} does not exist")
+        return 1
     failures = 0
     for name, fn in [("identifiers", check_identifiers),
                      ("colour-literals", check_colour_literals),

@@ -91,6 +91,7 @@ FORK 14 — Anchor corrections forced by the mandated data product (discovered
   REASON: the alternative — forcing the anchors — would require either a
   different track (violating the M/[Fe/H] spec), a scaled track (a silent
   fallback), or failing the mandated data product for being itself.
+  [decided v0.1]
 
 FORK 15 — Spectral-grid support boundary in log g (discovered v0.1). No
   published hydrostatic atmosphere grid reaches below logg = -0.5 (BT-Settl
@@ -179,6 +180,9 @@ FORK 19 — Colour premises corrected by measurement (recorded v0.1). Three
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass
 that decides them; an undeclared fork is failure state 53.
 """
+
+# fork 1
+GAMUT_MAP_METHOD = "oklab-chroma-compression-constant-L-h"
 
 # fork 3
 TABLE_FLOAT_DECIMALS = 9  # round-trips exactly through IEEE-754 binary32

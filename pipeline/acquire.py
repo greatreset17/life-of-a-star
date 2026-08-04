@@ -19,7 +19,11 @@ from sources import MANIFEST, _sha256  # noqa: E402
 
 def main(argv):
     verify_only = "verify" in argv
-    entries = json.loads(MANIFEST.read_text())["sources"]
+    # an explicit manifest path may be supplied (external substitution — the
+    # harness exercises corruption behaviour on a COPY, never on the real one)
+    paths = [a for a in argv if a.endswith(".json")]
+    manifest_path = Path(paths[0]) if paths else MANIFEST
+    entries = json.loads(manifest_path.read_text())["sources"]
     failures = []
     for name, e in entries.items():
         dest = ROOT / e["dest"]
