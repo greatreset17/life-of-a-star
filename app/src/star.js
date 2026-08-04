@@ -43,6 +43,8 @@ const frag = /* glsl */ `
   uniform float uHpR;         // H_p / R
   uniform float uCellAng;     // granule angular size D/R (radians on surface)
   uniform float uExposure;
+  uniform float uYMean;       // disk-mean luminance = uExposure * the Stage 0
+                              // flux-ratio integral (scene-referred tone)
   uniform float uContrast;    // granulation brightness contrast
   uniform float uCellPx;      // apparent granule size in screen pixels
   uniform vec3 uCamPos;
@@ -116,9 +118,13 @@ const frag = /* glsl */ `
       float mu = max(dot(nrm, -dir), 0.0);
       mu = uMuFloor + mu * (1.0 - uMuFloor);
       // granulation lattice: |q| moves 1 per radian of surface arc scaled by
-      // 1/cellAngle, so limb-to-limb (pi radians) shows pi/cellAngle cells —
-      // i.e. cell size D on a star of radius R, exactly as derived
-      vec3 q = nrm / max(uCellAng, 1.0e-6);
+      // 1/cellAngle — cell size D on a star of radius R, exactly as derived.
+      // SLICE_CAL: a 2-D surface slicing a 3-D Worley lattice shows ~1.7x
+      // more cells per area than the lattice period implies (neighbouring
+      // layers contribute); 0.77 restores the DERIVED count as the count a
+      // viewer can actually tally (calibrated against the pitch
+      // autocorrelation measurement, suite t41)
+      vec3 q = nrm * (0.77 / max(uCellAng, 1.0e-6));
       // slow domain drift: cells migrate and reform
       float tt = uTime * 0.03;
       vec3 w1 = cellular(q + vec3(0.0, 0.0, tt), 7u);
@@ -138,10 +144,13 @@ const frag = /* glsl */ `
       float core = 1.0 - smoothstep(0.0, 0.75, w1.x + 0.35 * w2.x);
       float fine = 1.0 - smoothstep(0.05, 0.45, w2.y);
       float jitter = 0.88 + 0.24 * w1.z;
-      float gran = mix(1.0, (1.0 + 0.35 * core) * jitter * (1.0 - 0.10 * fine), m);
+      // the second octave textures cell INTERIORS only — its weight stays
+      // below the countable-as-a-lane threshold so the visible cell census
+      // remains the first octave's, which carries the derived scale
+      float gran = mix(1.0, (1.0 + 0.35 * core) * jitter * (1.0 - 0.05 * fine), m);
       lanePost = mix(1.0, mix(0.40, 1.0, lane), m)
                * (1.0 + 0.22 * core * m)
-               * (1.0 - 0.07 * fine * m)
+               * (1.0 - 0.04 * fine * m)
                * (1.0 + 0.12 * (w1.z - 0.5) * m);
       bright = limbLaw(mu) * gran;
       colour = uRgb;
@@ -154,22 +163,22 @@ const frag = /* glsl */ `
              * exp(-h / max(soft, 1.0e-9));
       colour = uRgb;
     }
-    // tone (fork 30): Reinhard on luminance gives the DEMANDED display
-    // luminance yD; the chromaticity direction can only carry luminance up
-    // to its own ceiling yCeil = Y(uRgb). Below the ceiling, the pure
-    // table chromaticity is shown at exactly yD. Above it, the colour
-    // moves toward white by precisely the amount that makes the displayed
-    // luminance equal yD — an over-bright saturated source whitens (the
-    // percept of "fierce"), it does not turn pastel. Nothing here ever
-    // clips a channel and the mix weight is analytic, not tuned.
+    // tone (fork 30, amended): SCENE-REFERRED Reinhard — the compression
+    // divisor is the DISK-MEAN luminance (uExposure times the Stage 0
+    // flux-ratio integral of the limb profile), not the pixel's own value.
+    // Per-pixel Reinhard flattens within-disc ratios (the limb darkening
+    // kept vanishing to the eye — measured twice); dividing by the scene
+    // mean preserves I(mu) ratios on the display while the fork-30
+    // white-resolve below still bounds every pixel. yD may exceed 1 at the
+    // hot centre; the mix weight is clamped to pure white there.
     float y = bright * uExposure;
-    float yD = y / (1.0 + y);
+    float yD = y / (1.0 + uYMean);
     float yCeil = dot(uRgb, vec3(0.2126, 0.7152, 0.0722));
     vec3 lin;
     if (yD <= yCeil) {
       lin = colour * (yD / max(yCeil, 1e-6));
     } else {
-      float w = (yD - yCeil) / max(1.0 - yCeil, 1e-6);
+      float w = min((yD - yCeil) / max(1.0 - yCeil, 1e-6), 1.0);
       lin = mix(colour, vec3(1.0), w);
     }
     // intergranular lanes ride post-tone so they survive high exposure
@@ -197,6 +206,7 @@ export class Star {
       uHpR: { value: 1e-4 },
       uCellAng: { value: 1e-3 },
       uExposure: { value: 1 },
+      uYMean: { value: 1 },
       uContrast: { value: 1 },
       uCellPx: { value: 10 },
       uCamPos: { value: new THREE.Vector3(0, 0, 4) },
@@ -237,6 +247,7 @@ export class Star {
     u.uHpR.value = state.hpOverR;
     u.uCellAng.value = state.cellAngle;
     u.uExposure.value = state.exposure;
+    u.uYMean.value = state.exposure * state.ldFluxRatio;
     u.uContrast.value = state.contrast;
   }
 

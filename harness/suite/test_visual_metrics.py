@@ -95,6 +95,39 @@ for wp in ("rgb_tip", "agb_thermal_pulses"):
         check(f"t41-{wp}-granule-pitch", 0.55 * pitch_px < measured < 1.8 * pitch_px,
               f"measured {measured:.1f}px vs predicted {pitch_px:.1f}px")
 
+# ---- rendered cell census (the reviewer's direct demand): count the
+# visible first-octave cells and compare with the DERIVED count — test 36's
+# spirit measured at the pixels, not the probe
+try:
+    from scipy import ndimage
+    for wp in ("rgb_tip", "agb_thermal_pulses"):
+        png = cap / f"{wp}.png"
+        if not png.exists():
+            continue
+        p = probe(wp)
+        n_derived = float(p["granules_derived"])
+        L = lum(png)
+        yy3, xx3 = np.mgrid[0:800, 0:1280]
+        rr3 = np.sqrt((yy3 - 400) ** 2 + (xx3 - 640) ** 2) / disk_r_px
+        inner = rr3 < 0.72
+        vals = L[inner]
+        thresh = np.percentile(vals, 45)
+        markers = (L > thresh) & inner
+        lab, n_seen = ndimage.label(markers)
+        # scale the sampled cap area to the full visible disc: the census
+        # region covers a spherical cap; visible-disc cells = derived N
+        area_frac = float(inner.sum()) / (np.pi * disk_r_px ** 2)
+        n_rendered = n_seen / max(area_frac, 1e-9)
+        ratio = n_rendered / max(n_derived, 1e-9)
+        if MEASURE:
+            print(f"      [{wp}: cells seen {n_seen} in {area_frac:.2f} of disc "
+                  f"-> rendered ~{n_rendered:.0f} vs derived {n_derived:.0f} (x{ratio:.2f})]")
+        else:
+            check(f"t36-{wp}-rendered-count-matches-derived", 0.5 <= ratio <= 2.0,
+                  f"rendered ~{n_rendered:.0f} vs derived {n_derived:.0f} (x{ratio:.2f})")
+except ImportError:
+    pass
+
 # ---- paint metrics at disk centre (giant phases; targets from the critic,
 # measured then declared)
 for wp in ("rgb_tip", "agb_thermal_pulses"):
@@ -263,12 +296,15 @@ for wp in ("present_day", "rgb_tip", "agb_thermal_pulses",
     # the colour whitens by the analytic weight. A shader hue-skew still
     # fails this — the expectation is the transform of the TABLE value.
     e = (10 ** float(p["log_l"])) ** 0.25
-    y_d = e / (1 + e)
+    s_here = float(p["s"])
+    i_here = min(range(len(track["s"])), key=lambda k: abs(track["s"][k] - s_here))
+    fr = track["ld_flux_ratio"][i_here]
+    y_d = min(e / (1 + e * fr), 1.0)   # scene-referred Reinhard (fork 30 am.)
     y_ceil = float(0.2126 * tab[0] + 0.7152 * tab[1] + 0.0722 * tab[2])
     if y_d <= y_ceil:
         want = tab * (y_d / y_ceil)
     else:
-        w = (y_d - y_ceil) / (1 - y_ceil)
+        w = min((y_d - y_ceil) / (1 - y_ceil), 1.0)
         want = tab * (1 - w) + w
     a = np.asarray(Image.open(png).convert("RGB"), float)[400 - 70:400 + 70, 640 - 70:640 + 70]
     lin = srgb_to_lin(a).mean(axis=(0, 1))

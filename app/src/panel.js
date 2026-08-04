@@ -78,12 +78,16 @@ export class Panel {
     addEq(EQ.luminosity);
     addRows(["teff_k", "log_l", "r_rsun", "r_au", "log_g", "mass"]);
     sect();
+    // the two counts stay above the fold, always: derived and rendered are
+    // separate numbers and the divergence is the honest reading
+    addEq(EQ.granuleCount);
+    addRows(["granules_derived", "granules_rendered", "granule_d"]);
+    sect();
     addEq(EQ.colourChain);
     addRows(["chromaticity_srgb", "gamut_excursion"]);
     sect();
     addEq(EQ.scaleHeight, "scale derived from the track; cell texture procedural (fork 4)");
-    addEq(EQ.granuleCount);
-    addRows(["granules_derived", "granules_rendered", "granule_d", "instances_drawn", "ld_source"]);
+    addRows(["instances_drawn", "ld_source"]);
     sect();
     addEq(EQ.orbit, "the incomplete answer — the tidal and drag torques below reverse "
       + "S&CS's conclusion elsewhere; on this track they set the time and place (fork 21)");

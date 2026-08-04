@@ -193,6 +193,7 @@ async function boot() {
       hpOverR: hpR,
       cellAngle,
       exposure,
+      ldFluxRatio: track.ld_flux_ratio[i],
       contrast: convective,
     });
     const cellPx = star.frame(camera, { x: holder.clientWidth, y: holder.clientHeight }, time);
