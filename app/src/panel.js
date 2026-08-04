@@ -21,6 +21,10 @@ const ROWS = [
   ["granule_d", "granule diameter"],
   ["instances_drawn", "draw calls"],
   ["ld_source", "limb-darkening source"],
+  ["a_earth_au", "a⊕ (AU)"],
+  ["mdot", "Ṁ track (M☉/yr)"],
+  ["mdot_sc05", "Ṁ S&C05 comparison"],
+  ["drag_state", "tidal + ram drag"],
   ["data_state", "data state"],
 ];
 
@@ -74,6 +78,10 @@ export class Panel {
     addEq(EQ.granuleCount);
     addRows(["granules_derived", "granules_rendered", "granule_d", "instances_drawn", "ld_source"]);
     sect();
+    addEq(EQ.orbit, "the incomplete answer — the tidal and drag torques below reverse "
+      + "S&CS's conclusion elsewhere; on this track they set the time and place (fork 21)");
+    addRows(["a_earth_au", "mdot", "mdot_sc05", "drag_state"]);
+    sect();
     const bd = document.createElement("div");
     bd.className = "note";
     bd.textContent = "Declared boundary: the star carries full rigour; background sky "
@@ -116,6 +124,11 @@ export class Panel {
     set("instances_drawn", String(p.drawCalls));
     set("ld_source", p.ldSource.replace("neilson2013-spherical", "N&L13 spherical")
       .replace("claret2011-planar", "Claret11 planar"));
+    set("a_earth_au", p.aEarthAu === null ? "— (engulfed)" : p.aEarthAu.toFixed(4),
+        p.aEarthAu === null ? "engulfed" : String(p.aEarthAu));
+    set("mdot", p.mdot === 0 ? "0" : p.mdot.toExponential(2));
+    set("mdot_sc05", p.mdotSc.toExponential(2));
+    set("drag_state", p.dragOn ? "on" : "off (mass loss only)");
     set("data_state", p.dataState);
   }
 

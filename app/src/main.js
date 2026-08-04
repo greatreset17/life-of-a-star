@@ -8,6 +8,7 @@ import { Star, CELL_PX_BANDLIMIT } from "./star.js";
 import { Void } from "./void.js";
 import { HrDiagram } from "./hr.js";
 import { Panel } from "./panel.js";
+import { TwoCurves } from "./curves.js";
 
 const RSUN_M = 6.957e8;
 
@@ -17,6 +18,15 @@ async function boot() {
   const dprClamp = tier === "low" ? 1 : 2;
 
   const { track, colour } = await loadTables();
+  // earth table: absence is a visible refusal, never a substitute
+  let earth = null;
+  try {
+    const r = await fetch("./data/earth.json");
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    earth = await r.json();
+  } catch (e) {
+    console.error(`unavailable: earth table — ${e.message}`);
+  }
 
   // --- scene
   const holder = document.getElementById("scene");
@@ -31,8 +41,11 @@ async function boot() {
   // --- instruments
   const hr = new HrDiagram(document.getElementById("hr"), track, colour);
   const panel = new Panel(document.getElementById("panel"));
+  const curves = new TwoCurves(document.getElementById("curves"), earth);
   const ageBig = document.getElementById("age-big");
   const ageSub = document.getElementById("age-sub");
+  const ageNote = document.getElementById("age-note");
+  let dragOn = true;
 
   // --- control state
   const cam = {
@@ -57,6 +70,14 @@ async function boot() {
     b.addEventListener("click", () => { s = sv; slider.value = String(sv); });
     wpBox.appendChild(b);
   }
+  const tog = document.createElement("button");
+  tog.id = "dragtoggle";
+  tog.textContent = "drag physics: on";
+  tog.addEventListener("click", () => {
+    dragOn = !dragOn;
+    tog.textContent = `drag physics: ${dragOn ? "on" : "off"}`;
+  });
+  wpBox.appendChild(tog);
 
   // camera drag with inertial drift; wheel = framing distance
   let dragging = false, lastX = 0, lastY = 0;
@@ -132,6 +153,7 @@ async function boot() {
     const granRendered = cellPx < CELL_PX_BANDLIMIT ? Math.min(granDerived, resolvable) : granDerived;
 
     const ageYr = colAt(track, "age_yr", eep);
+    const aEarthAu = curves.aAt(s, dragOn);
     panel.update({
       s, ageYr,
       phase: phaseName(track.phase[i], teff),
@@ -143,12 +165,24 @@ async function boot() {
       granD: track.granule_d_m[i],
       drawCalls: renderer.info.render.calls,
       ldSource: track.ld_source[i],
+      aEarthAu,
+      mdot: earth ? earth.mdot_track[i] : 0,
+      mdotSc: earth ? earth.mdot_sc05[i] : 0,
+      dragOn,
       dataState: "tabulated",
     });
     const [av, au] = formatAge(ageYr);
     ageBig.textContent = `${av} ${au}`;
     ageSub.textContent = phaseName(track.phase[i], teff);
+    // the ending, announced quietly at the solved crossing — the event's s
+    // is the integrator's interpolated value, not a frame boundary
+    const ev = earth ? (dragOn ? earth.engulf_drag : earth.engulf_nodrag) : null;
+    ageNote.textContent = ev && s >= ev.s
+      ? (dragOn ? "the Earth is gone — drawn in at the tip of the red giant branch"
+                : "the Earth is gone — overrun on the asymptotic giant branch")
+      : "";
     hr.draw(eep, cssColour(crow.rgb_lin));
+    curves.draw(s, dragOn);
 
     if (!announcedReady) { panel.ready(); announcedReady = true; }
     requestAnimationFrame(frame);

@@ -175,6 +175,32 @@ FORK 19 — Colour premises corrected by measurement (recorded v0.1). Three
       locus adjacency (< 0.05) instead.
   [decided v0.1]
 
+FORK 21 — The drag toggle's meaning, corrected by the calculation
+  (recorded v0.2). The brief's premise — disable tidal+dynamical drag and
+  the curves miss, the Earth survives — is FALSE on the mandated track:
+  MIST v1.2's eta_R=0.1 leaves the RGB nearly massless-loss-free, the orbit
+  expands only to ~1.36 AU, and the TP-AGB photosphere (1.64 AU) overruns
+  it by pure geometry. MEASURED: with drag, tides capture the Earth at the
+  RGB tip (11.336 Gyr, 6.77 Gyr from present); without drag it dies anyway,
+  ~130 Myr later, swallowed on the AGB. CHOSEN: the toggle ships with its
+  honest meaning — drag decides WHEN and WHERE, not WHETHER — and the panel
+  says exactly that, alongside the S&CS-2008 comparison in which the
+  no-drag Earth does survive (their 0.332 Msun RGB loss pushes the orbit
+  beyond their smaller AGB). The outcome is a calculation, not a script,
+  and this is what the calculation says on this data. Computing effect 1
+  alone remains failure state 6 — it is also, on this track, no longer the
+  comforting answer. [decided v0.2]
+
+FORK 22 — Orbit-averaged evolution (decided v0.2). CHOSEN: the two-body
+  problem is advanced as orbit-averaged ODEs in a(t) (e=0 held), because 1e10 orbits
+  cannot be integrated directly and the averaged equations are the standard
+  treatment (S&CS 2008, Villaver & Livio 2009). The harness's vector
+  integrator (Tier 1) validates the averaged mass-loss rate over short
+  windows; tide and drag prefactors are declared constants
+  (TIDE_PREFACTOR, C_DRAG in pipeline/earth.py). Engulfment = photospheric
+  contact, a terminal event; the inspiral inside the envelope is outside
+  the declared boundary. [decided v0.2]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass

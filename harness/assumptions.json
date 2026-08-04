@@ -26,7 +26,8 @@
     "s", "age_yr", "teff_k", "log_g", "log_l", "r_rsun",
     "chromaticity_srgb", "gamut_excursion",
     "granules_derived", "granules_rendered", "instances_drawn",
-    "data_state", "phase"
+    "data_state", "phase",
+    "a_earth_au", "mdot", "mdot_sc05", "drag_state"
   ],
   "gate_console_fail_patterns": ["error", "shader", "self-test fail", "unavailable:"],
   "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]"

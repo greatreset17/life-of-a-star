@@ -49,6 +49,9 @@
     font-size: 13px; letter-spacing: 0.03em; }
   #agepane .big { font-size: 21px; font-variant-numeric: tabular-nums; }
   #agepane .sub { color: var(--ink-dim); font-size: 11px; }
+  #curves { position: absolute; left: 14px; bottom: 92px; width: 470px; height: 170px;
+    background: var(--panel-bg); border: 1px solid var(--hairline); }
+  #dragtoggle { margin-left: 12px; }
   #err { position: absolute; inset: 30% 20%; color: var(--ink); display: none;
     background: var(--panel-bg); border: 1px solid var(--hairline); padding: 18px;
     font-size: 13px; white-space: pre-wrap; }
@@ -65,7 +68,9 @@
 <div id="agepane">
   <div class="big" id="age-big"></div>
   <div class="sub" id="age-sub"></div>
+  <div class="sub" id="age-note"></div>
 </div>
+<canvas id="curves" width="470" height="170"></canvas>
 <div id="controls">
   <input id="timeline" type="range" min="0" max="1" step="0.00001" value="0">
   <div id="waypoints"></div>

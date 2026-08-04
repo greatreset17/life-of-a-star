@@ -61,6 +61,15 @@ def main(argv):
         ok = ref["combined"] == combined
         print(f"{'IDENTITY' if ok else 'MISMATCH'}  {label}\n  recorded {ref['combined']}\n  current  {combined}")
         return 0 if ok else 1
+    if cmd == "verify-prev":
+        # identity-by-default across passes: every file recorded under the
+        # label must be bit-identical NOW; files added since are permitted
+        bad = [k for k, v in ref["files"].items() if files.get(k) != v]
+        for k in bad:
+            print(f"changed-or-removed: {k}")
+        print(f"{'IDENTITY(prev-subset)' if not bad else 'MISMATCH'}  {label}"
+              f"  ({len(ref['files'])} recorded, {len(bad)} broken)")
+        return 0 if not bad else 1
     if cmd == "diff":
         a, b = ref["files"], files
         for k in sorted(set(a) | set(b)):
