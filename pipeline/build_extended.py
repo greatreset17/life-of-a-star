@@ -79,7 +79,10 @@ def build():
         "zams": tr.anchors["zams"],
         "present_day": cs.markers["present_day"],
         "subgiant": tr.anchors["tams"] + 30,
-        "rgb_tip": tr.anchors["rgb_tip"],
+        # the tip row itself is labelled CHeB's first instant by MIST; land
+        # the waypoint on the branch it names (critic: caption and probe
+        # disagreed at the piece's emotional peak)
+        "rgb_tip": tr.anchors["rgb_tip"] - 1,
         "agb_thermal_pulses": 1100,
         "planetary_nebula_peak": None,   # filled from the nebula solution
         "wd_crystallisation": onset + 1,

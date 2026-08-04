@@ -73,5 +73,37 @@ if bright_v and dim_v:
     check("t31-dimmer-shows-more", max(bright_v) <= max(dim_v) + 1,
           f"bright max {max(bright_v)}, dim max {max(dim_v)}")
 
+# --- colour bijection at the probe surface (added after the critic's
+# attack 1: a row-remap in main.js would have passed everything): each
+# capture's chromaticity must equal the colour-table row nearest its s
+colour_rows = json.loads((ROOT / "app/data/colour.json").read_text())["rows"]
+sn = track["s"]
+for wp, p in probes.items():
+    s = float(p["s"])
+    i = min(range(len(sn)), key=lambda k: abs(sn[k] - s))
+    want = colour_rows[i]["rgb_lin"]
+    got = [float(v) for v in p["chromaticity_srgb"].split(",")]
+    ok = all(abs(a - b) < 2e-3 for a, b in zip(got, want))
+    check(f"t39-{wp}-probe-colour-is-table-row", ok, f"probe {got} vs table {want}")
+
+# --- sky-count consistency (added after the critic's vacuity note): the
+# probe's own adaptation must predict its own visible count
+gmags = None
+sky_meta_p = ROOT / "app/data/sky.json"
+if sky_meta_p.exists():
+    gmags = json.loads(sky_meta_p.read_text())["gmag"]
+for wp, p in probes.items():
+    if gmags is None or float(p["sky_visible"]) < 0:
+        continue
+    a = float(p["adaptation"])
+    lim = 6.5 - 9.5 * a
+    expect = sum(1 for g in gmags if g <= lim)
+    got = float(p["sky_visible"])
+    # bound loosely: orbital drift changes individual magnitudes, but the
+    # census must stay the same order (the 1027-vs-1 bug was 3 orders off)
+    ok = got <= max(4 * expect + 10, 30)
+    check(f"t31-{wp}-count-consistent-with-adaptation", ok,
+          f"visible {got:.0f} vs adaptation-census {expect}")
+
 print(f"\ngate-probe suite: {'ALL GREEN' if not failures else f'{len(failures)} FAILURE(S)'}")
 sys.exit(1 if failures else 0)

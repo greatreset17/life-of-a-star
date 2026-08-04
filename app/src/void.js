@@ -29,8 +29,8 @@ const frag = /* glsl */ `
   }
 
   void main() {
-    float depth = vnoise(vNdc * 2.3 + vec2(0.0, uTime * 0.004), 11u) * 0.6
-                + vnoise(vNdc * 7.1, 23u) * 0.4;
+    float depth = vnoise(vNdc * 0.9 + vec2(0.0, uTime * 0.004), 31u) * 0.55
+                + vnoise(vNdc * 2.3, 11u) * 0.30 + vnoise(vNdc * 7.1, 23u) * 0.15;
     float vign = 1.0 - 0.35 * dot(vNdc, vNdc);
     float g = uLevel * (0.55 + 0.45 * depth) * vign;
     gl_FragColor = vec4(vec3(g), 1.0);

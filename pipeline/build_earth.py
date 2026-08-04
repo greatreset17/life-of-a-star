@@ -47,13 +47,12 @@ def build():
     res_d = eo.integrate(drag=True)
     res_n = eo.integrate(drag=False)
 
-    # a common slider grid: the no-drag run's output grid (it runs longest),
-    # extended to the end of the track — the star's curve continues after
-    # both Earths are gone; the orbit curves read null there (absence drawn
-    # as absence)
-    t_last = res_n["t_yr"][-1]
-    t_ext = ages[ages > t_last]
-    t_grid = np.concatenate([res_n["t_yr"], t_ext])
+    # the drawn-curve grid is the TRACK's own age nodes (dense exactly where
+    # the star changes — a geomspace output grid steps ~90 Myr near the tip
+    # and misses the 50-Myr radius spike entirely, so the drawn curves never
+    # met at the engulfment dot; measured by the critic pass), plus the
+    # integrator's own output where the orbit lives
+    t_grid = np.unique(np.concatenate([res_n["t_yr"], ages]))
     s_grid = s_of_age(t_grid)
     a_drag = np.interp(t_grid, res_d["t_yr"], res_d["a_yr"],
                        right=float("nan"))

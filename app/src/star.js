@@ -101,6 +101,7 @@ const frag = /* glsl */ `
     float disc = b * b - (c0 - uR * uR);
     vec3 colour;
     float bright;
+    float lanePost = 1.0;
     if (disc >= 0.0) {
       float t = -b - sqrt(disc);
       vec3 pos = uCamPos + t * dir;
@@ -114,16 +115,20 @@ const frag = /* glsl */ `
       float tt = uTime * 0.03;
       vec3 w1 = cellular(q + vec3(0.0, 0.0, tt), 7u);
       vec3 w2 = cellular(q * 2.03 + vec3(tt, 0.0, 0.0), 13u);
-      // thick-bodied stroke per cell: hot upwelling core falling off toward
-      // a genuinely dark intergranular lane
+      // thick-bodied stroke per cell: hot upwelling core falling toward a
+      // genuinely dark intergranular lane; per-cell brightness jitter from
+      // the cell id so no two strokes match; lane depth survives the tone
+      // map by riding POST-tone (multiplicative on the display value)
       float lane = smoothstep(0.0, 0.30, w1.y);
       float core = 1.0 - smoothstep(0.0, 0.75, w1.x + 0.35 * w2.x);
       float fine = 1.0 - smoothstep(0.05, 0.45, w2.y);
-      float gran = mix(0.42, 1.0, lane) * (1.0 + 0.32 * core) * (1.0 - 0.10 * fine);
+      float jitter = 0.88 + 0.24 * w1.z;
+      float gran = (1.0 + 0.35 * core) * jitter * (1.0 - 0.10 * fine);
       // analytic band-limit: fade cell contrast as cells shrink below pixels
       // (uCellPx = apparent granule size in screen pixels, computed CPU-side
       // from the same derived D the panel reports)
       float vis = smoothstep(${CELL_PX_BANDLIMIT.toFixed(1)}, ${(CELL_PX_BANDLIMIT * 3).toFixed(1)}, uCellPx);
+      lanePost = mix(1.0, mix(0.50, 1.0, lane), vis * uContrast);
       gran = mix(1.0, gran, vis * uContrast);
       bright = limbLaw(mu) * gran;
       colour = uRgb;
@@ -140,6 +145,12 @@ const frag = /* glsl */ `
     float y = dot(lin, vec3(0.2126, 0.7152, 0.0722));
     float yT = y / (1.0 + y);
     lin *= (y > 0.0) ? yT / y : 1.0;
+    // intergranular lanes ride post-tone so they survive high exposure
+    lin *= lanePost;
+    // ~1 LSB dither (integer hash) so the deep fades never band
+    float dth = (float(pcg3d(uvec3(uvec2(gl_FragCoord.xy), 7u)).x)
+                 * (1.0 / 4294967295.0) - 0.5) / 255.0;
+    lin = max(lin + vec3(dth), 0.0);
     // sRGB encode
     vec3 enc = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055,
                    step(0.0031308, lin));

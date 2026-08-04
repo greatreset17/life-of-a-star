@@ -24,7 +24,9 @@
   #hr { position: absolute; top: 14px; right: 14px; width: 300px; height: 340px;
     background: var(--panel-bg); border: 1px solid var(--hairline); }
   #panel { position: absolute; top: 368px; right: 14px; width: 300px;
-    max-height: calc(100% - 460px); overflow: hidden auto;
+    max-height: calc(100% - 400px); overflow: hidden auto;
+    mask-image: linear-gradient(to bottom, black calc(100% - 22px), transparent);
+    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 22px), transparent);
     background: var(--panel-bg); border: 1px solid var(--hairline);
     color: var(--ink); font-size: 11.5px; line-height: 1.55; padding: 10px 12px; }
   #panel .row { display: flex; justify-content: space-between; gap: 8px; }

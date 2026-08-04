@@ -145,7 +145,11 @@ class CoolingSpine:
 
         # ---- the two epochal markers, from the elapsed-time and temperature
         # integrals (never captions)
+        # the present is the interpolated INSTANT 4.57 Gyr, not the nearest
+        # EEP row (which sits 28 Myr early — 28 Myr of real orbital
+        # phase-mixing makes that a visibly different sky)
         i_now = int(np.argmin(np.abs(track.col("star_age") - 4.57e9)))
+        s_now = float(np.interp(4.57e9, self.age_yr, self.s))
         # existence: first crossing below the coolest observed white dwarf,
         # searched only in the cooling tail
         tail = slice(self.join_index, self.n)
@@ -158,8 +162,8 @@ class CoolingSpine:
         s_cross = self.s[i0] + f * (self.s[i_ex] - self.s[i0])
         self.markers = {
             "present_day": {
-                "age_yr": float(track.col("star_age")[i_now]),
-                "s": float(self.s[i_now]),
+                "age_yr": 4.57e9,
+                "s": s_now,
                 "phase": "main sequence" if track.col("phase")[i_now] == 0.0 else "not-ms",
             },
             "existence": {

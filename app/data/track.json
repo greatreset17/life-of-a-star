@@ -31,17 +31,17 @@
 "events_s": {
 "protostar_contraction": 0.030452,
 "zams": 0.078315,
-"present_day": 0.083526,
+"present_day": 0.083512,
 "subgiant": 0.104391,
-"rgb_tip": 0.187397,
+"rgb_tip": 0.186752,
 "agb_thermal_pulses": 0.466733,
 "planetary_nebula_peak": 0.639185,
 "wd_crystallisation": 0.871625
 },
 "markers": {
 "present_day": {
-"age_yr": 4581815089.714745,
-"s": 0.08352616306332551,
+"age_yr": 4570000000.0,
+"s": 0.08351180095620271,
 "phase": "main sequence"
 },
 "existence": {

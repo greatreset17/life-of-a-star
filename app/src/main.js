@@ -65,12 +65,19 @@ async function boot() {
   const voidBg = new Void(scene);
   const shell = new NebulaShell(scene);
   const eye = new Eye();
+  // the Sun's position at EXACTLY the present epoch (interpolated between
+  // spine nodes — the nearest row is 11.7 Myr off, ~2.6 kpc of orbit, and
+  // pairing present stars with that Sun inflates every distance)
   const ages = track.age_yr;
-  let iPresent = 0;
-  for (let k = 0; k < ages.length; k++) {
-    if (Math.abs(ages[k] - 4.57e9) < Math.abs(ages[iPresent] - 4.57e9)) iPresent = k;
+  let sunPresent = null;
+  if (sunOrbit && skyMeta) {
+    const tP = skyMeta.present_age_yr;
+    let k = 0;
+    while (k < ages.length - 2 && ages[k + 1] < tP) k++;
+    const f = Math.max(0, Math.min(1, (tP - ages[k]) / Math.max(ages[k + 1] - ages[k], 1e-9)));
+    sunPresent = [0, 1, 2].map((c) => sunOrbit[k * 3 + c] * (1 - f) + sunOrbit[(k + 1) * 3 + c] * f);
   }
-  const skyField = skyMeta ? new SkyField(scene, skyMeta, skyPos, sunOrbit, iPresent) : null;
+  const skyField = skyMeta ? new SkyField(scene, skyMeta, skyPos, sunOrbit, sunPresent) : null;
   const milkyWay = bandTex ? new MilkyWay(scene, bandTex) : null;
   let eyeJump = true; // initial load is a cut: arrive adapted (fork 28)
 

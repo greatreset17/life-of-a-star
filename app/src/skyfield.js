@@ -53,21 +53,21 @@ const frag = /* glsl */ `
 `;
 
 export class SkyField {
-  constructor(scene, skyMeta, positionsF32, sunOrbitF32, presentIndex) {
+  constructor(scene, skyMeta, positionsF32, sunOrbitF32, sunPresent) {
     this.meta = skyMeta;
     this.pos = positionsF32;   // [n_epoch][n_star][3] galactocentric pc
     this.sun = sunOrbitF32;    // [n_spine][3]
     const n = skyMeta.n_star;
-    // present-epoch distances: star(epoch nearest 0) against the Sun at the
-    // PRESENT-DAY spine node — same epoch on both sides (pairing the
-    // present stars with a past Sun turns shared orbital motion into
-    // phantom magnitude changes; measured before it was fixed)
+    // present-epoch distances: star(epoch nearest 0) against the Sun AT THE
+    // PRESENT EPOCH exactly (interpolated; a nearest-node Sun is megayears
+    // — kiloparsecs — off, and pairing present stars with a displaced Sun
+    // turns shared orbital motion into phantom magnitude changes; measured
+    // twice before it stayed fixed)
     {
       const eps = skyMeta.epochs_myr;
       const k0 = eps.reduce((b, v, idx) => Math.abs(v) < Math.abs(eps[b]) ? idx : b, 0);
       const Z = positionsF32.subarray(k0 * n * 3, (k0 + 1) * n * 3);
-      const sx = sunOrbitF32[presentIndex * 3], sy = sunOrbitF32[presentIndex * 3 + 1],
-        sz = sunOrbitF32[presentIndex * 3 + 2];
+      const [sx, sy, sz] = sunPresent;
       this.d0 = new Float32Array(n);
       for (let i = 0; i < n; i++) {
         const j = i * 3;

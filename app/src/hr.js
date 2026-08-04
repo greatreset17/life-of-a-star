@@ -33,7 +33,7 @@ export class HrDiagram {
     const { ctx, cv } = this;
     ctx.clearRect(0, 0, cv.width, cv.height);
     ctx.save();
-    ctx.font = "19px Georgia, serif";
+    ctx.font = "24px Georgia, serif";
     ctx.fillStyle = this.inkDim;
     ctx.strokeStyle = this.inkFaint;
     ctx.lineWidth = 1;
@@ -79,7 +79,7 @@ export class HrDiagram {
       ctx.lineWidth = 1;
       ctx.beginPath(); ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(x - 5, y + 5); ctx.lineTo(x + 5, y - 5); ctx.stroke();
-      ctx.font = "15px Georgia, serif";
+      ctx.font = "21px Georgia, serif";
       ctx.fillStyle = this.inkFaint;
       ctx.fillText(label, x + 7, y - 4);
     };
