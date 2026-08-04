@@ -1,0 +1,1924 @@
+{
+"needed": [
+{
+"teff": 45000.0,
+"logg": 7.75,
+"fid": 1007,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=1007",
+"grid": "koester2",
+"key": [
+"koester2",
+45000.0,
+7.75
+]
+},
+{
+"teff": 45000.0,
+"logg": 7.5,
+"fid": 1006,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=1006",
+"grid": "koester2",
+"key": [
+"koester2",
+45000.0,
+7.5
+]
+},
+{
+"teff": 50000.0,
+"logg": 7.75,
+"fid": 1020,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=1020",
+"grid": "koester2",
+"key": [
+"koester2",
+50000.0,
+7.75
+]
+},
+{
+"teff": 50000.0,
+"logg": 7.5,
+"fid": 1019,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=1019",
+"grid": "koester2",
+"key": [
+"koester2",
+50000.0,
+7.5
+]
+},
+{
+"teff": 40000.0,
+"logg": 7.75,
+"fid": 994,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=994",
+"grid": "koester2",
+"key": [
+"koester2",
+40000.0,
+7.75
+]
+},
+{
+"teff": 40000.0,
+"logg": 7.5,
+"fid": 993,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=993",
+"grid": "koester2",
+"key": [
+"koester2",
+40000.0,
+7.5
+]
+},
+{
+"teff": 38000.0,
+"logg": 7.75,
+"fid": 981,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=981",
+"grid": "koester2",
+"key": [
+"koester2",
+38000.0,
+7.75
+]
+},
+{
+"teff": 38000.0,
+"logg": 7.5,
+"fid": 980,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=980",
+"grid": "koester2",
+"key": [
+"koester2",
+38000.0,
+7.5
+]
+},
+{
+"teff": 36000.0,
+"logg": 7.75,
+"fid": 968,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=968",
+"grid": "koester2",
+"key": [
+"koester2",
+36000.0,
+7.75
+]
+},
+{
+"teff": 36000.0,
+"logg": 7.5,
+"fid": 967,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=967",
+"grid": "koester2",
+"key": [
+"koester2",
+36000.0,
+7.5
+]
+},
+{
+"teff": 36000.0,
+"logg": 8.0,
+"fid": 969,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=969",
+"grid": "koester2",
+"key": [
+"koester2",
+36000.0,
+8.0
+]
+},
+{
+"teff": 38000.0,
+"logg": 8.0,
+"fid": 982,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=982",
+"grid": "koester2",
+"key": [
+"koester2",
+38000.0,
+8.0
+]
+},
+{
+"teff": 35000.0,
+"logg": 8.0,
+"fid": 956,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=956",
+"grid": "koester2",
+"key": [
+"koester2",
+35000.0,
+8.0
+]
+},
+{
+"teff": 35000.0,
+"logg": 7.75,
+"fid": 955,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=955",
+"grid": "koester2",
+"key": [
+"koester2",
+35000.0,
+7.75
+]
+},
+{
+"teff": 34000.0,
+"logg": 8.0,
+"fid": 943,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=943",
+"grid": "koester2",
+"key": [
+"koester2",
+34000.0,
+8.0
+]
+},
+{
+"teff": 34000.0,
+"logg": 7.75,
+"fid": 942,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=942",
+"grid": "koester2",
+"key": [
+"koester2",
+34000.0,
+7.75
+]
+},
+{
+"teff": 32000.0,
+"logg": 8.0,
+"fid": 930,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=930",
+"grid": "koester2",
+"key": [
+"koester2",
+32000.0,
+8.0
+]
+},
+{
+"teff": 32000.0,
+"logg": 7.75,
+"fid": 929,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=929",
+"grid": "koester2",
+"key": [
+"koester2",
+32000.0,
+7.75
+]
+},
+{
+"teff": 30000.0,
+"logg": 8.0,
+"fid": 917,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=917",
+"grid": "koester2",
+"key": [
+"koester2",
+30000.0,
+8.0
+]
+},
+{
+"teff": 30000.0,
+"logg": 7.75,
+"fid": 916,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=916",
+"grid": "koester2",
+"key": [
+"koester2",
+30000.0,
+7.75
+]
+},
+{
+"teff": 29000.0,
+"logg": 8.0,
+"fid": 904,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=904",
+"grid": "koester2",
+"key": [
+"koester2",
+29000.0,
+8.0
+]
+},
+{
+"teff": 29000.0,
+"logg": 7.75,
+"fid": 903,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=903",
+"grid": "koester2",
+"key": [
+"koester2",
+29000.0,
+7.75
+]
+},
+{
+"teff": 28000.0,
+"logg": 8.0,
+"fid": 891,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=891",
+"grid": "koester2",
+"key": [
+"koester2",
+28000.0,
+8.0
+]
+},
+{
+"teff": 28000.0,
+"logg": 7.75,
+"fid": 890,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=890",
+"grid": "koester2",
+"key": [
+"koester2",
+28000.0,
+7.75
+]
+},
+{
+"teff": 27000.0,
+"logg": 8.0,
+"fid": 878,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=878",
+"grid": "koester2",
+"key": [
+"koester2",
+27000.0,
+8.0
+]
+},
+{
+"teff": 27000.0,
+"logg": 7.75,
+"fid": 877,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=877",
+"grid": "koester2",
+"key": [
+"koester2",
+27000.0,
+7.75
+]
+},
+{
+"teff": 26000.0,
+"logg": 8.0,
+"fid": 865,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=865",
+"grid": "koester2",
+"key": [
+"koester2",
+26000.0,
+8.0
+]
+},
+{
+"teff": 26000.0,
+"logg": 7.75,
+"fid": 864,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=864",
+"grid": "koester2",
+"key": [
+"koester2",
+26000.0,
+7.75
+]
+},
+{
+"teff": 25000.0,
+"logg": 8.0,
+"fid": 852,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=852",
+"grid": "koester2",
+"key": [
+"koester2",
+25000.0,
+8.0
+]
+},
+{
+"teff": 25000.0,
+"logg": 7.75,
+"fid": 851,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=851",
+"grid": "koester2",
+"key": [
+"koester2",
+25000.0,
+7.75
+]
+},
+{
+"teff": 24000.0,
+"logg": 8.0,
+"fid": 839,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=839",
+"grid": "koester2",
+"key": [
+"koester2",
+24000.0,
+8.0
+]
+},
+{
+"teff": 24000.0,
+"logg": 7.75,
+"fid": 838,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=838",
+"grid": "koester2",
+"key": [
+"koester2",
+24000.0,
+7.75
+]
+},
+{
+"teff": 23000.0,
+"logg": 8.0,
+"fid": 826,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=826",
+"grid": "koester2",
+"key": [
+"koester2",
+23000.0,
+8.0
+]
+},
+{
+"teff": 23000.0,
+"logg": 7.75,
+"fid": 825,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=825",
+"grid": "koester2",
+"key": [
+"koester2",
+23000.0,
+7.75
+]
+},
+{
+"teff": 22000.0,
+"logg": 8.0,
+"fid": 813,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=813",
+"grid": "koester2",
+"key": [
+"koester2",
+22000.0,
+8.0
+]
+},
+{
+"teff": 22000.0,
+"logg": 7.75,
+"fid": 812,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=812",
+"grid": "koester2",
+"key": [
+"koester2",
+22000.0,
+7.75
+]
+},
+{
+"teff": 21000.0,
+"logg": 8.0,
+"fid": 800,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=800",
+"grid": "koester2",
+"key": [
+"koester2",
+21000.0,
+8.0
+]
+},
+{
+"teff": 21000.0,
+"logg": 7.75,
+"fid": 799,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=799",
+"grid": "koester2",
+"key": [
+"koester2",
+21000.0,
+7.75
+]
+},
+{
+"teff": 20000.0,
+"logg": 8.0,
+"fid": 787,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=787",
+"grid": "koester2",
+"key": [
+"koester2",
+20000.0,
+8.0
+]
+},
+{
+"teff": 20000.0,
+"logg": 7.75,
+"fid": 786,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=786",
+"grid": "koester2",
+"key": [
+"koester2",
+20000.0,
+7.75
+]
+},
+{
+"teff": 19750.0,
+"logg": 8.0,
+"fid": 774,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=774",
+"grid": "koester2",
+"key": [
+"koester2",
+19750.0,
+8.0
+]
+},
+{
+"teff": 19750.0,
+"logg": 7.75,
+"fid": 773,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=773",
+"grid": "koester2",
+"key": [
+"koester2",
+19750.0,
+7.75
+]
+},
+{
+"teff": 19500.0,
+"logg": 8.0,
+"fid": 761,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=761",
+"grid": "koester2",
+"key": [
+"koester2",
+19500.0,
+8.0
+]
+},
+{
+"teff": 19500.0,
+"logg": 7.75,
+"fid": 760,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=760",
+"grid": "koester2",
+"key": [
+"koester2",
+19500.0,
+7.75
+]
+},
+{
+"teff": 19250.0,
+"logg": 8.0,
+"fid": 748,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=748",
+"grid": "koester2",
+"key": [
+"koester2",
+19250.0,
+8.0
+]
+},
+{
+"teff": 19250.0,
+"logg": 7.75,
+"fid": 747,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=747",
+"grid": "koester2",
+"key": [
+"koester2",
+19250.0,
+7.75
+]
+},
+{
+"teff": 19000.0,
+"logg": 8.0,
+"fid": 735,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=735",
+"grid": "koester2",
+"key": [
+"koester2",
+19000.0,
+8.0
+]
+},
+{
+"teff": 19000.0,
+"logg": 7.75,
+"fid": 734,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=734",
+"grid": "koester2",
+"key": [
+"koester2",
+19000.0,
+7.75
+]
+},
+{
+"teff": 18750.0,
+"logg": 8.0,
+"fid": 722,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=722",
+"grid": "koester2",
+"key": [
+"koester2",
+18750.0,
+8.0
+]
+},
+{
+"teff": 18750.0,
+"logg": 7.75,
+"fid": 721,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=721",
+"grid": "koester2",
+"key": [
+"koester2",
+18750.0,
+7.75
+]
+},
+{
+"teff": 18500.0,
+"logg": 8.0,
+"fid": 709,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=709",
+"grid": "koester2",
+"key": [
+"koester2",
+18500.0,
+8.0
+]
+},
+{
+"teff": 18500.0,
+"logg": 7.75,
+"fid": 708,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=708",
+"grid": "koester2",
+"key": [
+"koester2",
+18500.0,
+7.75
+]
+},
+{
+"teff": 18250.0,
+"logg": 8.0,
+"fid": 696,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=696",
+"grid": "koester2",
+"key": [
+"koester2",
+18250.0,
+8.0
+]
+},
+{
+"teff": 18250.0,
+"logg": 7.75,
+"fid": 695,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=695",
+"grid": "koester2",
+"key": [
+"koester2",
+18250.0,
+7.75
+]
+},
+{
+"teff": 18000.0,
+"logg": 8.0,
+"fid": 683,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=683",
+"grid": "koester2",
+"key": [
+"koester2",
+18000.0,
+8.0
+]
+},
+{
+"teff": 18000.0,
+"logg": 7.75,
+"fid": 682,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=682",
+"grid": "koester2",
+"key": [
+"koester2",
+18000.0,
+7.75
+]
+},
+{
+"teff": 17750.0,
+"logg": 8.0,
+"fid": 670,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=670",
+"grid": "koester2",
+"key": [
+"koester2",
+17750.0,
+8.0
+]
+},
+{
+"teff": 17750.0,
+"logg": 7.75,
+"fid": 669,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=669",
+"grid": "koester2",
+"key": [
+"koester2",
+17750.0,
+7.75
+]
+},
+{
+"teff": 17500.0,
+"logg": 8.0,
+"fid": 657,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=657",
+"grid": "koester2",
+"key": [
+"koester2",
+17500.0,
+8.0
+]
+},
+{
+"teff": 17500.0,
+"logg": 7.75,
+"fid": 656,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=656",
+"grid": "koester2",
+"key": [
+"koester2",
+17500.0,
+7.75
+]
+},
+{
+"teff": 17250.0,
+"logg": 8.0,
+"fid": 644,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=644",
+"grid": "koester2",
+"key": [
+"koester2",
+17250.0,
+8.0
+]
+},
+{
+"teff": 17250.0,
+"logg": 7.75,
+"fid": 643,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=643",
+"grid": "koester2",
+"key": [
+"koester2",
+17250.0,
+7.75
+]
+},
+{
+"teff": 17000.0,
+"logg": 8.0,
+"fid": 631,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=631",
+"grid": "koester2",
+"key": [
+"koester2",
+17000.0,
+8.0
+]
+},
+{
+"teff": 17000.0,
+"logg": 7.75,
+"fid": 630,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=630",
+"grid": "koester2",
+"key": [
+"koester2",
+17000.0,
+7.75
+]
+},
+{
+"teff": 16750.0,
+"logg": 8.0,
+"fid": 618,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=618",
+"grid": "koester2",
+"key": [
+"koester2",
+16750.0,
+8.0
+]
+},
+{
+"teff": 16750.0,
+"logg": 7.75,
+"fid": 617,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=617",
+"grid": "koester2",
+"key": [
+"koester2",
+16750.0,
+7.75
+]
+},
+{
+"teff": 16500.0,
+"logg": 8.0,
+"fid": 605,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=605",
+"grid": "koester2",
+"key": [
+"koester2",
+16500.0,
+8.0
+]
+},
+{
+"teff": 16500.0,
+"logg": 7.75,
+"fid": 604,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=604",
+"grid": "koester2",
+"key": [
+"koester2",
+16500.0,
+7.75
+]
+},
+{
+"teff": 16250.0,
+"logg": 8.0,
+"fid": 592,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=592",
+"grid": "koester2",
+"key": [
+"koester2",
+16250.0,
+8.0
+]
+},
+{
+"teff": 16250.0,
+"logg": 7.75,
+"fid": 591,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=591",
+"grid": "koester2",
+"key": [
+"koester2",
+16250.0,
+7.75
+]
+},
+{
+"teff": 16000.0,
+"logg": 8.0,
+"fid": 579,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=579",
+"grid": "koester2",
+"key": [
+"koester2",
+16000.0,
+8.0
+]
+},
+{
+"teff": 16000.0,
+"logg": 7.75,
+"fid": 578,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=578",
+"grid": "koester2",
+"key": [
+"koester2",
+16000.0,
+7.75
+]
+},
+{
+"teff": 15750.0,
+"logg": 8.0,
+"fid": 566,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=566",
+"grid": "koester2",
+"key": [
+"koester2",
+15750.0,
+8.0
+]
+},
+{
+"teff": 15750.0,
+"logg": 7.75,
+"fid": 565,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=565",
+"grid": "koester2",
+"key": [
+"koester2",
+15750.0,
+7.75
+]
+},
+{
+"teff": 15500.0,
+"logg": 8.0,
+"fid": 553,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=553",
+"grid": "koester2",
+"key": [
+"koester2",
+15500.0,
+8.0
+]
+},
+{
+"teff": 15500.0,
+"logg": 7.75,
+"fid": 552,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=552",
+"grid": "koester2",
+"key": [
+"koester2",
+15500.0,
+7.75
+]
+},
+{
+"teff": 15250.0,
+"logg": 8.0,
+"fid": 540,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=540",
+"grid": "koester2",
+"key": [
+"koester2",
+15250.0,
+8.0
+]
+},
+{
+"teff": 15250.0,
+"logg": 7.75,
+"fid": 539,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=539",
+"grid": "koester2",
+"key": [
+"koester2",
+15250.0,
+7.75
+]
+},
+{
+"teff": 15000.0,
+"logg": 8.0,
+"fid": 527,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=527",
+"grid": "koester2",
+"key": [
+"koester2",
+15000.0,
+8.0
+]
+},
+{
+"teff": 15000.0,
+"logg": 7.75,
+"fid": 526,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=526",
+"grid": "koester2",
+"key": [
+"koester2",
+15000.0,
+7.75
+]
+},
+{
+"teff": 14750.0,
+"logg": 8.0,
+"fid": 514,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=514",
+"grid": "koester2",
+"key": [
+"koester2",
+14750.0,
+8.0
+]
+},
+{
+"teff": 14750.0,
+"logg": 7.75,
+"fid": 513,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=513",
+"grid": "koester2",
+"key": [
+"koester2",
+14750.0,
+7.75
+]
+},
+{
+"teff": 14500.0,
+"logg": 8.0,
+"fid": 501,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=501",
+"grid": "koester2",
+"key": [
+"koester2",
+14500.0,
+8.0
+]
+},
+{
+"teff": 14500.0,
+"logg": 7.75,
+"fid": 500,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=500",
+"grid": "koester2",
+"key": [
+"koester2",
+14500.0,
+7.75
+]
+},
+{
+"teff": 14250.0,
+"logg": 8.0,
+"fid": 488,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=488",
+"grid": "koester2",
+"key": [
+"koester2",
+14250.0,
+8.0
+]
+},
+{
+"teff": 14250.0,
+"logg": 7.75,
+"fid": 487,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=487",
+"grid": "koester2",
+"key": [
+"koester2",
+14250.0,
+7.75
+]
+},
+{
+"teff": 14000.0,
+"logg": 8.0,
+"fid": 475,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=475",
+"grid": "koester2",
+"key": [
+"koester2",
+14000.0,
+8.0
+]
+},
+{
+"teff": 14000.0,
+"logg": 7.75,
+"fid": 474,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=474",
+"grid": "koester2",
+"key": [
+"koester2",
+14000.0,
+7.75
+]
+},
+{
+"teff": 13750.0,
+"logg": 8.0,
+"fid": 462,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=462",
+"grid": "koester2",
+"key": [
+"koester2",
+13750.0,
+8.0
+]
+},
+{
+"teff": 13750.0,
+"logg": 7.75,
+"fid": 461,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=461",
+"grid": "koester2",
+"key": [
+"koester2",
+13750.0,
+7.75
+]
+},
+{
+"teff": 13500.0,
+"logg": 8.0,
+"fid": 449,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=449",
+"grid": "koester2",
+"key": [
+"koester2",
+13500.0,
+8.0
+]
+},
+{
+"teff": 13500.0,
+"logg": 7.75,
+"fid": 448,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=448",
+"grid": "koester2",
+"key": [
+"koester2",
+13500.0,
+7.75
+]
+},
+{
+"teff": 13250.0,
+"logg": 8.0,
+"fid": 436,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=436",
+"grid": "koester2",
+"key": [
+"koester2",
+13250.0,
+8.0
+]
+},
+{
+"teff": 13250.0,
+"logg": 7.75,
+"fid": 435,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=435",
+"grid": "koester2",
+"key": [
+"koester2",
+13250.0,
+7.75
+]
+},
+{
+"teff": 13000.0,
+"logg": 8.0,
+"fid": 423,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=423",
+"grid": "koester2",
+"key": [
+"koester2",
+13000.0,
+8.0
+]
+},
+{
+"teff": 13000.0,
+"logg": 7.75,
+"fid": 422,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=422",
+"grid": "koester2",
+"key": [
+"koester2",
+13000.0,
+7.75
+]
+},
+{
+"teff": 12750.0,
+"logg": 8.0,
+"fid": 410,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=410",
+"grid": "koester2",
+"key": [
+"koester2",
+12750.0,
+8.0
+]
+},
+{
+"teff": 12750.0,
+"logg": 7.75,
+"fid": 409,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=409",
+"grid": "koester2",
+"key": [
+"koester2",
+12750.0,
+7.75
+]
+},
+{
+"teff": 12500.0,
+"logg": 8.0,
+"fid": 397,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=397",
+"grid": "koester2",
+"key": [
+"koester2",
+12500.0,
+8.0
+]
+},
+{
+"teff": 12500.0,
+"logg": 7.75,
+"fid": 396,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=396",
+"grid": "koester2",
+"key": [
+"koester2",
+12500.0,
+7.75
+]
+},
+{
+"teff": 12250.0,
+"logg": 8.0,
+"fid": 384,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=384",
+"grid": "koester2",
+"key": [
+"koester2",
+12250.0,
+8.0
+]
+},
+{
+"teff": 12250.0,
+"logg": 7.75,
+"fid": 383,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=383",
+"grid": "koester2",
+"key": [
+"koester2",
+12250.0,
+7.75
+]
+},
+{
+"teff": 12000.0,
+"logg": 8.0,
+"fid": 371,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=371",
+"grid": "koester2",
+"key": [
+"koester2",
+12000.0,
+8.0
+]
+},
+{
+"teff": 12000.0,
+"logg": 7.75,
+"fid": 370,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=370",
+"grid": "koester2",
+"key": [
+"koester2",
+12000.0,
+7.75
+]
+},
+{
+"teff": 11750.0,
+"logg": 8.0,
+"fid": 358,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=358",
+"grid": "koester2",
+"key": [
+"koester2",
+11750.0,
+8.0
+]
+},
+{
+"teff": 11750.0,
+"logg": 7.75,
+"fid": 357,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=357",
+"grid": "koester2",
+"key": [
+"koester2",
+11750.0,
+7.75
+]
+},
+{
+"teff": 11500.0,
+"logg": 8.0,
+"fid": 345,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=345",
+"grid": "koester2",
+"key": [
+"koester2",
+11500.0,
+8.0
+]
+},
+{
+"teff": 11500.0,
+"logg": 7.75,
+"fid": 344,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=344",
+"grid": "koester2",
+"key": [
+"koester2",
+11500.0,
+7.75
+]
+},
+{
+"teff": 11250.0,
+"logg": 8.0,
+"fid": 332,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=332",
+"grid": "koester2",
+"key": [
+"koester2",
+11250.0,
+8.0
+]
+},
+{
+"teff": 11250.0,
+"logg": 7.75,
+"fid": 331,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=331",
+"grid": "koester2",
+"key": [
+"koester2",
+11250.0,
+7.75
+]
+},
+{
+"teff": 11000.0,
+"logg": 8.0,
+"fid": 319,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=319",
+"grid": "koester2",
+"key": [
+"koester2",
+11000.0,
+8.0
+]
+},
+{
+"teff": 11000.0,
+"logg": 7.75,
+"fid": 318,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=318",
+"grid": "koester2",
+"key": [
+"koester2",
+11000.0,
+7.75
+]
+},
+{
+"teff": 10750.0,
+"logg": 8.0,
+"fid": 306,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=306",
+"grid": "koester2",
+"key": [
+"koester2",
+10750.0,
+8.0
+]
+},
+{
+"teff": 10750.0,
+"logg": 7.75,
+"fid": 305,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=305",
+"grid": "koester2",
+"key": [
+"koester2",
+10750.0,
+7.75
+]
+},
+{
+"teff": 10500.0,
+"logg": 8.0,
+"fid": 293,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=293",
+"grid": "koester2",
+"key": [
+"koester2",
+10500.0,
+8.0
+]
+},
+{
+"teff": 10500.0,
+"logg": 7.75,
+"fid": 292,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=292",
+"grid": "koester2",
+"key": [
+"koester2",
+10500.0,
+7.75
+]
+},
+{
+"teff": 10250.0,
+"logg": 8.0,
+"fid": 280,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=280",
+"grid": "koester2",
+"key": [
+"koester2",
+10250.0,
+8.0
+]
+},
+{
+"teff": 10250.0,
+"logg": 7.75,
+"fid": 279,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=279",
+"grid": "koester2",
+"key": [
+"koester2",
+10250.0,
+7.75
+]
+},
+{
+"teff": 10000.0,
+"logg": 8.0,
+"fid": 267,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=267",
+"grid": "koester2",
+"key": [
+"koester2",
+10000.0,
+8.0
+]
+},
+{
+"teff": 10000.0,
+"logg": 7.75,
+"fid": 266,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=266",
+"grid": "koester2",
+"key": [
+"koester2",
+10000.0,
+7.75
+]
+},
+{
+"teff": 9750.0,
+"logg": 8.0,
+"fid": 254,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=254",
+"grid": "koester2",
+"key": [
+"koester2",
+9750.0,
+8.0
+]
+},
+{
+"teff": 9750.0,
+"logg": 7.75,
+"fid": 253,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=253",
+"grid": "koester2",
+"key": [
+"koester2",
+9750.0,
+7.75
+]
+},
+{
+"teff": 9500.0,
+"logg": 8.0,
+"fid": 241,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=241",
+"grid": "koester2",
+"key": [
+"koester2",
+9500.0,
+8.0
+]
+},
+{
+"teff": 9500.0,
+"logg": 7.75,
+"fid": 240,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=240",
+"grid": "koester2",
+"key": [
+"koester2",
+9500.0,
+7.75
+]
+},
+{
+"teff": 9250.0,
+"logg": 8.0,
+"fid": 228,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=228",
+"grid": "koester2",
+"key": [
+"koester2",
+9250.0,
+8.0
+]
+},
+{
+"teff": 9250.0,
+"logg": 7.75,
+"fid": 227,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=227",
+"grid": "koester2",
+"key": [
+"koester2",
+9250.0,
+7.75
+]
+},
+{
+"teff": 9000.0,
+"logg": 8.0,
+"fid": 215,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=215",
+"grid": "koester2",
+"key": [
+"koester2",
+9000.0,
+8.0
+]
+},
+{
+"teff": 9000.0,
+"logg": 7.75,
+"fid": 214,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=214",
+"grid": "koester2",
+"key": [
+"koester2",
+9000.0,
+7.75
+]
+},
+{
+"teff": 8750.0,
+"logg": 8.0,
+"fid": 202,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=202",
+"grid": "koester2",
+"key": [
+"koester2",
+8750.0,
+8.0
+]
+},
+{
+"teff": 8750.0,
+"logg": 7.75,
+"fid": 201,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=201",
+"grid": "koester2",
+"key": [
+"koester2",
+8750.0,
+7.75
+]
+},
+{
+"teff": 8500.0,
+"logg": 8.0,
+"fid": 189,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=189",
+"grid": "koester2",
+"key": [
+"koester2",
+8500.0,
+8.0
+]
+},
+{
+"teff": 8500.0,
+"logg": 7.75,
+"fid": 188,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=188",
+"grid": "koester2",
+"key": [
+"koester2",
+8500.0,
+7.75
+]
+},
+{
+"teff": 8250.0,
+"logg": 8.0,
+"fid": 176,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=176",
+"grid": "koester2",
+"key": [
+"koester2",
+8250.0,
+8.0
+]
+},
+{
+"teff": 8250.0,
+"logg": 7.75,
+"fid": 175,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=175",
+"grid": "koester2",
+"key": [
+"koester2",
+8250.0,
+7.75
+]
+},
+{
+"teff": 8000.0,
+"logg": 8.0,
+"fid": 163,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=163",
+"grid": "koester2",
+"key": [
+"koester2",
+8000.0,
+8.0
+]
+},
+{
+"teff": 8000.0,
+"logg": 7.75,
+"fid": 162,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=162",
+"grid": "koester2",
+"key": [
+"koester2",
+8000.0,
+7.75
+]
+},
+{
+"teff": 7750.0,
+"logg": 8.0,
+"fid": 150,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=150",
+"grid": "koester2",
+"key": [
+"koester2",
+7750.0,
+8.0
+]
+},
+{
+"teff": 7750.0,
+"logg": 7.75,
+"fid": 149,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=149",
+"grid": "koester2",
+"key": [
+"koester2",
+7750.0,
+7.75
+]
+},
+{
+"teff": 7500.0,
+"logg": 8.0,
+"fid": 137,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=137",
+"grid": "koester2",
+"key": [
+"koester2",
+7500.0,
+8.0
+]
+},
+{
+"teff": 7500.0,
+"logg": 7.75,
+"fid": 136,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=136",
+"grid": "koester2",
+"key": [
+"koester2",
+7500.0,
+7.75
+]
+},
+{
+"teff": 7250.0,
+"logg": 8.0,
+"fid": 124,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=124",
+"grid": "koester2",
+"key": [
+"koester2",
+7250.0,
+8.0
+]
+},
+{
+"teff": 7250.0,
+"logg": 7.75,
+"fid": 123,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=123",
+"grid": "koester2",
+"key": [
+"koester2",
+7250.0,
+7.75
+]
+},
+{
+"teff": 7000.0,
+"logg": 8.0,
+"fid": 111,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=111",
+"grid": "koester2",
+"key": [
+"koester2",
+7000.0,
+8.0
+]
+},
+{
+"teff": 7000.0,
+"logg": 7.75,
+"fid": 110,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=110",
+"grid": "koester2",
+"key": [
+"koester2",
+7000.0,
+7.75
+]
+},
+{
+"teff": 6750.0,
+"logg": 8.0,
+"fid": 98,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=98",
+"grid": "koester2",
+"key": [
+"koester2",
+6750.0,
+8.0
+]
+},
+{
+"teff": 6750.0,
+"logg": 7.75,
+"fid": 97,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=97",
+"grid": "koester2",
+"key": [
+"koester2",
+6750.0,
+7.75
+]
+},
+{
+"teff": 6500.0,
+"logg": 8.0,
+"fid": 85,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=85",
+"grid": "koester2",
+"key": [
+"koester2",
+6500.0,
+8.0
+]
+},
+{
+"teff": 6500.0,
+"logg": 7.75,
+"fid": 84,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=84",
+"grid": "koester2",
+"key": [
+"koester2",
+6500.0,
+7.75
+]
+},
+{
+"teff": 6250.0,
+"logg": 8.0,
+"fid": 72,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=72",
+"grid": "koester2",
+"key": [
+"koester2",
+6250.0,
+8.0
+]
+},
+{
+"teff": 6250.0,
+"logg": 7.75,
+"fid": 71,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=71",
+"grid": "koester2",
+"key": [
+"koester2",
+6250.0,
+7.75
+]
+},
+{
+"teff": 6000.0,
+"logg": 8.0,
+"fid": 59,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=59",
+"grid": "koester2",
+"key": [
+"koester2",
+6000.0,
+8.0
+]
+},
+{
+"teff": 6000.0,
+"logg": 7.75,
+"fid": 58,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=58",
+"grid": "koester2",
+"key": [
+"koester2",
+6000.0,
+7.75
+]
+},
+{
+"teff": 5750.0,
+"logg": 8.0,
+"fid": 46,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=46",
+"grid": "koester2",
+"key": [
+"koester2",
+5750.0,
+8.0
+]
+},
+{
+"teff": 5750.0,
+"logg": 7.75,
+"fid": 45,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=45",
+"grid": "koester2",
+"key": [
+"koester2",
+5750.0,
+7.75
+]
+},
+{
+"teff": 5500.0,
+"logg": 8.0,
+"fid": 33,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=33",
+"grid": "koester2",
+"key": [
+"koester2",
+5500.0,
+8.0
+]
+},
+{
+"teff": 5500.0,
+"logg": 7.75,
+"fid": 32,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=32",
+"grid": "koester2",
+"key": [
+"koester2",
+5500.0,
+7.75
+]
+},
+{
+"teff": 5250.0,
+"logg": 8.0,
+"fid": 20,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=20",
+"grid": "koester2",
+"key": [
+"koester2",
+5250.0,
+8.0
+]
+},
+{
+"teff": 5250.0,
+"logg": 7.75,
+"fid": 19,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=19",
+"grid": "koester2",
+"key": [
+"koester2",
+5250.0,
+7.75
+]
+},
+{
+"teff": 5000.0,
+"logg": 8.0,
+"fid": 7,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=7",
+"grid": "koester2",
+"key": [
+"koester2",
+5000.0,
+8.0
+]
+},
+{
+"teff": 5000.0,
+"logg": 7.75,
+"fid": 6,
+"url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php?model=koester2&fid=6",
+"grid": "koester2",
+"key": [
+"koester2",
+5000.0,
+7.75
+]
+}
+]
+}

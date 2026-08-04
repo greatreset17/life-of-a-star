@@ -201,6 +201,75 @@ FORK 22 — Orbit-averaged evolution (decided v0.2). CHOSEN: the two-body
   contact, a terminal event; the inspiral inside the envelope is outside
   the declared boundary. [decided v0.2]
 
+FORK 11 — The MIST-to-cooling join (decided v0.3). CHOSEN: the cooling
+  spine begins at exactly MIST's final Teff (47623 K) — Teff and TIME are
+  matched by construction (the Bedard age axis is offset so the join is
+  simultaneous). Allowed to be discontinuous and MEASURED: L (-7.8%) and R
+  (-4.2%) — MIST's young-white-dwarf envelope and the Bedard et al. 2020
+  models are two independent codes and do not agree at the handoff; the
+  discontinuity is reported in the panel, the join is marked in the HR
+  diagram, and the suite bounds it at 12%/6% (a wrong bracketing mass or a
+  units slip produces >20%). REJECTED: smoothing/blending (a silent edit of
+  both codes), and joining in L instead (which would move the mismatch into
+  Teff, the axis the colour chain keys on). Sequences: seq_050/055_thick
+  interpolated to the track's final mass 0.5398 Msun. [decided v0.3]
+
+FORK 2 — Terminus and data horizon (decided v0.3). CHOSEN: two constants —
+  the HORIZON is where the Bedard tables end (~1470 K — they run further than
+  the brief guessed); the TERMINUS is TERMINUS_TEFF_K = 500 K, a factor ~6
+  below the coolest OBSERVED white dwarf (COOLEST_WD_OBSERVED_K = 3000 K,
+  WD J2147-4035, Elms et al. 2022), deep black-dwarf regime, chosen so
+  region B's arc share stays small (measured ~9%) while the piece still
+  ends in true darkness. Governs: TERMINUS_TEFF_K, COOLEST_WD_OBSERVED_K.
+  [decided v0.3]
+
+FORK 9 — Beyond-data cooling law (decided v0.3). CHOSEN: continue past the
+  horizon under one named law — Debye-regime exponential, Teff(t) =
+  T_h exp(-(t-t_h)/tau), tau anchored to the last tabulated dTeff/dt
+  (value and derivative continuous by construction), R frozen at the
+  horizon value, L from Stefan-Boltzmann. Region B is declared here,
+  single-law, anchored, bounded by the terminus, and labelled on screen
+  for its entire duration — all five properties that distinguish it from
+  a fallback. [decided v0.3]
+
+FORK 5 — Planetary nebula treatment (decided v0.3). CHOSEN — SOLVED: thin-shell
+  interacting-winds dynamics (energy-driven bubble in the superwind's r^-2
+  medium, ODE-integrated), the time-dependent ionisation balance
+  (photoionisation vs case-B recombination), and the emission-line spectrum
+  (H case-B + [OIII] + [NII] two-level atoms with published atomic
+  constants and the track's own surface O/N abundances) through the one
+  CIE chain. ASSERTED, not solved: spherical symmetry, T_e = 1e4 K,
+  thin-shell thickness 0.1 R_s, O++/N+ ionic fractions (0.8/0.2), wind
+  speeds via the escape-velocity relation from the track's M and R
+  (v_slow = 0.5 v_esc at AGB end; v_fast = v_esc of the core) because the
+  track's v_wind column is unpopulated on the AGB. Instabilities, clumping
+  and filamentary structure are OUTSIDE the declared boundary.
+  [decided v0.3]
+
+FORK 24 — Granulation on the cooling track (decided v0.3). CHOSEN: the
+  derived H_p scale is computed for every spine node (single formula, fork
+  4), but the RENDERED granulation contrast is gated by the convective
+  regime: DA atmospheres are radiative above ~15000 K, so cooling-track
+  nodes hotter than the convective boundary draw zero granule contrast; the
+  derived count is still reported (derived-vs-rendered divergence is
+  exactly what the panel's two numbers exist for). AMENDED after the first
+  v0.3 gate captures: the gate keys on Teff, not phase — surface convection
+  dies above ~8-10 kK everywhere (the observed granulation-flicker
+  boundary), so the post-AGB sprint fades its granules exactly as a hot DA
+  does; contrast ramps 10000 -> 8000 K. Governs: WD_CONVECTION_ONSET_K.
+  [decided v0.3]
+
+FORK 23 — Cooling-tail chromaticity pathways (decided v0.3). CHOSEN:
+  Koester (2010) DA spectra through the standard chain above 5000 K; below,
+  no public cool-DA spectra exist, so a coarse SED is REBUILT from the
+  Montreal tables' SDSS ugriz AB magnitudes (published cool-WD atmospheres
+  incl. CIA) at their published effective wavelengths and fed through the
+  IDENTICAL CIE function — same chain, coarser sampling, nothing invented,
+  no Planck anywhere. Below the tables' own 1500 K floor (region B),
+  chromaticity holds the 1500 K table edge with the excursion recorded;
+  the fade to black is luminance-driven and labelled. The 5000 K pathway
+  seam is measured by the suite. [decided v0.3]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass
@@ -235,3 +304,15 @@ L_SUN_W = 3.828e26          # IAU nominal
 M_SUN_KG = 1.98892e30
 AU_M = 1.495978707e11
 YEAR_S = 3.15576e7          # Julian year
+
+# fork 2 — the data horizon is where Bedard et al. 2020 end (~1470 K, the
+# coolest tabulated model at these masses); the terminus is a factor ~6
+# below the coolest OBSERVED white dwarf, deep in the black-dwarf regime,
+# keeping region B's arc share finite and small. Governs: TERMINUS_TEFF_K.
+TERMINUS_TEFF_K = 500.0
+# coolest observed white dwarf: WD J2147-4035, Teff ~ 3050 K (Elms et al.
+# 2022, MNRAS 517, 4557) — rounded declared constant for marker two.
+COOLEST_WD_OBSERVED_K = 3000.0
+
+# fork 24
+WD_CONVECTION_ONSET_K = 15000.0

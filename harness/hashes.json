@@ -12,5 +12,14 @@
    "colour.json": "5a8c18df57b1bd15e8fe687f04a34a735f4d80fa409fb4191bfbd56d3199406f"
   },
   "recorded_utc": "2026-08-04T11:59:17+00:00"
+ },
+ "v0.3-stage0": {
+  "combined": "efa1bda31c5b7b15a84295cc12bd7821348d2b8cf6de146d7f8d033f366f64cb",
+  "files": {
+   "colour.json": "5a8c18df57b1bd15e8fe687f04a34a735f4d80fa409fb4191bfbd56d3199406f",
+   "qtable.json": "b643ef61c3f18d20f3f14e393af1fa0967741d4d0acedaa2619b8ad2a565dd4d",
+   "spine.json": "b59de8c22ead5c084dd0a820eb3408e683833a2763aebdf270e5a71c21151023"
+  },
+  "recorded_utc": "2026-08-04T13:08:04+00:00"
  }
 }

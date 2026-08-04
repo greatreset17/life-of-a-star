@@ -52,17 +52,39 @@ export class HrDiagram {
     ctx.fillStyle = this.inkDim;
     ctx.fillText("L / L☉", 8, 14);
     ctx.fillText("Teff (K) →  cooler", cv.width - 190, cv.height - 6);
-    // the track
-    ctx.strokeStyle = this.ink;
-    ctx.lineWidth = 1.4;
-    ctx.globalAlpha = 0.75;
-    ctx.beginPath();
+    // the track — region B (beyond the data horizon) in a visibly lighter
+    // weight; the join and the horizon are both marked
     const lt = this.track.log_Teff, ll = this.track.log_L;
-    for (let i = 0; i < lt.length; i++) {
+    const state = this.track.data_state;
+    const seg = (from, to, alpha, width) => {
+      ctx.strokeStyle = this.ink;
+      ctx.lineWidth = width;
+      ctx.globalAlpha = alpha;
+      ctx.beginPath();
+      for (let i = from; i < to; i++) {
+        const [x, y] = this.px(lt[i], ll[i]);
+        if (i === from) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    };
+    const hIdx = state ? state.lastIndexOf("tabulated") : lt.length - 1;
+    seg(0, hIdx + 1, 0.75, 1.4);
+    if (hIdx < lt.length - 1) seg(hIdx, lt.length, 0.28, 1.0);
+    // marks: join (two codes meet) and horizon (data ends)
+    const mark = (i, label) => {
+      if (i === undefined || i === null) return;
       const [x, y] = this.px(lt[i], ll[i]);
-      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
-    }
-    ctx.stroke();
+      ctx.globalAlpha = 0.8;
+      ctx.strokeStyle = this.inkDim;
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x - 5, y - 5); ctx.lineTo(x + 5, y + 5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x - 5, y + 5); ctx.lineTo(x + 5, y - 5); ctx.stroke();
+      ctx.font = "15px Georgia, serif";
+      ctx.fillStyle = this.inkFaint;
+      ctx.fillText(label, x + 7, y - 4);
+    };
+    if (this.track.meta.join_index) mark(this.track.meta.join_index, "join");
+    if (this.track.meta.horizon_index) mark(this.track.meta.horizon_index, "data horizon");
     ctx.restore();
     this.base = ctx.getImageData(0, 0, cv.width, cv.height);
   }

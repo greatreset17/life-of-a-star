@@ -9,6 +9,7 @@ import { Void } from "./void.js";
 import { HrDiagram } from "./hr.js";
 import { Panel } from "./panel.js";
 import { TwoCurves } from "./curves.js";
+import { NebulaShell } from "./nebula.js";
 
 const RSUN_M = 6.957e8;
 
@@ -27,6 +28,14 @@ async function boot() {
   } catch (e) {
     console.error(`unavailable: earth table — ${e.message}`);
   }
+  let nebulaTab = null;
+  try {
+    const r = await fetch("./data/nebula.json");
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    nebulaTab = await r.json();
+  } catch (e) {
+    console.error(`unavailable: nebula table — ${e.message}`);
+  }
 
   // --- scene
   const holder = document.getElementById("scene");
@@ -37,6 +46,7 @@ async function boot() {
   const camera = new THREE.PerspectiveCamera(40, 1, 0.01, 1e9);
   const star = new Star(scene);
   const voidBg = new Void(scene);
+  const shell = new NebulaShell(scene);
 
   // --- instruments
   const hr = new HrDiagram(document.getElementById("hr"), track, colour);
@@ -133,6 +143,10 @@ async function boot() {
     // bolometric luminance; Reinhard-on-luminance in-shader never clips hue
     const exposure = Math.pow(Math.pow(10, logL), 0.25);
 
+    // granulation contrast is gated by the convective regime (fork 24):
+    // surface convection dies above ~8-10 kK (the observed granulation
+    // boundary) — post-AGB sprint and hot white dwarfs are radiative
+    const convective = Math.max(0, Math.min(1, (10000 - teff) / 2000));
     star.apply({
       rgbLin: crow.rgb_lin,
       ldA: track.ld_a[i],
@@ -140,10 +154,23 @@ async function boot() {
       hpOverR: hpR,
       cellAngle,
       exposure,
-      contrast: 1.0,
+      contrast: convective,
     });
     const cellPx = star.frame(camera, { x: holder.clientWidth, y: holder.clientHeight }, time);
     voidBg.frame(time);
+    // the nebula: nearest solved step at this s (transient — outside its
+    // ten-thousand-year window the interpolation reads nothing)
+    let nstep = null;
+    if (nebulaTab) {
+      const steps = nebulaTab.steps;
+      if (s >= steps[0].s && s <= steps[steps.length - 1].s) {
+        let lo = 0, hi = steps.length - 1;
+        while (hi - lo > 1) { const m = (lo + hi) >> 1; if (steps[m].s <= s) lo = m; else hi = m; }
+        nstep = steps[lo];
+      }
+    }
+    shell.apply(nstep, rR);
+    shell.frame(camera);
     renderer.render(scene, camera);
 
     // derived vs rendered counts: the panel reports both, honestly
@@ -154,9 +181,10 @@ async function boot() {
 
     const ageYr = colAt(track, "age_yr", eep);
     const aEarthAu = curves.aAt(s, dragOn);
+    const dataState = track.data_state ? track.data_state[i] : "tabulated";
     panel.update({
       s, ageYr,
-      phase: phaseName(track.phase[i], teff),
+      phase: phaseName(track.phase[i], teff, dataState),
       teff, logL, rRsun: rR, logg,
       mass: colAt(track, "star_mass", eep),
       rgbLin: crow.rgb_lin,
@@ -166,21 +194,29 @@ async function boot() {
       drawCalls: renderer.info.render.calls,
       ldSource: track.ld_source[i],
       aEarthAu,
-      mdot: earth ? earth.mdot_track[i] : 0,
-      mdotSc: earth ? earth.mdot_sc05[i] : 0,
+      mdot: earth ? (i < earth.mdot_track.length ? earth.mdot_track[i] : 0) : 0,
+      mdotSc: earth ? (i < earth.mdot_sc05.length ? earth.mdot_sc05[i] : 0) : 0,
       dragOn,
-      dataState: "tabulated",
+      dataState,
+      crystalFrac: track.crystal_frac ? track.crystal_frac[i] : 0,
+      nebula: nstep,
     });
     const [av, au] = formatAge(ageYr);
     ageBig.textContent = `${av} ${au}`;
-    ageSub.textContent = phaseName(track.phase[i], teff);
-    // the ending, announced quietly at the solved crossing — the event's s
-    // is the integrator's interpolated value, not a frame boundary
+    ageSub.textContent = phaseName(track.phase[i], teff, dataState);
+    // quiet beats, each at its solved crossing — never a frame-boundary guess
     const ev = earth ? (dragOn ? earth.engulf_drag : earth.engulf_nodrag) : null;
-    ageNote.textContent = ev && s >= ev.s
-      ? (dragOn ? "the Earth is gone — drawn in at the tip of the red giant branch"
-                : "the Earth is gone — overrun on the asymptotic giant branch")
-      : "";
+    const mk = track.markers ?? {};
+    const notes = [];
+    if (mk.present_day && Math.abs(s - mk.present_day.s) < 0.0015) notes.push("here — the only frame that exists right now");
+    if (ev && s >= ev.s) {
+      notes.push(dragOn ? "the Earth is gone — drawn in at the tip of the red giant branch"
+                        : "the Earth is gone — overrun on the asymptotic giant branch");
+    }
+    if (mk.existence && s >= mk.existence.s) {
+      notes.push("beyond here the object being rendered exists nowhere, and will not for a very long time");
+    }
+    ageNote.textContent = notes[notes.length - 1] ?? "";
     hr.draw(eep, cssColour(crow.rgb_lin));
     curves.draw(s, dragOn);
 

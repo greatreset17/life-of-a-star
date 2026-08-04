@@ -69,7 +69,9 @@ export function eepOfS(track, s) {
   return lo + 1 + (span > 0 ? (s - sn[lo]) / span : 0);
 }
 
-export function phaseName(code, teff) {
+export function phaseName(code, teff, dataState) {
+  if (dataState === "extrapolated") return "black dwarf — beyond published data";
+  if (code === 10) return teff > 3000 ? "white dwarf cooling" : "black dwarf";
   if (code < 0) return "protostellar contraction";
   if (code === 0) return "main sequence";
   if (code === 2) return teff > 5000 ? "subgiant" : "red giant branch";

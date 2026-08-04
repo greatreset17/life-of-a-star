@@ -25,6 +25,10 @@ const ROWS = [
   ["mdot", "Ṁ track (M☉/yr)"],
   ["mdot_sc05", "Ṁ S&C05 comparison"],
   ["drag_state", "tidal + ram drag"],
+  ["crystal_frac", "core crystallised"],
+  ["neb_r", "nebula shell radius"],
+  ["neb_v", "shell velocity"],
+  ["neb_x", "ionised fraction"],
   ["data_state", "data state"],
 ];
 
@@ -82,6 +86,9 @@ export class Panel {
       + "S&CS's conclusion elsewhere; on this track they set the time and place (fork 21)");
     addRows(["a_earth_au", "mdot", "mdot_sc05", "drag_state"]);
     sect();
+    addEq(EQ.shell, "interacting winds: fast wind sweeps the superwind into the shell");
+    addRows(["neb_r", "neb_v", "neb_x", "crystal_frac"]);
+    sect();
     const bd = document.createElement("div");
     bd.className = "note";
     bd.textContent = "Declared boundary: the star carries full rigour; background sky "
@@ -129,6 +136,15 @@ export class Panel {
     set("mdot", p.mdot === 0 ? "0" : p.mdot.toExponential(2));
     set("mdot_sc05", p.mdotSc.toExponential(2));
     set("drag_state", p.dragOn ? "on" : "off (mass loss only)");
+    set("crystal_frac", p.crystalFrac > 0 ? `${(p.crystalFrac * 100).toFixed(1)}%` : "—",
+        String(p.crystalFrac ?? 0));
+    if (p.nebula) {
+      set("neb_r", `${p.nebula.r_s_au.toFixed(0)} AU`, String(p.nebula.r_s_au));
+      set("neb_v", `${p.nebula.v_s_kms.toFixed(1)} km/s`, String(p.nebula.v_s_kms));
+      set("neb_x", p.nebula.x_ion.toFixed(3));
+    } else {
+      set("neb_r", "—", "none"); set("neb_v", "—", "none"); set("neb_x", "—", "none");
+    }
     set("data_state", p.dataState);
   }
 

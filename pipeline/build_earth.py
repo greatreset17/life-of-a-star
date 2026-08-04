@@ -22,8 +22,8 @@ import numpy as np
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from pipeline.arclength import ArcLength  # noqa: E402
 from pipeline.constants import AU_M, R_SUN_M, TABLE_FLOAT_DECIMALS  # noqa: E402
+from pipeline.cooling import CoolingSpine  # noqa: E402
 from pipeline.earth import EarthOrbit, sc05_rate  # noqa: E402
 from pipeline.track import Track  # noqa: E402
 
@@ -36,13 +36,13 @@ def rr(a):
 
 def build():
     tr = Track.load()
-    al = ArcLength.from_track(tr)
+    # slider positions live on the FULL spine's arc length (v0.3+)
+    cs = CoolingSpine.build(tr)
     eo = EarthOrbit(tr)
     ages = tr.col("star_age")
 
     def s_of_age(t_yr):
-        eep = 1.0 + np.interp(t_yr, ages, np.arange(tr.n))
-        return al.s_of_eep(np.atleast_1d(eep))
+        return np.interp(np.atleast_1d(t_yr), cs.age_yr, cs.s)
 
     res_d = eo.integrate(drag=True)
     res_n = eo.integrate(drag=False)

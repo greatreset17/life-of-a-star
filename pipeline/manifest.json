@@ -1,6 +1,6 @@
 {
   "_comment": [
-    "Acquisition manifest — every external source: retrieval URL, exact subset,",
+    "Acquisition manifest \u2014 every external source: retrieval URL, exact subset,",
     "expected size, sha256, licence. acquire.py fetches against this file and",
     "exits non-zero on any mismatch. Pipeline modules obtain sources ONLY through",
     "pipeline/sources.require(name); an entry missing here stops the pipeline by",
@@ -45,7 +45,7 @@
     "limb_claret2011": {
       "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/A%2BA/529/A75/tableeq5&Z=0.0&xi=2.0&Filt=%3D%3DV&Met=L&Mod=A&-out.max=99999&-out=logg,Teff,a1,a2,a3,a4",
       "dest": "data/raw/limb/claret2011_eq5_v.tsv",
-      "subset": "eq5 4-parameter JOHNSON V (case-sensitive ==V; a plain Filt=V constraint ALSO matches Stromgren v — measured pitfall), Z=0, xi=2 km/s, least-squares, ATLAS models (Teff 3500-50000, logg 0-5)",
+      "subset": "eq5 4-parameter JOHNSON V (case-sensitive ==V; a plain Filt=V constraint ALSO matches Stromgren v \u2014 measured pitfall), Z=0, xi=2 km/s, least-squares, ATLAS models (Teff 3500-50000, logg 0-5)",
       "bytes": 23453,
       "sha256": "82099c94795df719be36a8386df6d7e390bafe62f17be4a89ff11aeb1c284686",
       "licence": "CDS VizieR (Claret & Bloemen 2011, A&A 529, A75)",
@@ -59,6 +59,46 @@
       "subset": "567 nodes (fork 16 union), band cut to SPECTRA_BAND_ANGSTROM; per-file sha256 inside nodes_manifest.json, verified by acquire.py verify",
       "per_file_manifest": true,
       "licence": "SVO theory service (Allard+ 2012 BT-Settl; Castelli & Kurucz 2003; TMAP/TheoSSA grid 2)",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "montreal_seq_050": {
+      "url": "https://www.astro.umontreal.ca/~bergeron/CoolingModels/CoolingModels/seq_050_thick.txt",
+      "dest": "data/raw/montreal/seq_050_thick.txt",
+      "subset": "0.50 Msun C/O thick-H evolutionary sequence (complete file)",
+      "bytes": 56971,
+      "sha256": "21eb5de88935e9647815650e4e7c87c2b59dc903c0f904e5eeb501114c571df9",
+      "licence": "Montreal cooling models (Bedard et al. 2020, ApJ 901, 93); public tables",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "montreal_seq_055": {
+      "url": "https://www.astro.umontreal.ca/~bergeron/CoolingModels/CoolingModels/seq_055_thick.txt",
+      "dest": "data/raw/montreal/seq_055_thick.txt",
+      "subset": "0.55 Msun C/O thick-H evolutionary sequence (complete file)",
+      "bytes": 59281,
+      "sha256": "53f0a23174bc0e793404b04e0c58f391fb76acabb8c725993d2b1194cb6f8905",
+      "licence": "Montreal cooling models (Bedard et al. 2020, ApJ 901, 93); public tables",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "montreal_table_05": {
+      "url": "https://www.astro.umontreal.ca/~bergeron/CoolingModels/Tables/Table_Mass_0.5",
+      "dest": "data/raw/montreal/Table_Mass_0.5",
+      "subset": "0.5 Msun pure-H synthetic photometry grid (complete file)",
+      "bytes": 39378,
+      "sha256": "5441101b92eb10d0220eb76f093968935ec50cdd48e75f125a2d8d3a0e81023d",
+      "licence": "Montreal cooling models (Bedard et al. 2020, ApJ 901, 93); public tables",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "montreal_table_06": {
+      "url": "https://www.astro.umontreal.ca/~bergeron/CoolingModels/Tables/Table_Mass_0.6",
+      "dest": "data/raw/montreal/Table_Mass_0.6",
+      "subset": "0.6 Msun pure-H synthetic photometry grid (complete file)",
+      "bytes": 41202,
+      "sha256": "1cd59b7464c5a5a54e9cde273892f412e9ebe18c3f9d1a1ededbffb3b8be4fc7",
+      "licence": "Montreal cooling models (Bedard et al. 2020, ApJ 901, 93); public tables",
       "retrieved": "2026-08-04",
       "committed": true
     }
