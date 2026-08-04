@@ -46,6 +46,11 @@ def lum(png):
     return 0.2126 * a[..., 0] + 0.7152 * a[..., 1] + 0.0722 * a[..., 2]
 
 
+def srgb_to_lin(v):
+    v = v / 255.0
+    return np.where(v <= 0.04045, v / 12.92, ((v + 0.055) / 1.055) ** 2.4)
+
+
 def probe(wp):
     return json.loads((cap / f"{wp}.probe.json").read_text())["probe"]
 
@@ -219,30 +224,52 @@ for wp in ("planetary_nebula_peak",):
               f"{len(triples)} distinct triples]")
     else:
         # ceiling calibrated into the gulf: the flat-paint defect measures
-        # >0.9 (one triple, hard rim); a healthy dithered hot disc measures
-        # 0.35-0.45 (its genuine tone gradient spans only ~4 encoded levels
-        # — weak hot-star V-band limb darkening under a 69%-saturated tone
-        # curve is physics, not posterization)
-        check(f"t45-{wp}-not-posterized", mode_frac <= 0.55,
+        # >0.9 (one triple, hard rim, no chroma structure); a healthy
+        # fork-30 disc has a near-uniform whitened plateau (0.4-0.6 mode)
+        # with its visible structure in the chroma gradient toward the rim
+        check(f"t45-{wp}-not-posterized", mode_frac <= 0.75,
               f"mode colour covers {mode_frac:.1%} of the interior "
               f"(the flat-paint defect measured >0.9)")
+    # fork-30 signature: the rim must be more saturated (bluer here) than
+    # the whitened centre — flat paint has no such gradient
+    aa = np.asarray(Image.open(png).convert("RGB"), float)
+    Lc = srgb_to_lin(aa[400 - 60:400 + 60, 640 - 60:640 + 60]).mean(axis=(0, 1))
+    yy2, xx2 = np.mgrid[0:800, 0:1280]
+    rr2 = np.sqrt((yy2 - 400) ** 2 + (xx2 - 640) ** 2) / disk_r_px
+    # the chroma returns exactly where luminance demand crosses under the
+    # hue ceiling — the outermost limb and inner halo — so straddle the edge
+    rim = srgb_to_lin(aa[(rr2 > 0.97) & (rr2 < 1.05)]).mean(axis=0)
+    bg_c = Lc[2] / max(Lc[1], 1e-9)
+    bg_r = rim[2] / max(rim[1], 1e-9)
+    if MEASURE:
+        print(f"      [{wp}: B/G centre {bg_c:.3f}, rim {bg_r:.3f}]")
+    else:
+        check(f"t45-{wp}-rim-chroma-gradient", bg_r >= bg_c * 1.03,
+              f"B/G centre {bg_c:.3f} vs rim {bg_r:.3f} — fork-30 structure absent")
 
 # ---- t43: pixel chromaticity (critic round-2 attack 1 counter-test) —
 # the DISK PIXELS must carry the table's chromaticity, not just the probe:
 # tone map and paint are hue-preserving by design, so the centre-crop mean
 # channel ratios must track the probe's declared linear-sRGB ratios
-def srgb_to_lin(v):
-    v = v / 255.0
-    return np.where(v <= 0.04045, v / 12.92, ((v + 0.055) / 1.055) ** 2.4)
-
-
 for wp in ("present_day", "rgb_tip", "agb_thermal_pulses",
            "planetary_nebula_peak", "wd_crystallisation"):
     png = cap / f"{wp}.png"
     if not png.exists():
         continue
     p = probe(wp)
-    want = [float(v) for v in p["chromaticity_srgb"].split(",")]
+    tab = np.array([float(v) for v in p["chromaticity_srgb"].split(",")])
+    # the DECLARED tone transform (fork 30), recomputed from the probe's own
+    # numbers: demanded luminance from L; above the hue's luminance ceiling
+    # the colour whitens by the analytic weight. A shader hue-skew still
+    # fails this — the expectation is the transform of the TABLE value.
+    e = (10 ** float(p["log_l"])) ** 0.25
+    y_d = e / (1 + e)
+    y_ceil = float(0.2126 * tab[0] + 0.7152 * tab[1] + 0.0722 * tab[2])
+    if y_d <= y_ceil:
+        want = tab * (y_d / y_ceil)
+    else:
+        w = (y_d - y_ceil) / (1 - y_ceil)
+        want = tab * (1 - w) + w
     a = np.asarray(Image.open(png).convert("RGB"), float)[400 - 70:400 + 70, 640 - 70:640 + 70]
     lin = srgb_to_lin(a).mean(axis=(0, 1))
     ok = True

@@ -43,15 +43,6 @@ const frag = /* glsl */ `
   uniform float uHpR;         // H_p / R
   uniform float uCellAng;     // granule angular size D/R (radians on surface)
   uniform float uExposure;
-  uniform float uToneScale;   // per-FRAME gamut-ceiling normalisation: a
-                              // display cannot show saturated blue as bright
-                              // as white, and capping per-pixel flattens the
-                              // whole disc into one colour (measured: the
-                              // 77 kK core rendered as flat paint). One
-                              // uniform scale rides the tone curve just
-                              // under the hue's ceiling instead, so the
-                              // limb profile survives and chromaticity is
-                              // untouched.
   uniform float uContrast;    // granulation brightness contrast
   uniform float uCellPx;      // apparent granule size in screen pixels
   uniform vec3 uCamPos;
@@ -163,20 +154,26 @@ const frag = /* glsl */ `
              * exp(-h / max(soft, 1.0e-9));
       colour = uRgb;
     }
-    vec3 lin = colour * bright * uExposure;
-    // tone: Reinhard on luminance only — chromaticity is never clipped
-    float y = dot(lin, vec3(0.2126, 0.7152, 0.0722));
-    float yT = y / (1.0 + y);
-    lin *= (y > 0.0) ? yT / y : 1.0;
-    // frame-level gamut-ceiling normalisation (see uToneScale note)
-    lin *= uToneScale;
+    // tone (fork 30): Reinhard on luminance gives the DEMANDED display
+    // luminance yD; the chromaticity direction can only carry luminance up
+    // to its own ceiling yCeil = Y(uRgb). Below the ceiling, the pure
+    // table chromaticity is shown at exactly yD. Above it, the colour
+    // moves toward white by precisely the amount that makes the displayed
+    // luminance equal yD — an over-bright saturated source whitens (the
+    // percept of "fierce"), it does not turn pastel. Nothing here ever
+    // clips a channel and the mix weight is analytic, not tuned.
+    float y = bright * uExposure;
+    float yD = y / (1.0 + y);
+    float yCeil = dot(uRgb, vec3(0.2126, 0.7152, 0.0722));
+    vec3 lin;
+    if (yD <= yCeil) {
+      lin = colour * (yD / max(yCeil, 1e-6));
+    } else {
+      float w = (yD - yCeil) / max(1.0 - yCeil, 1e-6);
+      lin = mix(colour, vec3(1.0), w);
+    }
     // intergranular lanes ride post-tone so they survive high exposure
     lin *= lanePost;
-    // safety only — with uToneScale set, this should never engage; if it
-    // does, scaling the whole vector preserves the derived chromaticity
-    // (per-channel clipping is failure state 36)
-    float mx = max(lin.r, max(lin.g, lin.b));
-    if (mx > 1.0) lin /= mx;
     // sRGB encode, then ~1 LSB dither IN ENCODED SPACE (integer hash): a
     // linear-space dither dies under the gamma curve's shallow top slope —
     // the bright posterized interior kept only 8 distinct colours until
@@ -200,7 +197,6 @@ export class Star {
       uHpR: { value: 1e-4 },
       uCellAng: { value: 1e-3 },
       uExposure: { value: 1 },
-      uToneScale: { value: 1 },
       uContrast: { value: 1 },
       uCellPx: { value: 10 },
       uCamPos: { value: new THREE.Vector3(0, 0, 4) },
@@ -242,13 +238,6 @@ export class Star {
     u.uCellAng.value = state.cellAngle;
     u.uExposure.value = state.exposure;
     u.uContrast.value = state.contrast;
-    // ceiling luminance of this chromaticity direction (max channel = 1),
-    // and the Reinhard value the disc centre wants; ride 3% under the
-    // ceiling so the whole limb profile stays inside the gamut
-    const [r, g, b] = state.rgbLin;
-    const yCeil = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-    const yCentre = state.exposure / (1 + state.exposure);
-    u.uToneScale.value = Math.min(1, 0.97 * yCeil / Math.max(yCentre, 1e-6));
   }
 
   frame(camera, sizePx, time) {

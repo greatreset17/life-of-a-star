@@ -344,6 +344,23 @@ FORK 29 — The final colour, corrected by the data (recorded v0.4).
   observed ultracool-white-dwarf phenomenon (IR-faint sequence; Bergeron &
   Blouin CIA physics). CHOSEN: render the data. [decided v0.4]
 
+FORK 30 — Luminance-gamut conflict resolves toward white (decided final
+  round, user-measured twice). A display cannot carry a saturated hue above
+  that hue's luminance ceiling (Y=0.46 for the 120 kK blue-white): riding
+  the ceiling posterises the disc into pastel flat paint (95% of the disc
+  inside 3 encoded levels — measured), and per-pixel capping collapses it
+  to one colour. CHOSEN: when the tone-mapped luminance demand yD exceeds
+  the table chromaticity's ceiling yCeil, the displayed colour mixes toward
+  white with the ANALYTIC weight w = (yD - yCeil)/(1 - yCeil), which makes
+  the displayed luminance exactly yD; below the ceiling the pure table
+  chromaticity shows at exactly yD. REASON: an over-bright saturated source
+  whitens to the eye (Rigel reads blue-white, never periwinkle); the
+  weight is solved, not tuned; no channel is ever clipped; and suite t43
+  recomputes this exact transform from the probe's own numbers, so a
+  shader hue-skew still fails. The table remains the sole colour source —
+  this fork governs only how much of it the display can carry.
+  [decided v0.4]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass
