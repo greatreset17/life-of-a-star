@@ -179,6 +179,27 @@ for wp in ("present_day", "rgb_tip"):
         check(f"t45-{wp}-limb-profile-exists", prof >= 1.08,
               f"centre/edge = {prof:.3f} — a flat disc reads ~1.00")
 
+# no dark painted ring: the disc's outer annulus must never fall darker
+# than the glow OUTSIDE the limb (the spherical-fit mu-mismatch painted a
+# black band between disc and halo — user-reported before any test saw it)
+for wp in ("rgb_tip", "agb_thermal_pulses", "subgiant"):
+    png = cap / f"{wp}.png"
+    if not png.exists():
+        continue
+    L = lum(png)
+    yy, xx = np.mgrid[0:800, 0:1280]
+    rr = np.sqrt((yy - 400) ** 2 + (xx - 640) ** 2) / disk_r_px
+    annulus = L[(rr > 0.85) & (rr < 0.97)]
+    halo = L[(rr > 1.06) & (rr < 1.18)]
+    a_min = float(np.percentile(annulus, 5))
+    h_mean = float(halo.mean())
+    if MEASURE:
+        print(f"      [{wp}: rim-annulus p5 {a_min:.1f}, outer-halo mean {h_mean:.1f}]")
+    else:
+        check(f"t45-{wp}-no-painted-ring", a_min >= 0.8 * h_mean,
+              f"annulus p5 {a_min:.1f} vs halo {h_mean:.1f} — a black band "
+              f"inside a glowing rim is the defect signature")
+
 # hot compact phases: V-band limb darkening is physically weak and the tone
 # curve compresses the rest, so centre/edge cannot separate flat paint
 # (1.029) from healthy (1.035). The defect's signature is POSTERIZATION:

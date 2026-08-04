@@ -152,6 +152,17 @@ FORK 18 — Limb-darkening sources (decided v0.1). One law (Claret 4-param),
   raw I(mu) profiles. Met=L (least-squares) because the flux-conserving
   variant is not published for this band/composition; test 11 carries the
   fit's integral error in its tolerance. [decided v0.1]
+  AMENDED (final round, user-reported black-ring defect): the spherical
+  fits cross zero at mu0 > 0 — their mu is referenced to a radius that
+  includes extended atmosphere, while the track's R is the photospheric
+  radius, so evaluating the raw fit on the photospheric sphere painted a
+  black annulus inside the rim with the newborn nebula glowing beyond it.
+  CHOSEN: align the two published coordinates by remapping rendered mu
+  onto the law's own luminous range [mu0, 1] (mu0 root-found per
+  coefficient set at runtime; planar fits have mu0 = 0 and are untouched).
+  Intensity now reaches zero exactly at the photospheric edge, then the
+  H_p halo continues — a coordinate alignment between two published
+  quantities, not a reshaping of either. [decided v0.4]
 
 FORK 19 — Colour premises corrected by measurement (recorded v0.1). Three
   claims the project brief carried were tested against the mandated data and

@@ -32,6 +32,13 @@ const frag = /* glsl */ `
   varying vec2 vNdc;
   uniform vec3 uRgb;          // table chromaticity (linear sRGB direction)
   uniform vec4 uLdA;          // Claret a1..a4
+  uniform float uMuFloor;     // the law's own zero-crossing mu0: spherical
+                              // fits reach zero BEFORE mu=0 (their radius
+                              // reference includes extended atmosphere);
+                              // remapping mu onto [mu0, 1] aligns the fit's
+                              // luminous edge with the track's photospheric
+                              // radius — without it the disc rim rendered
+                              // as a black painted ring (user-reported)
   uniform float uR;           // photospheric radius, scene units
   uniform float uHpR;         // H_p / R
   uniform float uCellAng;     // granule angular size D/R (radians on surface)
@@ -116,6 +123,7 @@ const frag = /* glsl */ `
       vec3 pos = uCamPos + t * dir;
       vec3 nrm = pos / uR;
       float mu = max(dot(nrm, -dir), 0.0);
+      mu = uMuFloor + mu * (1.0 - uMuFloor);
       // granulation lattice: |q| moves 1 per radian of surface arc scaled by
       // 1/cellAngle, so limb-to-limb (pi radians) shows pi/cellAngle cells —
       // i.e. cell size D on a star of radius R, exactly as derived
@@ -151,7 +159,8 @@ const frag = /* glsl */ `
       // ~LIMB_SOFT_SCALE * H_p; its strength follows the near-limb intensity
       float dmin = sqrt(max(c0 - b * b, 0.0)); // closest approach to centre
       float h = dmin - uR;
-      bright = 0.6 * limbLaw(0.06) * exp(-h / max(soft, 1.0e-9));
+      bright = 0.6 * limbLaw(uMuFloor + 0.06 * (1.0 - uMuFloor))
+             * exp(-h / max(soft, 1.0e-9));
       colour = uRgb;
     }
     vec3 lin = colour * bright * uExposure;
@@ -186,6 +195,7 @@ export class Star {
     this.uniforms = {
       uRgb: { value: new THREE.Vector3(1, 1, 1) },
       uLdA: { value: new THREE.Vector4(0, 0, 0, 0) },
+      uMuFloor: { value: 0 },
       uR: { value: 1 },
       uHpR: { value: 1e-4 },
       uCellAng: { value: 1e-3 },
@@ -212,6 +222,21 @@ export class Star {
     const u = this.uniforms;
     u.uRgb.value.fromArray(state.rgbLin);
     u.uLdA.value.fromArray(state.ldA);
+    // the law's zero-crossing mu0 (0 for planar fits, which stay positive):
+    // bisection on I(mu) = 1 - sum a_k (1 - mu^(k/2))
+    const [a1, a2, a3, a4] = state.ldA;
+    const law = (m) => 1 - a1 * (1 - Math.sqrt(m)) - a2 * (1 - m)
+      - a3 * (1 - m * Math.sqrt(m)) - a4 * (1 - m * m);
+    let mu0 = 0;
+    if (law(0) < 0) {
+      let lo = 0, hi = 1;
+      for (let k = 0; k < 40; k++) {
+        const mid = 0.5 * (lo + hi);
+        if (law(mid) < 0) lo = mid; else hi = mid;
+      }
+      mu0 = hi;
+    }
+    u.uMuFloor.value = mu0;
     u.uR.value = state.rRsun;
     u.uHpR.value = state.hpOverR;
     u.uCellAng.value = state.cellAngle;
