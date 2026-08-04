@@ -40,16 +40,16 @@ async function boot() {
     console.error(`unavailable: nebula table — ${e.message}`);
   }
   // the sky: catalogue tables + orbit positions; absence is visible refusal
-  let skyMeta = null, skyPos = null, sunOrbit = null, bandTab = null;
+  let skyMeta = null, skyPos = null, sunOrbit = null, bandTex = null;
   try {
     const [rm, rp, rs, rb] = await Promise.all([
       fetch("./data/sky.json"), fetch("./data/sky_positions.bin"),
-      fetch("./data/sun_orbit.bin"), fetch("./data/band.json")]);
+      fetch("./data/sun_orbit.bin"), fetch("./data/band_tex.bin")]);
     if (!rm.ok || !rp.ok || !rs.ok || !rb.ok) throw new Error("HTTP failure");
     skyMeta = await rm.json();
     skyPos = new Float32Array(await rp.arrayBuffer());
     sunOrbit = new Float32Array(await rs.arrayBuffer());
-    bandTab = await rb.json();
+    bandTex = new Float32Array(await rb.arrayBuffer());
   } catch (e) {
     console.error(`unavailable: sky tables — ${e.message}`);
   }
@@ -71,7 +71,7 @@ async function boot() {
     if (Math.abs(ages[k] - 4.57e9) < Math.abs(ages[iPresent] - 4.57e9)) iPresent = k;
   }
   const skyField = skyMeta ? new SkyField(scene, skyMeta, skyPos, sunOrbit, iPresent) : null;
-  const milkyWay = bandTab ? new MilkyWay(scene, bandTab) : null;
+  const milkyWay = bandTex ? new MilkyWay(scene, bandTex) : null;
   let eyeJump = true; // initial load is a cut: arrive adapted (fork 28)
 
   // --- instruments

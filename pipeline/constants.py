@@ -318,6 +318,16 @@ FORK 28 — The eye's transient (decided v0.4). CHOSEN: adaptation STATE
   mapping are presentation, superseded progressively by this eye model.
   [decided v0.4]
 
+FORK 29 — The final colour, corrected by the data (recorded v0.4).
+  MEASURED from the Montreal pure-H tables: below ~2500 K collision-induced
+  H2 absorption devours the red — at 1500 K the g band is 2.5 mag brighter
+  than r — so the ember's chromaticity runs warm-white (4000 K) through
+  neutral (3000 K) into an increasingly BLUE-grey (2500-1500 K), and region
+  B holds the 1500 K edge value. The brief's "dull red coal" is falsified
+  for a pure-H atmosphere: the Sun's ember goes out blue, which is the
+  observed ultracool-white-dwarf phenomenon (IR-faint sequence; Bergeron &
+  Blouin CIA physics). CHOSEN: render the data. [decided v0.4]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass
