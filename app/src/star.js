@@ -36,6 +36,15 @@ const frag = /* glsl */ `
   uniform float uHpR;         // H_p / R
   uniform float uCellAng;     // granule angular size D/R (radians on surface)
   uniform float uExposure;
+  uniform float uToneScale;   // per-FRAME gamut-ceiling normalisation: a
+                              // display cannot show saturated blue as bright
+                              // as white, and capping per-pixel flattens the
+                              // whole disc into one colour (measured: the
+                              // 77 kK core rendered as flat paint). One
+                              // uniform scale rides the tone curve just
+                              // under the hue's ceiling instead, so the
+                              // limb profile survives and chromaticity is
+                              // untouched.
   uniform float uContrast;    // granulation brightness contrast
   uniform float uCellPx;      // apparent granule size in screen pixels
   uniform vec3 uCamPos;
@@ -150,21 +159,24 @@ const frag = /* glsl */ `
     float y = dot(lin, vec3(0.2126, 0.7152, 0.0722));
     float yT = y / (1.0 + y);
     lin *= (y > 0.0) ? yT / y : 1.0;
+    // frame-level gamut-ceiling normalisation (see uToneScale note)
+    lin *= uToneScale;
     // intergranular lanes ride post-tone so they survive high exposure
     lin *= lanePost;
-    // hue-preserving highlight cap: Reinhard bounds LUMINANCE but a saturated
-    // chromaticity can still push one channel past 1, and the encode would
-    // clip it per-channel — failure state 36 arriving through the display.
-    // Scaling the whole vector preserves the derived chromaticity exactly.
+    // safety only — with uToneScale set, this should never engage; if it
+    // does, scaling the whole vector preserves the derived chromaticity
+    // (per-channel clipping is failure state 36)
     float mx = max(lin.r, max(lin.g, lin.b));
     if (mx > 1.0) lin /= mx;
-    // ~1 LSB dither (integer hash) so the deep fades never band
-    float dth = (float(pcg3d(uvec3(uvec2(gl_FragCoord.xy), 7u)).x)
-                 * (1.0 / 4294967295.0) - 0.5) / 255.0;
-    lin = max(lin + vec3(dth), 0.0);
-    // sRGB encode
+    // sRGB encode, then ~1 LSB dither IN ENCODED SPACE (integer hash): a
+    // linear-space dither dies under the gamma curve's shallow top slope —
+    // the bright posterized interior kept only 8 distinct colours until
+    // this moved post-encode
     vec3 enc = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055,
                    step(0.0031308, lin));
+    uvec3 h2 = pcg3d(uvec3(uvec2(gl_FragCoord.xy), 7u));
+    float dth = ((float(h2.x) + float(h2.y)) * (1.0 / 4294967295.0) - 1.0) / 255.0;
+    enc = clamp(enc + vec3(dth), 0.0, 1.0);  // triangular +-1 LSB
     gl_FragColor = vec4(enc, 1.0);
   }
 `;
@@ -178,6 +190,7 @@ export class Star {
       uHpR: { value: 1e-4 },
       uCellAng: { value: 1e-3 },
       uExposure: { value: 1 },
+      uToneScale: { value: 1 },
       uContrast: { value: 1 },
       uCellPx: { value: 10 },
       uCamPos: { value: new THREE.Vector3(0, 0, 4) },
@@ -204,6 +217,13 @@ export class Star {
     u.uCellAng.value = state.cellAngle;
     u.uExposure.value = state.exposure;
     u.uContrast.value = state.contrast;
+    // ceiling luminance of this chromaticity direction (max channel = 1),
+    // and the Reinhard value the disc centre wants; ride 3% under the
+    // ceiling so the whole limb profile stays inside the gamut
+    const [r, g, b] = state.rgbLin;
+    const yCeil = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const yCentre = state.exposure / (1 + state.exposure);
+    u.uToneScale.value = Math.min(1, 0.97 * yCeil / Math.max(yCentre, 1e-6));
   }
 
   frame(camera, sizePx, time) {

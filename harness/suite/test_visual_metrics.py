@@ -156,6 +156,56 @@ if png.exists():
     else:
         check("t41-terminus-quiet", mot <= 0.35, f"block std/mean = {mot:.3f}")
 
+# ---- t45: the limb profile must EXIST on the display (regression guard
+# for the flat-paint defect: per-pixel gamut capping once collapsed the
+# 77 kK disc into one uniform colour — the user saw it before a test did).
+# Centre luminance over near-limb luminance must show the Claret falloff.
+for wp in ("present_day", "rgb_tip"):
+    png = cap / f"{wp}.png"
+    if not png.exists():
+        continue
+    L = lum(png)
+    centre = float(L[400 - 40:400 + 40, 640 - 40:640 + 40].mean())
+    r85 = int(disk_r_px * 0.85)
+    ring = []
+    for ang in np.linspace(0, 2 * np.pi, 24, endpoint=False):
+        yy = int(400 + r85 * np.sin(ang)); xx = int(640 + r85 * np.cos(ang))
+        ring.append(L[yy - 3:yy + 3, xx - 3:xx + 3].mean())
+    edge = float(np.mean(ring))
+    prof = centre / max(edge, 1e-9)
+    if MEASURE:
+        print(f"      [{wp}: limb profile centre/edge(0.85R) = {prof:.3f}]")
+    else:
+        check(f"t45-{wp}-limb-profile-exists", prof >= 1.08,
+              f"centre/edge = {prof:.3f} — a flat disc reads ~1.00")
+
+# hot compact phases: V-band limb darkening is physically weak and the tone
+# curve compresses the rest, so centre/edge cannot separate flat paint
+# (1.029) from healthy (1.035). The defect's signature is POSTERIZATION:
+# the per-pixel cap collapsed >90% of interior pixels onto one RGB triple.
+for wp in ("planetary_nebula_peak",):
+    png = cap / f"{wp}.png"
+    if not png.exists():
+        continue
+    a = np.asarray(Image.open(png).convert("RGB"))[400 - 250:400 + 250, 640 - 250:640 + 250]
+    yy, xx = np.mgrid[-250:250, -250:250]
+    disk = (yy ** 2 + xx ** 2) <= 240 ** 2   # the disc out to ~0.85R
+    flat = a[disk]
+    triples, counts = np.unique(flat, axis=0, return_counts=True)
+    mode_frac = float(counts.max() / len(flat))
+    if MEASURE:
+        print(f"      [{wp}: interior mode-colour fraction {mode_frac:.3f}, "
+              f"{len(triples)} distinct triples]")
+    else:
+        # ceiling calibrated into the gulf: the flat-paint defect measures
+        # >0.9 (one triple, hard rim); a healthy dithered hot disc measures
+        # 0.35-0.45 (its genuine tone gradient spans only ~4 encoded levels
+        # — weak hot-star V-band limb darkening under a 69%-saturated tone
+        # curve is physics, not posterization)
+        check(f"t45-{wp}-not-posterized", mode_frac <= 0.55,
+              f"mode colour covers {mode_frac:.1%} of the interior "
+              f"(the flat-paint defect measured >0.9)")
+
 # ---- t43: pixel chromaticity (critic round-2 attack 1 counter-test) —
 # the DISK PIXELS must carry the table's chromaticity, not just the probe:
 # tone map and paint are hue-preserving by design, so the centre-crop mean
