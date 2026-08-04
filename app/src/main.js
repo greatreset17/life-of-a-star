@@ -40,15 +40,17 @@ async function boot() {
     console.error(`unavailable: nebula table — ${e.message}`);
   }
   // the sky: catalogue tables + orbit positions; absence is visible refusal
-  let skyMeta = null, skyPos = null, sunOrbit = null, bandTex = null;
+  let skyMeta = null, skyPos = null, sunOrbit = null, sunEpochs = null, bandTex = null;
   try {
-    const [rm, rp, rs, rb] = await Promise.all([
+    const [rm, rp, rs, re, rb] = await Promise.all([
       fetch("./data/sky.json"), fetch("./data/sky_positions.bin"),
-      fetch("./data/sun_orbit.bin"), fetch("./data/band_tex.bin")]);
-    if (!rm.ok || !rp.ok || !rs.ok || !rb.ok) throw new Error("HTTP failure");
+      fetch("./data/sun_orbit.bin"), fetch("./data/sun_epochs.bin"),
+      fetch("./data/band_tex.bin")]);
+    if (!rm.ok || !rp.ok || !rs.ok || !re.ok || !rb.ok) throw new Error("HTTP failure");
     skyMeta = await rm.json();
     skyPos = new Float32Array(await rp.arrayBuffer());
     sunOrbit = new Float32Array(await rs.arrayBuffer());
+    sunEpochs = new Float32Array(await re.arrayBuffer());
     bandTex = new Float32Array(await rb.arrayBuffer());
   } catch (e) {
     console.error(`unavailable: sky tables — ${e.message}`);
@@ -65,19 +67,9 @@ async function boot() {
   const voidBg = new Void(scene);
   const shell = new NebulaShell(scene);
   const eye = new Eye();
-  // the Sun's position at EXACTLY the present epoch (interpolated between
-  // spine nodes — the nearest row is 11.7 Myr off, ~2.6 kpc of orbit, and
-  // pairing present stars with that Sun inflates every distance)
   const ages = track.age_yr;
-  let sunPresent = null;
-  if (sunOrbit && skyMeta) {
-    const tP = skyMeta.present_age_yr;
-    let k = 0;
-    while (k < ages.length - 2 && ages[k + 1] < tP) k++;
-    const f = Math.max(0, Math.min(1, (tP - ages[k]) / Math.max(ages[k + 1] - ages[k], 1e-9)));
-    sunPresent = [0, 1, 2].map((c) => sunOrbit[k * 3 + c] * (1 - f) + sunOrbit[(k + 1) * 3 + c] * f);
-  }
-  const skyField = skyMeta ? new SkyField(scene, skyMeta, skyPos, sunOrbit, sunPresent) : null;
+  const skyField = (skyMeta && sunEpochs)
+    ? new SkyField(scene, skyMeta, skyPos, sunEpochs) : null;
   const milkyWay = bandTex ? new MilkyWay(scene, bandTex) : null;
   let eyeJump = true; // initial load is a cut: arrive adapted (fork 28)
 
@@ -225,7 +217,7 @@ async function boot() {
     const adaptation = eye.step(fieldLum, dtS);
     const magLimit = eye.magLimit();
     const rod = eye.rodFraction();
-    if (skyField) skyField.update(ageYr, i, magLimit, rod, camera.position);
+    if (skyField) skyField.update(ageYr, magLimit, rod, camera.position);
     // the chrome yields to the dark: at deep adaptation the instrument ink
     // dims so the interface cannot outshine the sky it reports on
     const uiDim = 0.45 + 0.55 * Math.min(adaptation / 0.2, 1);

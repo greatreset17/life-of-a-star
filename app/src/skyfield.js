@@ -42,7 +42,11 @@ const frag = /* glsl */ `
   void main() {
     // whole-point visibility: a star is present or absent, never partial
     if (vMag > uMagLimit) discard;
-    float lum = pow(10.0, -0.4 * (vMag - uMagLimit)) ;
+    // brightness scales with magnitude ABOVE threshold: full at 5 mag
+    // (x100) over the limit, fading to 1% AT the limit. The previous form
+    // clamped every visible star to identical full brightness — magnitude
+    // was a binary gate, caught by the pixel-photometry test (t26).
+    float lum = pow(10.0, -0.4 * (vMag - (uMagLimit - 5.0)));
     lum = min(lum, 1.0);
     vec3 cone = vRgb * lum;
     vec3 rod = vec3(lum * vScot * 0.8);
@@ -58,21 +62,20 @@ const frag = /* glsl */ `
 `;
 
 export class SkyField {
-  constructor(scene, skyMeta, positionsF32, sunOrbitF32, sunPresent) {
+  constructor(scene, skyMeta, positionsF32, sunEpochsF32) {
     this.meta = skyMeta;
-    this.pos = positionsF32;   // [n_epoch][n_star][3] galactocentric pc
-    this.sun = sunOrbitF32;    // [n_spine][3]
+    this.pos = positionsF32;      // [n_epoch][n_star][3] galactocentric pc
+    this.sunE = sunEpochsF32;     // [n_epoch][3] — the Sun ON THE SAME GRID
     const n = skyMeta.n_star;
-    // present-epoch distances: star(epoch nearest 0) against the Sun AT THE
-    // PRESENT EPOCH exactly (interpolated; a nearest-node Sun is megayears
-    // — kiloparsecs — off, and pairing present stars with a displaced Sun
-    // turns shared orbital motion into phantom magnitude changes; measured
-    // twice before it stayed fixed)
+    // heliocentric quantities always pair star(epoch) with Sun(SAME epoch,
+    // same interpolation weights). Any other pairing turns shared orbital
+    // motion into phantom structure — measured three times in three forms
+    // (magnitudes, then marker epoch, then every direction at once).
     {
       const eps = skyMeta.epochs_myr;
       const k0 = eps.reduce((b, v, idx) => Math.abs(v) < Math.abs(eps[b]) ? idx : b, 0);
       const Z = positionsF32.subarray(k0 * n * 3, (k0 + 1) * n * 3);
-      const [sx, sy, sz] = sunPresent;
+      const sx = sunEpochsF32[k0 * 3], sy = sunEpochsF32[k0 * 3 + 1], sz = sunEpochsF32[k0 * 3 + 2];
       this.d0 = new Float32Array(n);
       for (let i = 0; i < n; i++) {
         const j = i * 3;
@@ -104,10 +107,9 @@ export class SkyField {
     this.visibleCount = 0;
   }
 
-  // ageYr: current stellar age; spineIndex: current spine node for the
-  // Sun's position; magLimit/rod from the eye; camPos: camera position in
-  // scene units (the parallax baseline)
-  update(ageYr, spineIndex, magLimit, rod, camPos) {
+  // ageYr: current stellar age; magLimit/rod from the eye; camPos: the
+  // camera position in scene units (the parallax baseline)
+  update(ageYr, magLimit, rod, camPos) {
     const m = this.meta;
     const tMyr = (ageYr - m.present_age_yr) / 1e6;
     const eps = m.epochs_myr;
@@ -117,7 +119,10 @@ export class SkyField {
     const n = m.n_star;
     const A = this.pos.subarray(lo * n * 3, (lo + 1) * n * 3);
     const B = this.pos.subarray(hi * n * 3, (hi + 1) * n * 3);
-    const sx = this.sun[spineIndex * 3], sy = this.sun[spineIndex * 3 + 1], sz = this.sun[spineIndex * 3 + 2];
+    // the Sun with the SAME (lo, f) as the stars — the pairing invariant
+    const sx = this.sunE[lo * 3] * (1 - f) + this.sunE[hi * 3] * f;
+    const sy = this.sunE[lo * 3 + 1] * (1 - f) + this.sunE[hi * 3 + 1] * f;
+    const sz = this.sunE[lo * 3 + 2] * (1 - f) + this.sunE[hi * 3 + 2] * f;
     const P = this.posAttr.array;
     const MG = this.magAttr.array;
     let visible = 0;

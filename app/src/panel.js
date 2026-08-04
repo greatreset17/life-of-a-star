@@ -103,7 +103,10 @@ export class Panel {
     bd.textContent = "Declared boundary: the star carries full rigour; background sky "
       + "arrives in a later pass with positions computed and existence frozen at the "
       + "present epoch; granule texture is procedural over a derived scale; the MIST "
-      + "grid track runs +76 K / +10.6% L of the observed Sun at 4.57 Gyr (fork 14).";
+      + "grid track runs +76 K / +10.6% L of the observed Sun at 4.57 Gyr (fork 14). "
+      + "At this viewpoint's real baselines, stellar parallax is sub-pixel — the sky's "
+      + "3-D truth is carried in the computed directions, measured under an amplified "
+      + "baseline by the harness (fork 31).";
     frag.appendChild(bd);
 
     // the harness-visible ready flag (set by main.js after first frame)

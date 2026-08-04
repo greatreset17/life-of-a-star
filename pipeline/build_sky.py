@@ -77,6 +77,13 @@ def build():
         pos_epochs.astype("<f4").tobytes())
     (ROOT / "app" / "data" / "sun_orbit.bin").write_bytes(
         sun_spine.astype("<f4").tobytes())
+    # the Sun ON THE SAME EPOCH GRID as the stars: heliocentric directions
+    # must subtract a Sun interpolated with the same (lo, f) as the star
+    # positions — a spine-node Sun is up to 1/6 of an orbit (kpc) off the
+    # true path between MS nodes and collapses every direction (measured)
+    sun_epochs = np.stack([np.interp(t_out, t_sun, sun_pos[:, k]) for k in range(3)], axis=1)
+    (ROOT / "app" / "data" / "sun_epochs.bin").write_bytes(
+        sun_epochs.astype("<f4").tobytes())
 
     meta = {
         "n_star": len(rows), "n_epoch": len(t_out),

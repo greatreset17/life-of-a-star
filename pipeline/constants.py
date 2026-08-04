@@ -407,3 +407,15 @@ COOLEST_WD_OBSERVED_K = 3000.0
 
 # fork 24
 WD_CONVECTION_ONSET_K = 15000.0
+
+# fork 31 — recorded after reviewer round 5: at the piece's REAL viewpoint
+# baselines (AU-scale camera motion around the star) against parsec
+# distances, parallax is sub-pixel at this field of view — the brief's
+# claim that parallax is "the single property that makes a viewer believe
+# they are somewhere" is therefore inaccurate at these baselines, and the
+# data wins over the brief exactly as with the track (fork 14). The sky IS
+# a true 3-D volume: star directions and distances are computed per frame
+# in float64 from the catalogued positions (suite t25 measures the pixel
+# parallax under an amplified declared baseline: 93 stars, corr 0.999,
+# median error 0.03 px, anchored to the RAW catalogue parallaxes).
+PARALLAX_REAL_BASELINE_SUBPIXEL = True

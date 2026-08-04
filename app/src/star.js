@@ -139,6 +139,13 @@ const frag = /* glsl */ `
       // CPU-side from the same derived D the panel reports)
       float vis = smoothstep(${CELL_PX_BANDLIMIT.toFixed(1)}, ${(CELL_PX_BANDLIMIT * 3).toFixed(1)}, uCellPx);
       float m = vis * uContrast;
+      // below the band limit the cells do not vanish into perfect flatness:
+      // N sub-pixel cells average to a DERIVED residual fluctuation
+      // sigma_px = sigma_cell * cellPx (cells per pixel = cellPx^-2), a
+      // statistical shimmer, not a texture choice
+      float subres = (1.0 - vis) * uContrast * 0.35 * clamp(uCellPx, 0.0, 1.0);
+      float micro = (float(pcg3d(uvec3(uvec2(gl_FragCoord.xy),
+                     uint(uTime * 4.0) + 97u)).x) * (1.0 / 4294967295.0) - 0.5);
       float laneW = 0.30 * (0.55 + 0.9 * w2.x);
       float lane = smoothstep(0.0, laneW, w1.y);
       float core = 1.0 - smoothstep(0.0, 0.75, w1.x + 0.35 * w2.x);
@@ -147,7 +154,8 @@ const frag = /* glsl */ `
       // the second octave textures cell INTERIORS only — its weight stays
       // below the countable-as-a-lane threshold so the visible cell census
       // remains the first octave's, which carries the derived scale
-      float gran = mix(1.0, (1.0 + 0.35 * core) * jitter * (1.0 - 0.05 * fine), m);
+      float gran = mix(1.0, (1.0 + 0.35 * core) * jitter * (1.0 - 0.05 * fine), m)
+                 * (1.0 + 2.0 * micro * subres);
       lanePost = mix(1.0, mix(0.40, 1.0, lane), m)
                * (1.0 + 0.22 * core * m)
                * (1.0 - 0.04 * fine * m)
