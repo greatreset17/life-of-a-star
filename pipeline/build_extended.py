@@ -86,6 +86,9 @@ def build():
         "agb_thermal_pulses": 1100,
         "planetary_nebula_peak": None,   # filled from the nebula solution
         "wd_crystallisation": onset + 1,
+        # the ninth waypoint: deep in region B, where the galaxy stands
+        # over the ember — gated so the ending is measured, not just seen
+        "black_dwarf_terminus": None,    # resolved below by temperature
     }
 
     # nebula
@@ -109,6 +112,11 @@ def build():
             events_s[k] = pn_peak_s
         elif k == "wd_crystallisation":
             events_s[k] = round(float(cs.s[onset]), 6)
+        elif k == "black_dwarf_terminus":
+            # deep region B, at Teff = 700 K (below the existence marker,
+            # above the terminus) — resolved by temperature, not by row
+            tail = slice(cs.horizon_index, cs.n)
+            events_s[k] = round(float(np.interp(-700.0, -cs.teff[tail], cs.s[tail])), 6)
         else:
             events_s[k] = round(float(cs.s[v - 1]), 6)
     markers = {

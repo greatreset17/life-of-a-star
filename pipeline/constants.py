@@ -244,6 +244,11 @@ FORK 5 — Planetary nebula treatment (decided v0.3). CHOSEN — SOLVED: thin-sh
   (v_slow = 0.5 v_esc at AGB end; v_fast = v_esc of the core) because the
   track's v_wind column is unpopulated on the AGB. Instabilities, clumping
   and filamentary structure are OUTSIDE the declared boundary.
+  AMENDED (final round): the brief's preferred upgrade over pure sphericity
+  is adopted — an equator-pole superwind density contrast as a DECLARED
+  parameter (C_EQ = 3, axis = the system's orbital axis), giving the
+  ring-waist that both inside and outside viewpoints read; the fine
+  structure remains unsolved and undeclared shapes remain unsculpted.
   [decided v0.3]
 
 FORK 24 — Granulation on the cooling track (decided v0.3). CHOSEN: the

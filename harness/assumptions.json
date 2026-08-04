@@ -20,7 +20,8 @@
     "rgb_tip",
     "agb_thermal_pulses",
     "planetary_nebula_peak",
-    "wd_crystallisation"
+    "wd_crystallisation",
+    "black_dwarf_terminus"
   ],
   "probe_required_keys": [
     "s", "age_yr", "teff_k", "log_g", "log_l", "r_rsun",

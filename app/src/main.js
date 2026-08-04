@@ -148,7 +148,12 @@ async function boot() {
 
   let announcedReady = false;
   let lastT = null;
+  const frameTimes = [];
   function frame(tMs) {
+    if (lastT !== null) {
+      frameTimes.push(tMs - lastT);
+      if (frameTimes.length > 120) frameTimes.shift();
+    }
     const time = tMs / 1000;
     // state at slider position — everything from the tables
     const eep = eepOfS(track, s);
@@ -254,6 +259,9 @@ async function boot() {
       nebula: nstep,
       adaptation,
       skyVisible: skyField ? skyField.visibleCount : -1,
+      frameMs: frameTimes.length > 20
+        ? [...frameTimes].sort((a, b) => a - b)[Math.floor(frameTimes.length * 0.95)]
+        : undefined,
     });
     const [av, au] = formatAge(ageYr);
     ageBig.textContent = `${av} ${au}`;

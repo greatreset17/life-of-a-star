@@ -55,7 +55,11 @@ export class MilkyWay {
   }
 
   update(adaptation, rod, sunAzimuthRad) {
-    this.uniforms.uGain.value = Math.max(0, (0.12 - adaptation) / 0.12);
+    // the galaxy emerges below deep-mesopic adaptation (a < 0.20 — the
+    // ember's own equilibrium at the terminus is 0.14; the earlier 0.12
+    // threshold withheld the ending's vastness entirely, measured by the
+    // luminance-budget test before it was fixed)
+    this.uniforms.uGain.value = Math.max(0, (0.20 - adaptation) / 0.20);
     this.uniforms.uRod.value = rod;
     this.mesh.rotation.z = sunAzimuthRad;
   }

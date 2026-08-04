@@ -46,7 +46,15 @@ const frag = /* glsl */ `
     }
     if (chord <= 0.0) discard;
     float thick = uROut - uRIn;
-    float e = uBright * chord / max(thick, 1e-9);
+    // declared asphericity (fork 5 amendment): the superwind is denser at
+    // the equator by the DECLARED contrast C — the brief's own preferred
+    // upgrade over pure sphericity. Emission goes as density squared, so
+    // the ring-waist appears from inside and outside alike. The axis is
+    // the system's orbital axis (scene z); C is a parameter, not a shape.
+    const float C_EQ = 3.0;
+    float s2 = 1.0 - rd.z * rd.z;
+    float dens = (1.0 + C_EQ * s2) / (1.0 + C_EQ * 0.6667);
+    float e = uBright * (chord / max(thick, 1e-9)) * dens * dens;
     vec3 lin = uRgb * e;
     float y = dot(lin, vec3(0.2126, 0.7152, 0.0722));
     float yT = y / (1.0 + y);

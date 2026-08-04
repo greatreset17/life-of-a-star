@@ -31,6 +31,7 @@ const ROWS = [
   ["neb_x", "ionised fraction"],
   ["adaptation", "eye adaptation"],
   ["sky_visible", "stars visible to the eye"],
+  ["frame_ms", "frame time (ms, p95)"],
   ["data_state", "data state"],
 ];
 
@@ -91,7 +92,7 @@ export class Panel {
     addEq(EQ.shell, "interacting winds: fast wind sweeps the superwind into the shell");
     addRows(["neb_r", "neb_v", "neb_x", "crystal_frac"]);
     sect();
-    addRows(["adaptation", "sky_visible"]);
+    addRows(["adaptation", "sky_visible", "frame_ms"]);
     sect();
     const bd = document.createElement("div");
     bd.className = "note";
@@ -154,6 +155,8 @@ export class Panel {
       : "—", String(p.adaptation ?? ""));
     set("sky_visible", p.skyVisible >= 0 ? String(p.skyVisible) : "unavailable",
         String(p.skyVisible ?? -1));
+    set("frame_ms", p.frameMs !== undefined ? p.frameMs.toFixed(1) : "—",
+        String(p.frameMs ?? ""));
     set("data_state", p.dataState);
   }
 

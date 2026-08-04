@@ -116,20 +116,25 @@ const frag = /* glsl */ `
       vec3 w1 = cellular(q + vec3(0.0, 0.0, tt), 7u);
       vec3 w2 = cellular(q * 2.03 + vec3(tt, 0.0, 0.0), 13u);
       // thick-bodied stroke per cell: hot upwelling core falling toward a
-      // genuinely dark intergranular lane; per-cell brightness jitter from
-      // the cell id so no two strokes match; lane depth survives the tone
-      // map by riding POST-tone (multiplicative on the display value)
-      float lane = smoothstep(0.0, 0.30, w1.y);
+      // genuinely dark intergranular lane. Lane WIDTH varies per region
+      // (second-octave field), per-cell brightness jitters from the cell id
+      // so no two strokes match, and the painterly modulation rides
+      // POST-tone so seven decades of exposure cannot iron it flat.
+      // analytic band-limit: fade cell contrast as cells shrink below
+      // pixels (uCellPx = apparent granule size in screen pixels, computed
+      // CPU-side from the same derived D the panel reports)
+      float vis = smoothstep(${CELL_PX_BANDLIMIT.toFixed(1)}, ${(CELL_PX_BANDLIMIT * 3).toFixed(1)}, uCellPx);
+      float m = vis * uContrast;
+      float laneW = 0.30 * (0.55 + 0.9 * w2.x);
+      float lane = smoothstep(0.0, laneW, w1.y);
       float core = 1.0 - smoothstep(0.0, 0.75, w1.x + 0.35 * w2.x);
       float fine = 1.0 - smoothstep(0.05, 0.45, w2.y);
       float jitter = 0.88 + 0.24 * w1.z;
-      float gran = (1.0 + 0.35 * core) * jitter * (1.0 - 0.10 * fine);
-      // analytic band-limit: fade cell contrast as cells shrink below pixels
-      // (uCellPx = apparent granule size in screen pixels, computed CPU-side
-      // from the same derived D the panel reports)
-      float vis = smoothstep(${CELL_PX_BANDLIMIT.toFixed(1)}, ${(CELL_PX_BANDLIMIT * 3).toFixed(1)}, uCellPx);
-      lanePost = mix(1.0, mix(0.50, 1.0, lane), vis * uContrast);
-      gran = mix(1.0, gran, vis * uContrast);
+      float gran = mix(1.0, (1.0 + 0.35 * core) * jitter * (1.0 - 0.10 * fine), m);
+      lanePost = mix(1.0, mix(0.40, 1.0, lane), m)
+               * (1.0 + 0.22 * core * m)
+               * (1.0 - 0.07 * fine * m)
+               * (1.0 + 0.12 * (w1.z - 0.5) * m);
       bright = limbLaw(mu) * gran;
       colour = uRgb;
     } else {
