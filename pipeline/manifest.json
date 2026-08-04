@@ -1,0 +1,36 @@
+{
+  "_comment": [
+    "Acquisition manifest — every external source: retrieval URL, exact subset,",
+    "expected size, sha256, licence. acquire.py fetches against this file and",
+    "exits non-zero on any mismatch. Pipeline modules obtain sources ONLY through",
+    "pipeline/sources.require(name); an entry missing here stops the pipeline by",
+    "name (no-fallback policy, suite test 35).",
+    "Entries whose subset depends on derived quantities (spectra envelope,",
+    "cooling-mass brackets) are pinned in the pass that derives them.",
+    "Large files (data/raw/large/) are not committed; retrieval date + sha256 are."
+  ],
+  "sources": {
+    "cie_cmf": {
+      "url": "http://www.cvrl.org/database/data/cmfs/ciexyz31.csv",
+      "dest": "data/raw/cie/ciexyz31.csv",
+      "subset": "complete file (CIE 1931 2-deg observer, 5 nm, 360-830 nm)",
+      "bytes": 4750,
+      "sha256": "a61eb7a6d3aa3cede8b0baf2b63d01610a124038c3238390ba5b5540829d7dde",
+      "licence": "CVRL public dataset; CIE 1931 standard observer",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "mist_track_1p0": {
+      "url": "https://waps.cfa.harvard.edu/MIST/data/tarballs_v1.2/MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.0_EEPS.txz",
+      "dest": "data/raw/large/MIST_v1.2_feh_p0.00_afe_p0.0_vvcrit0.0_EEPS.txz",
+      "subset": "member 00100M.track.eep only (M=1.0 Msun, [Fe/H]=0, v/vcrit=0.0), extracted to data/raw/mist/00100M.track.eep and committed",
+      "bytes": 100050704,
+      "sha256": "a445d926c1765e951eb1bf6811dbfb14635725efcf63aaaa883d02f36cc58741",
+      "extracted_member": "data/raw/mist/00100M.track.eep",
+      "extracted_sha256": "a962600501741588e17ac133d60040ca686c62a2e5f07100f9eeeec3be1bc4f3",
+      "licence": "MIST v1.2 (Choi et al. 2016, Dotter 2016); free with citation",
+      "retrieved": "2026-08-04",
+      "committed": false
+    }
+  }
+}
