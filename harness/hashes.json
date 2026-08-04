@@ -1,1 +1,9 @@
-{}
+{
+ "v0.1-stage0": {
+  "combined": "eec5e4cfa4153408bd89ff21dca1a8c4fc30b84fe086a101a91e0850602df598",
+  "files": {
+   "colour.json": "5a8c18df57b1bd15e8fe687f04a34a735f4d80fa409fb4191bfbd56d3199406f"
+  },
+  "recorded_utc": "2026-08-04T11:12:36+00:00"
+ }
+}

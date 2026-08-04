@@ -31,6 +31,36 @@
       "licence": "MIST v1.2 (Choi et al. 2016, Dotter 2016); free with citation",
       "retrieved": "2026-08-04",
       "committed": false
+    },
+    "limb_neilson2013": {
+      "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/A%2BA/554/A98/table5&-out.max=99999&-out=Teff,logg,M,f1(V),f2(V),f3(V),f4(V)",
+      "dest": "data/raw/limb/neilson2013_sph4_v.tsv",
+      "subset": "spherical 4-parameter V-band coefficients, all 5300 models (Teff 3000-8000, logg -1..3, M 0.5-20)",
+      "bytes": 260238,
+      "sha256": "346a34fed1b36a1cc549dbef8d80b95877932b2f9bf80cbfb4d959cf8efc1c55",
+      "licence": "CDS VizieR (Neilson & Lester 2013, A&A 554, A98)",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "limb_claret2011": {
+      "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=J/A%2BA/529/A75/tableeq5&Z=0.0&xi=2.0&Filt=%3D%3DV&Met=L&Mod=A&-out.max=99999&-out=logg,Teff,a1,a2,a3,a4",
+      "dest": "data/raw/limb/claret2011_eq5_v.tsv",
+      "subset": "eq5 4-parameter JOHNSON V (case-sensitive ==V; a plain Filt=V constraint ALSO matches Stromgren v — measured pitfall), Z=0, xi=2 km/s, least-squares, ATLAS models (Teff 3500-50000, logg 0-5)",
+      "bytes": 23453,
+      "sha256": "82099c94795df719be36a8386df6d7e390bafe62f17be4a89ff11aeb1c284686",
+      "licence": "CDS VizieR (Claret & Bloemen 2011, A&A 529, A75)",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "spectra_nodes": {
+      "url": "http://svo2.cab.inta-csic.es/theory/newov2/ssap.php (per-node, fid in data/raw/spectra/nodes_manifest.json)",
+      "dest": "data/raw/spectra/nodes_manifest.json",
+      "derived_selection": "data/raw/spectra_selection.json (pipeline/gridmap.py against SVO SSAP enumeration; committed, git history is its record)",
+      "subset": "567 nodes (fork 16 union), band cut to SPECTRA_BAND_ANGSTROM; per-file sha256 inside nodes_manifest.json, verified by acquire.py verify",
+      "per_file_manifest": true,
+      "licence": "SVO theory service (Allard+ 2012 BT-Settl; Castelli & Kurucz 2003; TMAP/TheoSSA grid 2)",
+      "retrieved": "2026-08-04",
+      "committed": true
     }
   }
 }

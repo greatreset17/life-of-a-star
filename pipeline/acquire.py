@@ -23,6 +23,24 @@ def main(argv):
     failures = []
     for name, e in entries.items():
         dest = ROOT / e["dest"]
+        if e.get("per_file_manifest"):
+            # a manifest-of-manifests: verify each listed file's checksum
+            if not dest.exists():
+                failures.append(f"{name}: nodes manifest absent ({e['dest']})")
+                continue
+            nodes = json.loads(dest.read_text())
+            bad = 0
+            for key, ne in nodes.items():
+                p = ROOT / ne["file"]
+                if not p.exists() or _sha256(p) != ne["sha256"]:
+                    failures.append(f"{name}/{key}: absent or checksum mismatch")
+                    bad += 1
+                    if bad > 5:
+                        failures.append(f"{name}: …further node failures suppressed")
+                        break
+            if bad == 0:
+                print(f"ok    {name} ({len(nodes)} node files)")
+            continue
         if not dest.exists():
             if verify_only:
                 failures.append(f"{name}: file absent ({e['dest']})")
