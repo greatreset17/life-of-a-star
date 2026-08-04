@@ -324,26 +324,50 @@ for wp in ("present_day", "rgb_tip", "agb_thermal_pulses",
 # says the eye sees stars, the pixels must contain point sources
 try:
     from scipy.ndimage import median_filter
-    for wp in ("black_dwarf_terminus", "wd_crystallisation"):
-        png = cap / f"{wp}.png"
-        if not png.exists():
-            continue
-        vis = float(probe(wp)["sky_visible"])
-        if vis < 30:
-            continue
-        L = lum(png)
-        med = median_filter(L, size=9)
-        prom = L - med
+
+    def star_peaks(wp):
+        L = lum(cap / f"{wp}.png")
+        prom = L - median_filter(L, size=9)
+        # region free of EVERY instrument: below the age pane, above the
+        # curves panel and waypoint strip, left of the HR/panel column, and
+        # outside the disc. The first census masked none of these and was
+        # counting the two-curves plot as stars — zero discriminative
+        # power, exactly the attack class the reviewer named.
         mask = np.zeros_like(L, bool)
-        mask[80:760, 30:950] = True          # outside UI cards
+        mask[100:520, 30:940] = True
         yy, xx = np.mgrid[0:800, 0:1280]
-        mask &= (yy - 400) ** 2 + (xx - 640) ** 2 > 340 ** 2  # outside disk
-        peaks = int(((prom > 3.0) & mask).sum())
+        mask &= (yy - 400) ** 2 + (xx - 640) ** 2 > 340 ** 2
+        return int(((prom > 5.0) & mask).sum())
+
+    # the in-fiction sky is HONESTLY sparse (125 visible over the whole
+    # sphere -> ~3 expected per gated frame; statistically useless), so the
+    # aliveness proof runs a dedicated capture with the project-sanctioned
+    # EXTERNAL SUBSTITUTION of one declared constant (mag limit 6.5 -> 30
+    # on a scratch copy — harness/census.mjs): alive => thousands of point
+    # sources, dead => zero. Deterministic either way.
+    import subprocess
+    r = subprocess.run(["node", str(ROOT / "harness" / "census.mjs")],
+                       capture_output=True, text=True, timeout=180)
+    census_png = ROOT / "harness" / "captures" / "census" / "starfield.png"
+    if r.returncode != 0 or not census_png.exists():
+        check("t42-census-capture", False, r.stderr[-200:] or r.stdout[-200:])
+    else:
+        a2 = np.asarray(Image.open(census_png).convert("RGB"), float)
+        L2 = 0.2126 * a2[..., 0] + 0.7152 * a2[..., 1] + 0.0722 * a2[..., 2]
+        prom2 = L2 - median_filter(L2, size=9)
+        m2 = np.ones_like(L2, bool)
+        m2[:95, :] = False; m2[705:, :] = False; m2[:, 945:] = False
+        m2[530:715, :495] = False
+        from scipy.ndimage import label as _label
+        _, ncomp = _label(prom2 > 5.0)
+        n_px = int((prom2[m2] > 5.0).sum())
         if MEASURE:
-            print(f"      [{wp}: point-source pixels {peaks}, probe visible {vis:.0f}]")
+            print(f"      [census (magLimit 30 substitution): {n_px} star pixels, "
+                  f"{ncomp} components]")
         else:
-            check(f"t42-{wp}-stars-actually-drawn", peaks >= 3,
-                  f"{peaks} point-source pixels with {vis:.0f} probe-visible stars")
+            check("t42-starfield-render-path-alive", n_px >= 200,
+                  f"{n_px} star pixels under an all-visible magnitude limit "
+                  f"— a dead render path shows zero")
 except ImportError:
     check("t42-scipy-available", False, "scipy needed for the census")
 

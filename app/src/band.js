@@ -7,7 +7,10 @@
 // (fork 27); visible only to the dark-adapted eye, colourless first.
 import * as THREE from "three";
 
-const R_FAR = 4.0e9; // scene units (Rsun)
+const R_FAR = 1.0e6; // scene units; direction-only geometry, kept well
+                     // inside the f32-safe coordinate regime (the same
+                     // vertex-stage failure that ate the starfield at
+                     // parsec-scale radii — see skyfield.js header)
 
 const frag = /* glsl */ `
   precision highp float;

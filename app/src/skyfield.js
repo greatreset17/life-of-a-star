@@ -1,13 +1,18 @@
-// @render-path — the sky as seen. Stars sit at their catalogued 3D
-// positions (scene units = Rsun), so camera translation produces real
-// parallax; colours are the table's chain-derived chromaticities; there is
-// no lens, so there is no flare, no bloom, no twinkle. Visibility passes
-// through the eye: each point is entirely present or entirely absent
-// (whole-instance culling, failure state 43), rod vision drains colour to
-// achromatic luminance via per-star scotopic weights.
+// @render-path — the sky as seen. Star DIRECTIONS and distances are
+// computed every frame in float64 from the catalogued 3D positions
+// relative to the moving camera — the change of direction under camera
+// translation IS parallax, exact by construction — and the GPU receives
+// only well-conditioned coordinates (a camera-anchored shell at R_DRAW):
+// raw parsec-scale vertex coordinates die in the f32 vertex stage of this
+// render path (established empirically: in-app points render at radius
+// 1e2 and vanish at 2e8 with identical pipeline state). Colours are the
+// table's chain-derived chromaticities; no lens, no flare, no twinkle.
+// Each point is entirely present or entirely absent (whole-instance
+// culling); rod vision drains colour via per-star scotopic weights.
 import * as THREE from "three";
 
 const PC_TO_RSUN = 3.0856775814913673e16 / 6.957e8;
+const R_DRAW = 1.0e4; // camera-anchored shell radius, scene units
 
 const vert = /* glsl */ `
   attribute vec3 rgb;
@@ -100,8 +105,9 @@ export class SkyField {
   }
 
   // ageYr: current stellar age; spineIndex: current spine node for the
-  // Sun's position; magLimit/rod from the eye
-  update(ageYr, spineIndex, magLimit, rod) {
+  // Sun's position; magLimit/rod from the eye; camPos: camera position in
+  // scene units (the parallax baseline)
+  update(ageYr, spineIndex, magLimit, rod, camPos) {
     const m = this.meta;
     const tMyr = (ageYr - m.present_age_yr) / 1e6;
     const eps = m.epochs_myr;
@@ -115,13 +121,18 @@ export class SkyField {
     const P = this.posAttr.array;
     const MG = this.magAttr.array;
     let visible = 0;
+    const cx = camPos.x, cy = camPos.y, cz = camPos.z;
     for (let i = 0; i < n; i++) {
       const j = i * 3;
-      const x = (A[j] * (1 - f) + B[j] * f) - sx;
-      const y = (A[j + 1] * (1 - f) + B[j + 1] * f) - sy;
-      const z = (A[j + 2] * (1 - f) + B[j + 2] * f) - sz;
-      const dPc = Math.sqrt(x * x + y * y + z * z);
-      P[j] = x * PC_TO_RSUN; P[j + 1] = y * PC_TO_RSUN; P[j + 2] = z * PC_TO_RSUN;
+      // heliocentric position in scene units, f64, then camera-relative:
+      // the direction from the CAMERA carries the true parallax
+      const x = ((A[j] * (1 - f) + B[j] * f) - sx) * PC_TO_RSUN - cx;
+      const y = ((A[j + 1] * (1 - f) + B[j + 1] * f) - sy) * PC_TO_RSUN - cy;
+      const z = ((A[j + 2] * (1 - f) + B[j + 2] * f) - sz) * PC_TO_RSUN - cz;
+      const dScene = Math.sqrt(x * x + y * y + z * z);
+      const k = R_DRAW / Math.max(dScene, 1e-3);
+      P[j] = cx + x * k; P[j + 1] = cy + y * k; P[j + 2] = cz + z * k;
+      const dPc = dScene / PC_TO_RSUN;
       // apparent magnitude at this epoch: catalogue magnitude shifted by the
       // changed distance (luminosity FROZEN at the present epoch — declared)
       MG[i] = m.gmag[i] + 5 * Math.log10(Math.max(dPc, 1e-3) / Math.max(this.d0[i], 1e-3));
