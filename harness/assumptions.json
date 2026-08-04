@@ -27,7 +27,8 @@
     "chromaticity_srgb", "gamut_excursion",
     "granules_derived", "granules_rendered", "instances_drawn",
     "data_state", "phase",
-    "a_earth_au", "mdot", "mdot_sc05", "drag_state"
+    "a_earth_au", "mdot", "mdot_sc05", "drag_state",
+    "crystal_frac", "neb_r", "neb_v", "neb_x", "adaptation", "sky_visible"
   ],
   "gate_console_fail_patterns": ["error", "shader", "self-test fail", "unavailable:"],
   "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]"

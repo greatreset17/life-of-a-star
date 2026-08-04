@@ -21,5 +21,15 @@
    "spine.json": "b59de8c22ead5c084dd0a820eb3408e683833a2763aebdf270e5a71c21151023"
   },
   "recorded_utc": "2026-08-04T13:08:04+00:00"
+ },
+ "v0.4-stage0": {
+  "combined": "32a272e738e10127cb3dc92f9c10f0b3668527bf4d7bfa37e98a29d394962021",
+  "files": {
+   "colour.json": "5a8c18df57b1bd15e8fe687f04a34a735f4d80fa409fb4191bfbd56d3199406f",
+   "qtable.json": "b643ef61c3f18d20f3f14e393af1fa0967741d4d0acedaa2619b8ad2a565dd4d",
+   "sky_meta.json": "a4c4597884779bbae2bcb23364ad97d5ba8e29405025d24d929a6cb794937458",
+   "spine.json": "b59de8c22ead5c084dd0a820eb3408e683833a2763aebdf270e5a71c21151023"
+  },
+  "recorded_utc": "2026-08-04T13:29:09+00:00"
  }
 }

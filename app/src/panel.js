@@ -29,6 +29,8 @@ const ROWS = [
   ["neb_r", "nebula shell radius"],
   ["neb_v", "shell velocity"],
   ["neb_x", "ionised fraction"],
+  ["adaptation", "eye adaptation"],
+  ["sky_visible", "stars visible to the eye"],
   ["data_state", "data state"],
 ];
 
@@ -89,6 +91,8 @@ export class Panel {
     addEq(EQ.shell, "interacting winds: fast wind sweeps the superwind into the shell");
     addRows(["neb_r", "neb_v", "neb_x", "crystal_frac"]);
     sect();
+    addRows(["adaptation", "sky_visible"]);
+    sect();
     const bd = document.createElement("div");
     bd.className = "note";
     bd.textContent = "Declared boundary: the star carries full rigour; background sky "
@@ -145,6 +149,11 @@ export class Panel {
     } else {
       set("neb_r", "—", "none"); set("neb_v", "—", "none"); set("neb_x", "—", "none");
     }
+    set("adaptation", p.adaptation !== undefined
+      ? (p.adaptation > 0.6 ? "photopic" : p.adaptation > 0.12 ? "mesopic" : "scotopic")
+      : "—", String(p.adaptation ?? ""));
+    set("sky_visible", p.skyVisible >= 0 ? String(p.skyVisible) : "unavailable",
+        String(p.skyVisible ?? -1));
     set("data_state", p.dataState);
   }
 

@@ -10,6 +10,9 @@ import { HrDiagram } from "./hr.js";
 import { Panel } from "./panel.js";
 import { TwoCurves } from "./curves.js";
 import { NebulaShell } from "./nebula.js";
+import { Eye } from "./eye.js";
+import { SkyField } from "./skyfield.js";
+import { MilkyWay } from "./band.js";
 
 const RSUN_M = 6.957e8;
 
@@ -36,6 +39,20 @@ async function boot() {
   } catch (e) {
     console.error(`unavailable: nebula table — ${e.message}`);
   }
+  // the sky: catalogue tables + orbit positions; absence is visible refusal
+  let skyMeta = null, skyPos = null, sunOrbit = null, bandTab = null;
+  try {
+    const [rm, rp, rs, rb] = await Promise.all([
+      fetch("./data/sky.json"), fetch("./data/sky_positions.bin"),
+      fetch("./data/sun_orbit.bin"), fetch("./data/band.json")]);
+    if (!rm.ok || !rp.ok || !rs.ok || !rb.ok) throw new Error("HTTP failure");
+    skyMeta = await rm.json();
+    skyPos = new Float32Array(await rp.arrayBuffer());
+    sunOrbit = new Float32Array(await rs.arrayBuffer());
+    bandTab = await rb.json();
+  } catch (e) {
+    console.error(`unavailable: sky tables — ${e.message}`);
+  }
 
   // --- scene
   const holder = document.getElementById("scene");
@@ -47,6 +64,15 @@ async function boot() {
   const star = new Star(scene);
   const voidBg = new Void(scene);
   const shell = new NebulaShell(scene);
+  const eye = new Eye();
+  const ages = track.age_yr;
+  let iPresent = 0;
+  for (let k = 0; k < ages.length; k++) {
+    if (Math.abs(ages[k] - 4.57e9) < Math.abs(ages[iPresent] - 4.57e9)) iPresent = k;
+  }
+  const skyField = skyMeta ? new SkyField(scene, skyMeta, skyPos, sunOrbit, iPresent) : null;
+  const milkyWay = bandTab ? new MilkyWay(scene, bandTab) : null;
+  let eyeJump = true; // initial load is a cut: arrive adapted (fork 28)
 
   // --- instruments
   const hr = new HrDiagram(document.getElementById("hr"), track, colour);
@@ -77,7 +103,7 @@ async function boot() {
   for (const [name, sv] of Object.entries(track.events_s)) {
     const b = document.createElement("button");
     b.textContent = name.replaceAll("_", " ");
-    b.addEventListener("click", () => { s = sv; slider.value = String(sv); });
+    b.addEventListener("click", () => { s = sv; slider.value = String(sv); eyeJump = true; });
     wpBox.appendChild(b);
   }
   const tog = document.createElement("button");
@@ -114,6 +140,7 @@ async function boot() {
   resize();
 
   let announcedReady = false;
+  let lastT = null;
   function frame(tMs) {
     const time = tMs / 1000;
     // state at slider position — everything from the tables
@@ -171,6 +198,25 @@ async function boot() {
     }
     shell.apply(nstep, rR);
     shell.frame(camera);
+    const ageYr = colAt(track, "age_yr", eep);
+    // the eye: field luminance from the star's tone-domain brightness times
+    // the fraction of the view its disc fills — the same numbers the panel
+    // shows; sky visibility is computed, never chosen
+    const yStar = Math.min(exposure / (1 + exposure), 1);
+    const diskFrac = Math.min(1, Math.pow(rR / Math.max(dist - rR, 1e-9), 2)
+      / Math.pow(Math.tan(0.5 * camera.fov * Math.PI / 180), 2));
+    const dtS = Math.min((tMs - (lastT ?? tMs)) / 1000, 0.1);
+    lastT = tMs;
+    const fieldLum = yStar * diskFrac + (nstep ? 0.02 : 0);
+    if (eyeJump) { eye.jumpTo(fieldLum); eyeJump = false; }
+    const adaptation = eye.step(fieldLum, dtS);
+    const magLimit = eye.magLimit();
+    const rod = eye.rodFraction();
+    if (skyField) skyField.update(ageYr, i, magLimit, rod);
+    if (milkyWay && sunOrbit) {
+      const az = Math.atan2(sunOrbit[i * 3 + 1], sunOrbit[i * 3]) - Math.atan2(0, -1);
+      milkyWay.update(adaptation, rod, az);
+    }
     renderer.render(scene, camera);
 
     // derived vs rendered counts: the panel reports both, honestly
@@ -179,7 +225,6 @@ async function boot() {
     const resolvable = (Math.PI / 4) * Math.pow(diskPx / CELL_PX_BANDLIMIT, 2);
     const granRendered = cellPx < CELL_PX_BANDLIMIT ? Math.min(granDerived, resolvable) : granDerived;
 
-    const ageYr = colAt(track, "age_yr", eep);
     const aEarthAu = curves.aAt(s, dragOn);
     const dataState = track.data_state ? track.data_state[i] : "tabulated";
     panel.update({
@@ -200,6 +245,8 @@ async function boot() {
       dataState,
       crystalFrac: track.crystal_frac ? track.crystal_frac[i] : 0,
       nebula: nstep,
+      adaptation,
+      skyVisible: skyField ? skyField.visibleCount : -1,
     });
     const [av, au] = formatAge(ageYr);
     ageBig.textContent = `${av} ${au}`;

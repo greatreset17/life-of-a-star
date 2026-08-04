@@ -1,0 +1,1 @@
+SELECT GAIA_HEALPIX_INDEX(5, source_id) AS hpx, COUNT(*) AS n, SUM(phot_g_mean_flux) AS gflux, SUM(phot_bp_mean_flux) AS bpflux, SUM(phot_rp_mean_flux) AS rpflux FROM gaiadr3.gaia_source WHERE phot_g_mean_mag BETWEEN 6.5 AND 12 GROUP BY hpx

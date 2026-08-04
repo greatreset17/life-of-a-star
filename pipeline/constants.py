@@ -270,6 +270,54 @@ FORK 23 — Cooling-tail chromaticity pathways (decided v0.3). CHOSEN:
   the fade to black is luminance-driven and labelled. The 5000 K pathway
   seam is measured by the suite. [decided v0.3]
 
+FORK 6 — Background stars (decided v0.4). CHOSEN: positions and orbits are
+  computed physics (Gaia DR3 astrometry, leapfrog in the fork-27 potential);
+  existence, mass and luminosity are FROZEN at the present epoch. Ten
+  billion years hence many rendered stars will not exist — predicting which
+  would require population synthesis, which is deliberately outside the
+  boundary so the Sun remains the only thing in the frame with a life.
+  Stars with non-positive parallax (346) are EXCLUDED and counted, never
+  placed at an assumed distance. [decided v0.4]
+
+FORK 26 — Star and band chromaticity from broadband fluxes (decided v0.4).
+  CHOSEN: each Gaia star's G/BP/RP fluxes (Hipparcos B/V for the ~132
+  bright stars Gaia saturates on — without them the sky is missing Sirius)
+  form a coarse SED at the SVO-published pivot wavelengths, through the
+  IDENTICAL CIE chain (fork 23's precedent). Scotopic weights come from the
+  same SEDs against CIE 1951 V'(lambda) — the Purkinje shift is carried by
+  data. Stars lacking DR3 radial velocity (~23%) evolve with their measured
+  transverse motion and RV=0, counted in the meta (their unknown radial
+  drift is second-order for sky appearance). Upgrade path: DR3 XP spectra.
+  [decided v0.4]
+
+FORK 27 — Galactic dynamics and the Milky Way band (decided v0.4). CHOSEN:
+  MWPotential2014-class potential (Miyamoto-Nagai disk + Hernquist bulge +
+  NFW halo, halo amplitude solved so v_c(R0)=220 km/s); leapfrog, all stars
+  vectorised; energy and L_z are suite invariants. MEASURED: circular
+  period at R0 = 223 Myr (the brief's 220-240 band); the Sun's own
+  azimuthal period in this potential is 244 Myr (eccentric orbit — both
+  numbers asserted for what they are). The BAND is the catalogue's own
+  unresolved integrated light (healpix aggregate, 6.5<G<12) whose dark
+  rifts are the real dust already imprinted in the observed fluxes —
+  nothing painted, and no separate dust cube: a 3-D dust map would matter
+  only for kpc-scale viewpoint shifts that are outside the declared
+  boundary (the band is frozen in shape, re-azimuthed rigidly with the
+  solar orbit). Named upgrade path: Edenhofer 2023 / Lallement 2022 cubes.
+  [decided v0.4]
+
+FORK 28 — The eye's transient (decided v0.4). CHOSEN: adaptation STATE
+  physics is honest (equilibrium visibility follows field luminance; rod
+  vision is achromatic with data-derived scotopic weights; the galaxy
+  emerges only below deep-mesopic adaptation), but the TRANSIENT is
+  compressed — real dark adaptation takes tens of minutes; here
+  tau_dark = 12 s so a hand on the slider can feel it. A deep link or
+  waypoint jump is a CUT, not continuous viewing: the eye arrives at the
+  new scene's equilibrium; continuous slider motion pays the transient.
+  Also fork 20/25 live here: the v0.1 tone curve (Stevens-compressed
+  bolometric luminance) and the nebula's interim (Sigma/Sigma_sun)^0.1
+  mapping are presentation, superseded progressively by this eye model.
+  [decided v0.4]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass

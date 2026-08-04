@@ -1,0 +1,12 @@
+{
+"n_star": 11905,
+"excluded": {
+"no_parallax": 346,
+"no_bands": 0
+},
+"solar_period_myr": 243.9,
+"e_lz_sample": [
+-109396.02425470471,
+-1704211.3221749119
+]
+}

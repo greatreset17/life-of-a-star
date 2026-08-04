@@ -101,6 +101,46 @@
       "licence": "Montreal cooling models (Bedard et al. 2020, ApJ 901, 93); public tables",
       "retrieved": "2026-08-04",
       "committed": true
+    },
+    "cie_scotopic": {
+      "url": "http://www.cvrl.org/database/data/lum/scvle_1.csv",
+      "dest": "data/raw/cie/scvle.csv",
+      "subset": "CIE 1951 scotopic V'(lambda), 1nm",
+      "bytes": 7617,
+      "sha256": "0cd9737bc2afee57202f9cb95f98c674ba4bfecca0e75964e13530b36dce2ba3",
+      "licence": "CVRL public dataset",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "gaia_naked_eye": {
+      "url": "https://gea.esac.esa.int/tap-server/tap/sync (query committed: data/raw/gaia/query_naked_eye.adql)",
+      "dest": "data/raw/gaia/naked_eye.csv",
+      "subset": "gaiadr3.gaia_source, G<6.5, astrometry+photometry (12119 rows)",
+      "bytes": 2308419,
+      "sha256": "5865cdc37ce7a974a292f488213791d1b154f6a6b679cf76742d780942b614a7",
+      "licence": "ESA Gaia DR3; CC BY-SA 3.0 IGO",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "gaia_band": {
+      "url": "https://gea.esac.esa.int/tap-server/tap/sync (query committed: data/raw/gaia/query_band.adql)",
+      "dest": "data/raw/gaia/band_hpx5.csv",
+      "subset": "healpix-5 aggregate of 6.5<G<12 integrated flux (12288 cells)",
+      "bytes": 862666,
+      "sha256": "5b108e23c61fa82b0172b204fe2c031db6b3708299ea01f3456890cbdeb5461b",
+      "licence": "ESA Gaia DR3; CC BY-SA 3.0 IGO",
+      "retrieved": "2026-08-04",
+      "committed": true
+    },
+    "hipparcos_bright": {
+      "url": "https://vizier.cds.unistra.fr/viz-bin/asu-tsv?-source=I/239/hip_main&Vmag=%3C3.6",
+      "dest": "data/raw/gaia/hipparcos_bright.tsv",
+      "subset": "Hipparcos main catalogue V<3.6 bright-end supplement (324 rows)",
+      "bytes": 25363,
+      "sha256": "7cc93f6b6d4e572eac2c1ec11653b6d0ae44a8132c2c70d07012bcc271196368",
+      "licence": "CDS VizieR I/239",
+      "retrieved": "2026-08-04",
+      "committed": true
     }
   }
 }
