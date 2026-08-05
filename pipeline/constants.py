@@ -423,6 +423,25 @@ FORK 34 — The paint yields to the sky (user-measured: "the background
   was unreachable except by waypoint buttons (user-measured twice).
   [decided v0.4]
 
+FORK 35 — The eye is lit by what it can SEE. The adaptation field
+  luminance had been driven by BOLOMETRIC luminosity; the eye responds to
+  V(lambda)-weighted light. CHOSEN: every colour row now carries f_vis —
+  the V-weighted fraction of its own SED (main track: Y over the SED's
+  bolometric integral; Koester rows the same ratio; Montreal rows the
+  ABSOLUTE route, V-luminosity from the published absolute AB magnitudes
+  against 4 pi R^2 sigma T^4 with the row's own M and log g, the panel's
+  displayed law — no Planck anywhere; one measured cross-calibration at
+  the 5000 K seam; region B edge-held like the chromaticity). MEASURED
+  consequences: the red giant dims fourfold in the eye (TiO blankets the
+  visible), the 56 kK PN star dims to 0.7x (EUV-dominated) — and the
+  founding premise of this fork was FALSIFIED by the data: the CIA ember
+  is NOT infrared-dark to the eye. f_vis(1772 K) = 1.5x solar — collision-
+  induced absorption closes the infrared and the flux escapes through the
+  optical window, the same physics that makes fork 29's ember blue. An
+  ember that holds the eye at close range is therefore CORRECT, and the
+  ending's composed distance (8 R_photo) is where the visible-light night
+  arrives while the ember keeps its presence. [decided v0.5]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass

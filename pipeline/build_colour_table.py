@@ -29,6 +29,12 @@ def build():
         xyz = colour.spectrum_to_xyz(wl, flux)
         xy = colour.xyz_to_xy(xyz)
         rgb, excursion = colour.gamut_map(xyz)
+        # fork 35 — the eye is lit by what it can see: the V(lambda)-weighted
+        # fraction of the SED (Y is already the CIE ybar integral; the ratio
+        # against the SED's own bolometric integral is the piece's adaptation
+        # weight). An ember radiating in the far infrared no longer holds
+        # the eye. Ratio of integrals over the same grid: units cancel.
+        f_vis = float(xyz[1] / max(np.trapezoid(flux, wl), 1e-300))
         rows.append({
             "eep": p["eep"],
             "teff": round(p["teff"], 2),
@@ -38,6 +44,7 @@ def build():
             "xy": [round(v, TABLE_FLOAT_DECIMALS) for v in xy],
             "rgb_lin": [round(float(v), TABLE_FLOAT_DECIMALS) for v in rgb],
             "excursion": round(float(excursion), TABLE_FLOAT_DECIMALS),
+            "f_vis": float(f"{f_vis:.6e}"),
         })
         if p["eep"] % 200 == 0:
             print(f"  eep {p['eep']}/{tr.n}  T={p['teff']:.0f} xy=({xy[0]:.4f},{xy[1]:.4f}) exc={excursion:.4f}", flush=True)

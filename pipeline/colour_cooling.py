@@ -95,15 +95,63 @@ class CoolingColour:
         # coarse SED on nm axis
         return colour.spectrum_to_xyz(leff / 10.0, flam), abs(teff - t_eval)
 
+    # fork 35 — visible fraction of the emission, per pathway:
+    #   koester : Y / integral(F dlambda) over the model spectrum (the same
+    #             ratio the main-track table uses)
+    #   montreal: the ABSOLUTE route — the tables give absolute AB mags, so
+    #             the V-weighted luminosity is known outright; the bolometric
+    #             is 4 pi R^2 sigma T^4 with R from the row's own (M, log g)
+    #             — the panel's own displayed law, no Planck SED anywhere.
+    #             The two definitions are cross-calibrated at the measured
+    #             5000 K seam (one declared factor, like every other seam).
+    #   < 1500 K: both integrals ride t_eval at the table edge, so the
+    #             fraction is edge-held exactly like the chromaticity.
+    _G_SI = 6.674e-11
+    _SIGMA_SB = 5.670374419e-8
+    _PC10_M = 10 * 3.0856775814913673e16
+    _MSUN_KG = 1.98892e30
+
+    def _koester_fvis(self, teff, logg):
+        teffs = sorted({t for t, _ in self.koester_nodes})
+        t_lo = max([t for t in teffs if t <= teff], default=teffs[0])
+        t_hi = min([t for t in teffs if t >= teff], default=teffs[-1])
+        cell = []
+        for tv in {t_lo, t_hi}:
+            gs = sorted({g for t, g in self.koester_nodes if t == tv})
+            g_lo = max([g for g in gs if g <= logg], default=gs[0])
+            g_hi = min([g for g in gs if g >= logg], default=gs[-1])
+            cell += [[tv, g_lo], [tv, g_hi]]
+        wl, flux = colour.interp_spectrum(self.root, "koester2",
+                                          [list(c) for c in {tuple(c) for c in cell}],
+                                          teff, logg)
+        return float(colour.spectrum_to_xyz(wl, flux)[1]
+                     / max(np.trapezoid(flux, wl), 1e-300))
+
+    def _montreal_fvis_raw(self, teff, mass, logg):
+        (xyz, _) = self._montreal_xyz(teff, mass)
+        t_eval = max(teff, MONTREAL_FLOOR_K)
+        r_m = np.sqrt(self._G_SI * mass * self._MSUN_KG / (10.0 ** logg * 1e-2))
+        l_bol = 4 * np.pi * r_m ** 2 * self._SIGMA_SB * t_eval ** 4
+        return float(xyz[1] * 4 * np.pi * self._PC10_M ** 2 / max(l_bol, 1e-300))
+
+    def _seam_factor(self):
+        if not hasattr(self, "_seam_k"):
+            fk = self._koester_fvis(KOESTER_FLOOR_K, 8.0)
+            fm = self._montreal_fvis_raw(KOESTER_FLOOR_K, 0.5398, 8.0)
+            self._seam_k = fk / max(fm, 1e-300)
+        return self._seam_k
+
     def row(self, teff, logg, mass):
-        """Returns (rgb_lin, xy, excursion_gamut, source, teff_excursion)."""
+        """Returns (rgb_lin, xy, excursion_gamut, source, teff_excursion, f_vis)."""
         if teff > KOESTER_FLOOR_K:
             xyz = self._koester_xyz(teff, logg)
             t_exc = 0.0
             src = "koester2-spectrum"
+            f_vis = self._koester_fvis(teff, logg)
         else:
             xyz, t_exc = self._montreal_xyz(teff, mass)
             src = "montreal-ugriz-sed"
+            f_vis = self._montreal_fvis_raw(teff, mass, logg) * self._seam_factor()
         rgb, exc = colour.gamut_map(xyz)
         return ([float(v) for v in rgb], list(colour.xyz_to_xy(xyz)),
-                float(exc), src, float(t_exc))
+                float(exc), src, float(t_exc), float(f_vis))

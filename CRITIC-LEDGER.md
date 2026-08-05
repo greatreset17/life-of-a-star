@@ -213,3 +213,29 @@ Terminus luminance floor recalibrated 8.0 -> 4.5: the old floor was
 propped up by two artifacts (undithered void competing at scotopic;
 pole-uv smear adding false light). Honest content measures 7.0; dead
 ending ~2.5. Suite 307 ALL GREEN; gate 9/9 (final-w).
+
+## Round 7 — fork 35: the eye is lit by what it can see
+
+Adaptation had been driven by BOLOMETRIC luminosity; the eye responds to
+V(lambda)-weighted light. Every colour row now carries f_vis (main track:
+Y over the SED's own bolometric integral; Koester rows the same ratio;
+Montreal rows the absolute route from published AB magnitudes against
+4 pi R^2 sigma T^4; one measured 5000 K seam cross-calibration; region B
+edge-held). Measured consequences: the red giant dims FOURFOLD in the eye
+(TiO), the 56 kK PN star to 0.7x (EUV) — and the fork's own founding
+premise was FALSIFIED by the data: f_vis(1772 K) = 1.5x SOLAR. Collision-
+induced absorption closes the infrared and the flux escapes through the
+optical window — the same physics that makes fork 29's ember blue. The
+ember that holds the eye at close range is CORRECT, and the record now
+says so (suite: t33-fvis-cia-ember-shines-visibly).
+
+The ending recomposed at distance 8 (was 26; user-measured: the ember
+shrank to a dot). With the visible-light eye the night still arrives at 8
+and the ember keeps its presence under the galaxy. The nebula era now
+narrates itself ("you are inside the nebula — its light is the whole
+sky") so the green sky reads as the story it is. t44 span recalibrated
+8.0 -> 4.0 for the larger occluding ember (healthy 6.4, lamp < 0.5).
+
+Stage-0 identity moves BY DECLARATION for the first time since v0.4:
+colour.json gains f_vis (recorded v0.5-stage0, 534f6f68...). Suite 315
+checks ALL GREEN; gate 9/9 (final-x).

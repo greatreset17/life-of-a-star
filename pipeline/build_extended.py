@@ -60,7 +60,7 @@ def build():
     cc = CoolingColour(ROOT)
     rows = list(base)
     for i in range(n_m, cs.n):
-        rgb, xy, exc, src, t_exc = cc.row(cs.teff[i], cs.log_g[i], cs.mass[i])
+        rgb, xy, exc, src, t_exc, f_vis = cc.row(cs.teff[i], cs.log_g[i], cs.mass[i])
         rows.append({
             "eep": i + 1, "teff": round(float(cs.teff[i]), 2),
             "logg": round(float(cs.log_g[i]), 4), "grid": src,
@@ -68,6 +68,7 @@ def build():
             "xy": [round(v, R) for v in xy],
             "rgb_lin": [round(v, R) for v in rgb],
             "excursion": round(exc, R),
+            "f_vis": float(f"{f_vis:.6e}"),
         })
 
     # events on the new spine

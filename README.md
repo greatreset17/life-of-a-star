@@ -35,7 +35,7 @@ Deep links are shipped functionality: `?wp=rgb_tip`, `?s=0.985`,
   numerics), visual gate (a capture without a complete probe is refused
   before the screenshot is written), identity hashing, static checks
   (identifier purity, colour literals, sinless shader hashes), and the
-  suite (`harness/suite/`, 307 checks): track fidelity, colour chain,
+  suite (`harness/suite/`, 315 checks): track fidelity, colour chain,
   granulation, limb darkening, Earth, cooling, nebula, sky, gate probes,
   pixel-measured visual metrics, acquisition integrity, fork completeness.
 - `pipeline/` — Stage 0 (Python, float64). Acquisition against a

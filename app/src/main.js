@@ -78,6 +78,17 @@ async function boot() {
 
   // --- instruments
   const hr = new HrDiagram(document.getElementById("hr"), track, colour);
+  // fork 35 — the eye is lit by what it can SEE: adaptation runs on the
+  // V(lambda)-weighted fraction of the SED (f_vis, Stage 0), normalised to
+  // the present-day row. Red giants dim in the eye (TiO blankets the
+  // visible), the PN star dims (EUV-dominated) — and the CIA ember does
+  // NOT: the premise "an infrared ember cannot hold the eye" was falsified
+  // by the Montreal data (f_vis(1772 K) = 1.5x solar; collision-induced
+  // absorption closes the infrared and the flux escapes through the
+  // OPTICAL window — the same physics that makes fork 29's ember blue).
+  const iPresent = ages.reduce((b, v, i2) =>
+    Math.abs(v - 4.57e9) < Math.abs(ages[b] - 4.57e9) ? i2 : b, 0);
+  const FVIS_REF = colour.rows[iPresent].f_vis ?? 1;
   const panel = new Panel(document.getElementById("panel"));
   const curves = new TwoCurves(document.getElementById("curves"), earth);
   const ageBig = document.getElementById("age-big");
@@ -101,7 +112,7 @@ async function boot() {
   const wp = params.get("wp");
   if (wp && track.events_s[wp] !== undefined) s = track.events_s[wp];
   if (wp === "black_dwarf_terminus" && params.get("cam_d") === null) {
-    cam.d = 26; cam.az = Math.PI / 2; // the ending faces the galaxy
+    cam.d = 8; cam.az = Math.PI / 2; // the ending faces the galaxy
     if (params.get("cam_alt") === null) cam.alt = (25 * Math.PI) / 180;
   }
   if (params.get("s") !== null) s = parseFloat(params.get("s"));
@@ -115,7 +126,10 @@ async function boot() {
   // face the galaxy). A waypoint button is a CUT: it composes the shot,
   // and the camera no longer stays wherever the previous cut left it
   // (user-measured: after the terminus every star looked tiny).
-  const WP_CAM = { black_dwarf_terminus: { d: 26, az: 90, alt: 25 } };
+  // terminus distance 8, not 26 (user-measured: at 26 the ember shrank to
+  // a dot) — with the eye on visible light the night arrives at 8 anyway,
+  // and the ember keeps its presence under the galaxy
+  const WP_CAM = { black_dwarf_terminus: { d: 8, az: 90, alt: 25 } };
   const wpBox = document.getElementById("waypoints");
   for (const [name, sv] of Object.entries(track.events_s)) {
     const b = document.createElement("button");
@@ -229,7 +243,9 @@ async function boot() {
     // the eye: field luminance from the star's tone-domain brightness times
     // the fraction of the view its disc fills — the same numbers the panel
     // shows; sky visibility is computed, never chosen
-    const yStar = Math.min(exposure / (1 + exposure), 1);
+    const exposureEye = Math.pow(
+      Math.pow(10, logL) * ((crow.f_vis ?? FVIS_REF) / FVIS_REF), 0.25);
+    const yStar = Math.min(exposureEye / (1 + exposureEye), 1);
     const diskFrac = Math.min(1, Math.pow(rR / Math.max(dist - rR, 1e-9), 2)
       / Math.pow(Math.tan(0.5 * camera.fov * Math.PI / 180), 2));
     const dtS = Math.min((tMs - (lastT ?? tMs)) / 1000, 0.1);
@@ -310,6 +326,13 @@ async function boot() {
     // of leaving a black screen (user-measured three times)
     if (yStar < 0.05 && diskFrac > 0.25) {
       notes.push("this close, even an ember holds the eye — pull back (wheel) and the night arrives");
+    }
+    // the green sky IS the nebula: the camera sits deep inside the shell
+    // (radii of thousands of AU against a camera a few stellar radii out),
+    // so the whole sky glows — narrated so it reads as the story, not a
+    // rendering fault (user-measured)
+    if (nstep) {
+      notes.push("you are inside the nebula — its light is the whole sky; the waist rings the equator");
     }
     ageNote.textContent = notes[notes.length - 1] ?? "";
     hr.draw(eep, cssColour(crow.rgb_lin));

@@ -1,75 +1,75 @@
 {
-  "_comment": [
-    "Every assumption the harness carries, stated absolutely. If the application's",
-    "defaults change, this file does NOT follow silently: the gate passes these values",
-    "explicitly on every run via URL parameters, so a divergence between harness and",
-    "application defaults cannot change what is measured.",
-    "Waypoint slider positions are resolved by NAME through the shipped",
-    "data/derived/events.json at gate time, and the resolved numeric s is recorded in",
-    "each capture's probe. The names are absolute; the numbers are derived data.",
-    "Re-verify this file whenever a feature is added (see harness/run.py assumptions-check)."
-  ],
-  "viewport": {
-    "width": 1280,
-    "height": 800,
-    "deviceScaleFactor": 1
-  },
-  "quality_tier": "high",
-  "camera": {
-    "mode": "framed",
-    "distance_rphoto_multiples": 4.0,
-    "azimuth_deg": 0.0,
-    "altitude_deg": 25.0,
-    "_altitude_note": "25 deg, not 0: the fork-5 nebula axis is scene z, and a camera looking straight down that axis can never frame the declared equatorial waist (critic round 2, NOT-MET 8)"
-  },
-  "waypoints": [
-    "protostar_contraction",
-    "zams",
-    "present_day",
-    "subgiant",
-    "rgb_tip",
-    "agb_thermal_pulses",
-    "planetary_nebula_peak",
-    "wd_crystallisation",
-    "black_dwarf_terminus"
-  ],
-  "probe_required_keys": [
-    "s",
-    "age_yr",
-    "teff_k",
-    "log_g",
-    "log_l",
-    "r_rsun",
-    "chromaticity_srgb",
-    "gamut_excursion",
-    "granules_derived",
-    "granules_rendered",
-    "instances_drawn",
-    "data_state",
-    "phase",
-    "a_earth_au",
-    "mdot",
-    "mdot_sc05",
-    "drag_state",
-    "crystal_frac",
-    "neb_r",
-    "neb_v",
-    "neb_x",
-    "adaptation",
-    "sky_visible"
-  ],
-  "gate_console_fail_patterns": [
-    "error",
-    "shader",
-    "self-test fail",
-    "unavailable:"
-  ],
-  "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]",
-  "waypoint_camera": {
-    "black_dwarf_terminus": {
-      "distance_rphoto_multiples": 26.0,
-      "azimuth_deg": 90.0,
-      "_note": "the ending pulls back and faces the galactic plane (measured azimuth sweep): the ember sits quietly under the galaxy"
-    }
+ "_comment": [
+  "Every assumption the harness carries, stated absolutely. If the application's",
+  "defaults change, this file does NOT follow silently: the gate passes these values",
+  "explicitly on every run via URL parameters, so a divergence between harness and",
+  "application defaults cannot change what is measured.",
+  "Waypoint slider positions are resolved by NAME through the shipped",
+  "data/derived/events.json at gate time, and the resolved numeric s is recorded in",
+  "each capture's probe. The names are absolute; the numbers are derived data.",
+  "Re-verify this file whenever a feature is added (see harness/run.py assumptions-check)."
+ ],
+ "viewport": {
+  "width": 1280,
+  "height": 800,
+  "deviceScaleFactor": 1
+ },
+ "quality_tier": "high",
+ "camera": {
+  "mode": "framed",
+  "distance_rphoto_multiples": 4.0,
+  "azimuth_deg": 0.0,
+  "altitude_deg": 25.0,
+  "_altitude_note": "25 deg, not 0: the fork-5 nebula axis is scene z, and a camera looking straight down that axis can never frame the declared equatorial waist (critic round 2, NOT-MET 8)"
+ },
+ "waypoints": [
+  "protostar_contraction",
+  "zams",
+  "present_day",
+  "subgiant",
+  "rgb_tip",
+  "agb_thermal_pulses",
+  "planetary_nebula_peak",
+  "wd_crystallisation",
+  "black_dwarf_terminus"
+ ],
+ "probe_required_keys": [
+  "s",
+  "age_yr",
+  "teff_k",
+  "log_g",
+  "log_l",
+  "r_rsun",
+  "chromaticity_srgb",
+  "gamut_excursion",
+  "granules_derived",
+  "granules_rendered",
+  "instances_drawn",
+  "data_state",
+  "phase",
+  "a_earth_au",
+  "mdot",
+  "mdot_sc05",
+  "drag_state",
+  "crystal_frac",
+  "neb_r",
+  "neb_v",
+  "neb_x",
+  "adaptation",
+  "sky_visible"
+ ],
+ "gate_console_fail_patterns": [
+  "error",
+  "shader",
+  "self-test fail",
+  "unavailable:"
+ ],
+ "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]",
+ "waypoint_camera": {
+  "black_dwarf_terminus": {
+   "distance_rphoto_multiples": 8.0,
+   "azimuth_deg": 90.0,
+   "_note": "the ending pulls back to 8 R_photo and faces the galactic plane: the ember keeps its presence under the galaxy (user-measured: at 26 it shrank to a dot; with the fork-35 visible-light eye the night arrives at 8)"
   }
+ }
 }

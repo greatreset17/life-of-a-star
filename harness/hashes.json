@@ -61,5 +61,15 @@
    "spine.json": "b59de8c22ead5c084dd0a820eb3408e683833a2763aebdf270e5a71c21151023"
   },
   "recorded_utc": "2026-08-04T13:29:09+00:00"
+ },
+ "v0.5-stage0": {
+  "combined": "534f6f681c55ef3f1c3597ccda3a18c6c799993de80b10edc102ad1a8791e0e3",
+  "files": {
+   "colour.json": "0525adc83352dc510734d1870aa225004bd0a6843b3769d5897b30be113b2b8b",
+   "qtable.json": "b643ef61c3f18d20f3f14e393af1fa0967741d4d0acedaa2619b8ad2a565dd4d",
+   "sky_meta.json": "a4c4597884779bbae2bcb23364ad97d5ba8e29405025d24d929a6cb794937458",
+   "spine.json": "bc770960ec99646589804ffdaefd53ebd6d8d02bf61e68ef7f3498eab1d9b7c8"
+  },
+  "recorded_utc": "2026-08-05T11:31:10+00:00"
  }
 }

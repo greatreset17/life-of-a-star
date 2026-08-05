@@ -142,5 +142,30 @@ if seam_jumps:
     check("t05-seam-continuity", max(seam_jumps) < 0.010,
           f"seam dxy = {[f'{v:.4f}' for v in seam_jumps]}")
 
+# --- fork 35: f_vis — the eye's visible-light weight, on every row of the
+# APP table (main track + cooling + region B), with the physics the data
+# actually shows: TiO dims the giant, EUV dims the PN star, and the CIA
+# ember is NOT infrared-dark (the fork's own founding premise, falsified)
+app_tab = json.loads((ROOT / "app" / "data" / "colour.json").read_text())["rows"]
+fv = [r.get("f_vis") for r in app_tab]
+check("t33-fvis-on-every-row", all(v is not None and v > 0 for v in fv),
+      f"{sum(1 for v in fv if v is None)} rows missing f_vis")
+te = [r["teff"] for r in app_tab]
+i_sun = min(range(len(app_tab)), key=lambda i: abs(te[i] - 5772.0))
+ratio = lambda i: fv[i] / fv[i_sun]
+check("t33-fvis-solar-scale", 0.15 < fv[i_sun] < 0.40, f"{fv[i_sun]:.3f}")
+i_giant = min(range(len(app_tab)), key=lambda i: abs(te[i] - 3045.0))
+check("t33-fvis-tio-dims-the-giant", ratio(i_giant) < 0.5,
+      f"3045 K ratio {ratio(i_giant):.2f}")
+i_pn = min(range(len(app_tab)), key=lambda i: abs(te[i] - 56000.0))
+check("t33-fvis-euv-dims-the-pn-star", ratio(i_pn) < 0.9,
+      f"56 kK ratio {ratio(i_pn):.2f}")
+i_cia = min(range(len(app_tab)), key=lambda i: abs(te[i] - 1772.0))
+check("t33-fvis-cia-ember-shines-visibly", ratio(i_cia) > 1.0,
+      f"1772 K ratio {ratio(i_cia):.2f} — the falsified premise, kept measured")
+# region B edge-held: constant below the montreal floor
+rb = [fv[i] for i in range(len(app_tab)) if te[i] < 1400]
+check("t33-fvis-edge-held-in-region-b", len(set(rb)) <= 2, f"{len(set(rb))} values")
+
 print(f"\ncolour suite: {'ALL GREEN' if not failures else f'{len(failures)} FAILURE(S)'}")
 sys.exit(1 if failures else 0)

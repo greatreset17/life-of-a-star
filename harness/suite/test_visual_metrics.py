@@ -414,7 +414,10 @@ if png.exists():
     if MEASURE:
         print(f"      [terminus block-mean span {span:.2f}/255]")
     else:
-        check("t44-terminus-light-structured", span >= 8.0,
+        # recalibrated for the composed distance 8 (fork 35 round): the
+        # larger ember occludes more of the band; healthy measures 6.4,
+        # a flat lamp < 0.5 — the discriminating gulf is unchanged
+        check("t44-terminus-light-structured", span >= 4.0,
               f"block-mean span {span:.2f}/255 — a flat lamp reads < 0.5")
 
 print(f"\nvisual-metrics suite: {'ALL GREEN' if not failures else f'{len(failures)} FAILURE(S)'}")
