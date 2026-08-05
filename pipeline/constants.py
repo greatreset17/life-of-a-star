@@ -361,6 +361,23 @@ FORK 30 — Luminance-gamut conflict resolves toward white (decided final
   this fork governs only how much of it the display can carry.
   [decided v0.4]
 
+FORK 32 — Orbit epoch tables are stored CYLINDRICAL with the azimuth
+  UNWRAPPED along the epoch axis (R, phi_unwrapped, z), not Cartesian.
+  MEASURED: the far-epoch spacing (300 Myr) exceeds every star's galactic
+  period (200-280 Myr, differential), so linear interpolation of Cartesian
+  positions chords whole orbits — at +26 Gyr the entire forward cone was
+  empty (0 of 11905 stars; a single co-rotating frame still fails by
+  differential rotation, 4 of 11905). CHOSEN: unwrapped phase makes the
+  dominant motion — steady rotation — exactly linear per star between
+  epochs; the app reconstructs x = R cos(phi) per frame. Residual error is
+  the epicyclic wobble within one step, a small fraction of R. After the
+  change the same measurement reads 477 stars in the forward cone and the
+  aliveness census resolves 66 bright components (dead path: exactly 0).
+  This fork changes a STORAGE representation, not a physical quantity: the
+  integrated orbits are identical, so Stage-0 physics hashes over derived
+  quantities are unchanged; only the sky position tables re-encode.
+  [decided v0.4]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass

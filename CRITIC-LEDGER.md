@@ -57,3 +57,44 @@ exhaustive — the suite is as strong as its last successful attack round.
    nebula exponent against quiet brightening.
 5. Off-waypoint frames (terminus views) carry no probes; consider adding a
    ninth gated waypoint at s=0.985 so the ending is measured too.
+
+## Round 3 — the ending, handed to the critic with probes (user-directed)
+
+The terminus became the NINTH GATED WAYPOINT (closing round-2 open item 5):
+`black_dwarf_terminus`, with a per-waypoint camera declared in
+assumptions.json (pull-back distance 26 R_photo multiples, azimuth 90°) —
+chosen from the critic's verdict that the composition must put the galaxy
+OVER the ember, not behind the camera. Verdict items, all converted to
+measurements and closed:
+
+- **Scotopic star lift** — the dark-adapted eye brightens the stars, not
+  the UI: `lin *= 1 + 6·rod`, budgeted by the terminus capture luminance
+  band (8.0–34.0, measured 20.4).
+- **Band reveal** — the Milky Way band calibrated to appear at threshold
+  (gain 0.20), band-structure span ≥ 8 held at the terminus camera (t44).
+- **Full-UI adaptation dimming** — panel and HR ink follow the eye
+  (floor 0.22), so the instruments recede with the star.
+- **Double-suppression fix** — star alpha was `lum × falloff`, dimming
+  every star twice; alpha is falloff only, photometry lives in `lum`.
+- **Pixel non-darkness** — the user's requirement "confirm it is not
+  dark, in pixels this time": t42 census (66 bright components, dead path
+  exactly 0), t44 band span, terminus luminance budget — all pixel-side.
+
+## Round 3 finding — the deepest bug of the project (fork 32)
+
+The starfield census read exactly 0. Isolation (the garish-probe method,
+per the user's directive) walked it to the data layer: the 300-Myr
+far-epoch grid vs 200–280-Myr differential orbital periods — Cartesian
+interpolation CHORDS WHOLE ORBITS, so every late-epoch direction was
+geometry-free (front cone 0/11905). A co-rotating frame cannot fix it
+(differential rotation, 4/11905). Fix: cylindrical unwrapped-phase storage
+(fork 32) — front cone 477, census 66 components, and the +26 Gyr sky is
+the physically disc-settled population. Stage-0 identity hash verified
+INVARIANT (7e229316…) across the change: a storage re-encoding, not a
+physics edit. Readers (suite + parallax substitution target) updated in
+the same pass; harness ALL GREEN, 293 checks; gate 9/9 (label final-t).
+
+## Round-1 open items 1–4 — status: CLOSED in rounds 2–3 (items 3 and 4
+became suite tests t-granule-pitch and the per-phase luminance budgets;
+items 1–2 met their declared thresholds during the ending pass). Open
+items: none. Honest residuals stand as declared in round 2.

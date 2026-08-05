@@ -28,10 +28,15 @@ if (!eye.includes("return 6.5 - 9.5 * this.a;")) {
 writeFileSync(eyePath, eye.replace("return 6.5 - 9.5 * this.a;",
   "return 30.0 - 0.0 * this.a; // CENSUS SUBSTITUTION (harness/census.mjs)"));
 
-// diagnostic print (harness copy only)
+// diagnostic print (harness copy only) — same substitution rule: declared,
+// scratch-only, and guarded against drift of its anchor expression
 {
   const sf = join(SCRATCH, "src", "skyfield.js");
   let s2 = readFileSync(sf, "utf8");
+  if (!s2.includes("this.posAttr.needsUpdate = true;")) {
+    console.error("census: diagnostic anchor not found in skyfield.js — the harness assumption drifted");
+    process.exit(2);
+  }
   s2 = s2.replace("this.posAttr.needsUpdate = true;",
     `if (!this.dg) { this.dg = true;
       let front = 0, vis2 = 0;

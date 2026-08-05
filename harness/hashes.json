@@ -42,6 +42,16 @@
   },
   "recorded_utc": "2026-08-04T13:57:29+00:00"
  },
+ "v0.4-final": {
+  "combined": "7e229316a5c495b331e5d345388398a3320e5c1e0cfb9e57a0f339f27d2663ce",
+  "files": {
+   "colour.json": "5a8c18df57b1bd15e8fe687f04a34a735f4d80fa409fb4191bfbd56d3199406f",
+   "qtable.json": "b643ef61c3f18d20f3f14e393af1fa0967741d4d0acedaa2619b8ad2a565dd4d",
+   "sky_meta.json": "a4c4597884779bbae2bcb23364ad97d5ba8e29405025d24d929a6cb794937458",
+   "spine.json": "bc770960ec99646589804ffdaefd53ebd6d8d02bf61e68ef7f3498eab1d9b7c8"
+  },
+  "recorded_utc": "2026-08-05T00:40:53+00:00"
+ },
  "v0.4-stage0": {
   "combined": "32a272e738e10127cb3dc92f9c10f0b3668527bf4d7bfa37e98a29d394962021",
   "files": {
