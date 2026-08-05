@@ -14,12 +14,18 @@ const R_FAR = 1.0e6; // scene units; direction-only geometry, kept well
 
 const frag = /* glsl */ `
   precision highp float;
-  varying vec2 vUv;
+  varying vec3 vDir;
   uniform sampler2D uMap;   // rgb = chain colour * lum, a = scotopic lum
   uniform float uGain;
   uniform float uRod;
   void main() {
-    vec4 t = texture2D(uMap, vUv);
+    // equirect uv PER FRAGMENT: interpolating uv across vertices smears
+    // the atan2 wrap into arcs at the galactic poles (user-measured as
+    // "an unnatural semicircle" of concentric rings above the disc)
+    vec3 d = normalize(vDir);
+    vec2 uv = vec2(atan(d.y, d.x) / 6.2831853 + 0.5,
+                   asin(clamp(d.z, -1.0, 1.0)) / 3.14159265 + 0.5);
+    vec4 t = texture2D(uMap, uv);
     float g = uGain * 0.20;
     vec3 lin = mix(t.rgb * g, vec3(t.a * g), uRod);
     vec3 enc = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055,
@@ -38,11 +44,11 @@ export class MilkyWay {
     this.uniforms = { uMap: { value: tex }, uGain: { value: 0 }, uRod: { value: 0 } };
     const mat = new THREE.ShaderMaterial({
       vertexShader: /* glsl */ `
-        varying vec2 vUv;
+        varying vec3 vDir;
         void main() {
-          // equirect uv from the GALACTIC-frame direction
-          vec3 d = normalize(position);
-          vUv = vec2(atan(d.y, d.x) / 6.2831853 + 0.5, asin(clamp(d.z, -1.0, 1.0)) / 3.14159265 + 0.5);
+          // GALACTIC-frame direction; the equirect uv is computed in the
+          // fragment shader (vertex-interpolated uv wraps at the poles)
+          vDir = position;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
         }`,
       fragmentShader: frag,

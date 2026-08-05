@@ -161,7 +161,12 @@ BUDGET = {  # measured on the accepted build, then DECLARED as ranges
     "wd_crystallisation": (0.0, 8.0),
     # floor 2.0 ASSERTS the galaxy's presence at the ending — the build in
     # which the band threshold withheld it measured 1.93 and must fail here
-    "black_dwarf_terminus": (8.0, 34.0),
+    # floor recalibrated after forks 34 + the band pole-uv fix: the old
+    # 8.0 floor was propped up by two artifacts (the undithered void
+    # competing at scotopic, and vertex-interpolated equirect uv smearing
+    # bright plane texels across the galactic pole). Honest content now
+    # measures 7.0; a dead ending (no band, no stars) reads ~2.5.
+    "black_dwarf_terminus": (4.5, 34.0),
 }
 for wp, (lo, hi) in BUDGET.items():
     png = cap / f"{wp}.png"

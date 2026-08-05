@@ -101,6 +101,19 @@ export class NebulaShell {
     scene.add(mesh);
   }
 
+  // the presentation ramp is ANCHORED TO THE TABLE'S OWN HORIZON (same
+  // move as region B's anchoring): without this the compressive exponent
+  // keeps six-decades-dead emission at a visible level right up to the
+  // last solved step, then pops to zero (measured: 0.0023 -> 0 in one
+  // slider quantum). endPow is the last step's compressed value; the veil
+  // now dies exactly where the data ends, continuously.
+  setHorizon(lastStep) {
+    const SIGMA_SUN = 3.828e26 / (4 * Math.PI * 6.957e8 * 6.957e8);
+    const sbEnd = lastStep.l_lines_w
+      / (4 * Math.PI * Math.pow(lastStep.r_s_au * 1.495978707e11, 2));
+    this.endPow = Math.pow(sbEnd / SIGMA_SUN, 0.1);
+  }
+
   // step: an entry of nebula.json interpolated at s (or null when no nebula)
   apply(step, rStarScene) {
     const u = this.uniforms;
@@ -121,7 +134,7 @@ export class NebulaShell {
     // brief, and far below the saturation of the published long exposures.
     const SIGMA_SUN = 3.828e26 / (4 * Math.PI * 6.957e8 * 6.957e8);
     const sb = step.l_lines_w / (4 * Math.PI * Math.pow(step.r_s_au * 1.495978707e11, 2));
-    u.uBright.value = 0.6 * Math.pow(sb / SIGMA_SUN, 0.1);
+    u.uBright.value = 0.6 * Math.max(Math.pow(sb / SIGMA_SUN, 0.1) - (this.endPow ?? 0), 0);
   }
 
   frame(camera) {

@@ -175,3 +175,41 @@ composed button. That is fork-28 physics, kept.
 
 Suite 307 checks ALL GREEN; gate 9/9 (final-v). Stage-0 identity
 unchanged (render/presentation round).
+
+## Round 6 — self-review (user-reported, five items)
+
+1. **"Unnatural semicircle over the star" — REAL RENDERING BUG, fixed.**
+   The band's equirectangular uv was computed PER VERTEX and interpolated:
+   near the galactic poles the atan2 wrap smears the whole longitude range
+   across single triangles — concentric arc rings, hard chord edge, and
+   the earlier "streak fan" were all this one defect. The uv now derives
+   per fragment from the interpolated direction. Verified at the reported
+   state (s=0.95901, terminus camera): rings gone, starfield + band clean.
+2. **"Terminus button, then sliding works; sun looks small after" —
+   camera state, fixed.** Only the terminus button composed a shot; the
+   camera then STAYED at d=26 for every later waypoint. Every waypoint
+   button now applies the DECLARED composition (the harness assumptions'
+   4/0/25; terminus 26/90/25) — a button is a cut, and cuts compose.
+3. **"From the initial state the slider shows no stars" — adaptation at
+   close range, guided.** At d=4 a dark ember still fills 84% of the
+   field; the eye model honestly holds mesopic and the night cannot
+   arrive. The piece now SAYS so at the moment it applies ("this close,
+   even an ember holds the eye — pull back and the night arrives")
+   instead of leaving an unexplained near-black frame.
+4. **"Green background near the PN" — mostly physics, one real defect
+   fixed.** The camera is INSIDE the shell (2.4 R_sun vs thousands of AU):
+   a sky-wide green veil is the honest view. The real defect: the fork-25
+   compressive exponent kept six-decades-dead emission visible to the
+   table's last step, then popped to zero in one slider quantum
+   (0.0023 -> 0, measured). The presentation ramp is now ANCHORED TO THE
+   TABLE'S HORIZON (the region-B move): it dies continuously exactly
+   where the data ends. Verified: s=0.7437 vs 0.7460 now differ by <1/255.
+5. **"Stars/nebula move with the mouse" — by design.** The drag orbits
+   the camera; the sky pans because the view direction changes. Parallax
+   on parsec-distant stars at R_sun-scale camera motion is sub-pixel
+   (fork 31) — the sky pans rigidly, which is correct.
+
+Terminus luminance floor recalibrated 8.0 -> 4.5: the old floor was
+propped up by two artifacts (undithered void competing at scotopic;
+pole-uv smear adding false light). Honest content measures 7.0; dead
+ending ~2.5. Suite 307 ALL GREEN; gate 9/9 (final-w).

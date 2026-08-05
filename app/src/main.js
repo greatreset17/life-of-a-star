@@ -68,6 +68,7 @@ async function boot() {
   const star = new Star(scene);
   const voidBg = new Void(scene);
   const shell = new NebulaShell(scene);
+  if (nebulaTab) shell.setHorizon(nebulaTab.steps[nebulaTab.steps.length - 1]);
   const eye = new Eye();
   const ages = track.age_yr;
   const skyField = (skyMeta && sunEpochs)
@@ -109,15 +110,21 @@ async function boot() {
   slider.value = String(s);
   slider.addEventListener("input", () => { s = parseFloat(slider.value); });
 
+  // declared per-waypoint compositions — the same framing the harness
+  // assumptions state (global d=4/az=0/alt=25; the terminus pulls back to
+  // face the galaxy). A waypoint button is a CUT: it composes the shot,
+  // and the camera no longer stays wherever the previous cut left it
+  // (user-measured: after the terminus every star looked tiny).
+  const WP_CAM = { black_dwarf_terminus: { d: 26, az: 90, alt: 25 } };
   const wpBox = document.getElementById("waypoints");
   for (const [name, sv] of Object.entries(track.events_s)) {
     const b = document.createElement("button");
     b.textContent = name.replaceAll("_", " ");
     b.addEventListener("click", () => {
       s = sv; slider.value = String(sv); eyeJump = true;
-      if (name === "black_dwarf_terminus") { // the ember sits under the galaxy
-        cam.d = 26; cam.az = Math.PI / 2; cam.alt = (25 * Math.PI) / 180;
-      }
+      const c = WP_CAM[name] ?? { d: 4, az: 0, alt: 25 };
+      cam.d = c.d; cam.az = (c.az * Math.PI) / 180; cam.alt = (c.alt * Math.PI) / 180;
+      cam.vAz = 0; cam.vAlt = 0;
     });
     wpBox.appendChild(b);
   }
@@ -297,6 +304,12 @@ async function boot() {
     }
     if (mk.existence && s >= mk.existence.s) {
       notes.push("beyond here the object being rendered exists nowhere, and will not for a very long time");
+    }
+    // the ember floods the eye at close range: the sky is there, but the
+    // adaptation the eye model computes cannot reach it — say so instead
+    // of leaving a black screen (user-measured three times)
+    if (yStar < 0.05 && diskFrac > 0.25) {
+      notes.push("this close, even an ember holds the eye — pull back (wheel) and the night arrives");
     }
     ageNote.textContent = notes[notes.length - 1] ?? "";
     hr.draw(eep, cssColour(crow.rgb_lin));
