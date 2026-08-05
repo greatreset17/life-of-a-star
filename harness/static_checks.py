@@ -96,6 +96,31 @@ def check_sin_hash(srcdir):
     return bad
 
 
+def check_timeliterals(srcdir):
+    """Pacing path: exactly one named duration parameter (PLAY_SPAN_S) and
+    no other numeric literal on any line that references it — the check
+    declared dormant in this module's docstring, active now that autoplay
+    exists. A second pacing constant, or a raw number spliced into the
+    advance expression, fails by construction."""
+    bad = []
+    defs = 0
+    for p in sorted(srcdir.rglob("*.js")):
+        for i, line in enumerate(p.read_text().splitlines(), 1):
+            if "PLAY_SPAN_S" not in line:
+                continue
+            stripped = strip_strings_comments(line)
+            if re.search(r"\bconst\s+PLAY_SPAN_S\s*=", stripped):
+                defs += 1
+                if not re.fullmatch(r"\s*const\s+PLAY_SPAN_S\s*=\s*\d+(\.\d+)?\s*;\s*",
+                                    stripped):
+                    bad.append(f"{p.name}:{i}: duration definition is not a bare named number")
+            elif re.search(r"\d", stripped):
+                bad.append(f"{p.name}:{i}: numeric literal beside the named duration")
+    if defs != 1:
+        bad.append(f"expected exactly one PLAY_SPAN_S definition, found {defs}")
+    return bad
+
+
 def main(argv):
     # argv: [script, ("all",) (srcdir,)] — "all" is the subcommand, not a dir
     rest = [a for a in argv[1:] if a != "all"]
@@ -107,7 +132,8 @@ def main(argv):
     failures = 0
     for name, fn in [("identifiers", check_identifiers),
                      ("colour-literals", check_colour_literals),
-                     ("sin-hash", check_sin_hash)]:
+                     ("sin-hash", check_sin_hash),
+                     ("time-literals", check_timeliterals)]:
         bad = fn(srcdir)
         print(f"{'PASS ' if not bad else 'FAIL '} static/{name}" + ("" if not bad else f"  ({len(bad)})"))
         for b in bad:

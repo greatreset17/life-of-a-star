@@ -35,7 +35,7 @@ Deep links are shipped functionality: `?wp=rgb_tip`, `?s=0.985`,
   numerics), visual gate (a capture without a complete probe is refused
   before the screenshot is written), identity hashing, static checks
   (identifier purity, colour literals, sinless shader hashes), and the
-  suite (`harness/suite/`, 315 checks): track fidelity, colour chain,
+  suite (`harness/suite/`, 316 checks): track fidelity, colour chain,
   granulation, limb darkening, Earth, cooling, nebula, sky, gate probes,
   pixel-measured visual metrics, acquisition integrity, fork completeness.
 - `pipeline/` — Stage 0 (Python, float64). Acquisition against a
@@ -67,4 +67,8 @@ absence renders as absence, by name. Region B (beyond the ~1470 K data
 horizon) is declared, single-law, anchored, bounded, and labelled on screen
 for its whole duration. The panel is the probe surface; no test hook exists
 in shipping source, and no verification path writes to physical state.
-Manual slider only — autoplay is deliberately absent from version one.
+Manual slider first — version one declared autoplay absent; it was added at the
+commissioner's request as one play/pause control with a SINGLE named duration
+(PLAY_SPAN_S = 120 s for the whole journey). The static time-literals check,
+declared dormant for exactly this moment, activated with it: no second pacing
+constant and no raw number can enter the advance path.

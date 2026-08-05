@@ -121,6 +121,22 @@ async function boot() {
   slider.value = String(s);
   slider.addEventListener("input", () => { s = parseFloat(slider.value); });
 
+  // autoplay — version one declared it absent; added at the commissioner's
+  // request. One named duration carries the whole journey, and the static
+  // time-literals check (declared dormant for exactly this moment) pins it:
+  // no second pacing constant, no raw number in the advance path.
+  const PLAY_SPAN_S = 120;
+  const playBtn = document.getElementById("playbtn");
+  let playing = false;
+  const setPlay = (on) => {
+    playing = on;
+    playBtn.textContent = on ? "pause" : "play";
+  };
+  playBtn.addEventListener("click", () => {
+    if (!playing && s > 0.9995) { s = 0; slider.value = String(s); eyeJump = true; }
+    setPlay(!playing);
+  });
+
   // declared per-waypoint compositions — the same framing the harness
   // assumptions state (global d=4/az=0/alt=25; the terminus pulls back to
   // face the galaxy). A waypoint button is a CUT: it composes the shot,
@@ -184,6 +200,14 @@ async function boot() {
       if (frameTimes.length > 120) frameTimes.shift();
     }
     const time = tMs / 1000;
+    const dtS = Math.min((tMs - (lastT ?? tMs)) / 1000, 0.1);
+    lastT = tMs;
+    if (playing) {
+      const ds = dtS / PLAY_SPAN_S;
+      s = Math.min(s + ds, 1);
+      slider.value = String(s);
+      if (s >= 1) setPlay(false);
+    }
     // state at slider position — everything from the tables
     const eep = eepOfS(track, s);
     const i = rowAt(track, eep);
@@ -248,8 +272,6 @@ async function boot() {
     const yStar = Math.min(exposureEye / (1 + exposureEye), 1);
     const diskFrac = Math.min(1, Math.pow(rR / Math.max(dist - rR, 1e-9), 2)
       / Math.pow(Math.tan(0.5 * camera.fov * Math.PI / 180), 2));
-    const dtS = Math.min((tMs - (lastT ?? tMs)) / 1000, 0.1);
-    lastT = tMs;
     const fieldLum = yStar * diskFrac + (nstep ? 0.02 : 0);
     if (eyeJump) { eye.jumpTo(fieldLum); eyeJump = false; }
     const adaptation = eye.step(fieldLum, dtS);

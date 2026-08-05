@@ -62,10 +62,28 @@ const report = {};
   report.path_b = { probe: await probeOf(page), errors: errs };
   await page.close();
 }
+{ // path C — the play button: the journey must advance at the declared
+  // rate (PLAY_SPAN_S for the full span; measured over a six-second run)
+  const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await page.goto(base, { waitUntil: "load" });
+  await page.waitForSelector('[data-q="ready"][data-value="1"]', { state: "attached", timeout: 30000 });
+  await page.click("#playbtn");
+  const t0 = Date.now();
+  await page.waitForTimeout(6000);
+  const sNow = parseFloat(await page.inputValue("#timeline"));
+  const elapsed = (Date.now() - t0) / 1000;
+  const expected = elapsed / 120;
+  report.path_c = { s_after: sNow, expected, ok: Math.abs(sNow / expected - 1) < 0.2 };
+  await page.close();
+}
 await browser.close();
 srv.close();
 writeFileSync(join(OUT, "userpaths.json"), JSON.stringify(report, null, 1));
 for (const [k, v] of Object.entries(report)) {
-  console.log(`${k}: sky_visible=${v.probe.sky_visible} adaptation=${v.probe.adaptation} errors=${v.errors.length}`);
-  for (const e of v.errors) console.log(`  ERR ${e}`);
+  if (v.probe) {
+    console.log(`${k}: sky_visible=${v.probe.sky_visible} adaptation=${v.probe.adaptation} errors=${v.errors.length}`);
+    for (const e of v.errors) console.log(`  ERR ${e}`);
+  } else {
+    console.log(`${k}: s=${v.s_after?.toFixed(4)} expected~${v.expected?.toFixed(4)} ${v.ok ? "OK" : "FAIL"}`);
+  }
 }

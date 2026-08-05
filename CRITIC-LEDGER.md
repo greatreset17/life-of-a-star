@@ -239,3 +239,17 @@ sky") so the green sky reads as the story it is. t44 span recalibrated
 Stage-0 identity moves BY DECLARATION for the first time since v0.4:
 colour.json gains f_vis (recorded v0.5-stage0, 534f6f68...). Suite 315
 checks ALL GREEN; gate 9/9 (final-x).
+
+## Round 8 — autoplay (commissioned addition)
+
+Version one declared autoplay absent; the commissioner requested it. One
+play/pause button drives the slider across the whole journey in a single
+named duration (PLAY_SPAN_S = 120 s); pressing play at the end restarts
+from the beginning as a cut. The harness had planned for this: the
+time-literals static check, documented dormant "active once autoplay
+exists", is now implemented and green — the pacing path contains exactly
+one named duration and no other numeric literal. Behavioural rate is
+measured by userpaths path C (6 s of playback -> s 0.0510 vs 0.0503
+expected). Manual input during playback seeks without stopping; the
+adaptation transient is paid honestly along the way (no eye jumps).
+Suite 316 checks ALL GREEN; gate 9/9 (final-y).
