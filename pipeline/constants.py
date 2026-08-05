@@ -404,6 +404,25 @@ FORK 33 — Beyond the identity horizon the sky is the population, not the
   were data; the stand-in sky renders the theorem instead and is labelled.
   [decided v0.4]
 
+FORK 34 — The paint yields to the sky (user-measured: "the background
+  turns green"). The void layer is DECLARED presentation (fork 20 family):
+  a painterly achromatic depth so darkness never reads as dead flat black.
+  MEASURED on the reported frame: its 1-3/255 mottle (a) quantises into
+  hard-edged posterised blobs with chroma fringing — the layer wrote raw
+  display values with no dither while every data layer dithers — and (b)
+  sits at the same 1-3/255 as the Milky Way band itself at deep
+  adaptation, i.e. presentation texture at LUMINANCE PARITY with data,
+  which the eye reads as green-tinged cloud. CHOSEN: the void gains the
+  same triangular 1-LSB dither as every other layer (display-space, since
+  the layer is display-referred), and its level retires with rod vision —
+  0.012 photopic falling to 0.0018 at full scotopic — so at deep
+  adaptation the REAL sky owns the dark. Same principle as the interface
+  dimming: nothing painted may compete with what is computed. Additional
+  amendment recorded on fork 28: TAU_DARK 12 s -> 4.5 s — at 12 s the
+  slider's natural pace never completed dark adaptation, so the night sky
+  was unreachable except by waypoint buttons (user-measured twice).
+  [decided v0.4]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass

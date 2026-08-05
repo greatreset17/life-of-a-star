@@ -135,3 +135,43 @@ t42-terminus-real-eye-stars (>=150, no substitution), census recalibrated
 (distance/latitude preserved, longitude equidistributed, deterministic,
 identity profile matches). Stage-0 identity hash 7e229316... INVARIANT.
 Suite 305 checks ALL GREEN; gate 9/9 (final-u).
+
+## Round 5 — self-review (user-reported: "the background turns green;
+stars and the nebula never appear when moving by slider alone")
+
+All three verified real and traced by layer decomposition (layers.mjs)
+and path-differential instrumentation. Three distinct causes:
+
+1. **Green background = the void layer.** The declared painterly depth
+   wrote raw display values with NO dither (every data layer dithers), so
+   its 1-3/255 mottle quantised into hard-edged posterised blobs with
+   chroma fringing — and at deep adaptation it sat at LUMINANCE PARITY
+   with the real Milky Way band: presentation texture as bright as data.
+   FIX (fork 34): triangular 1-LSB display-space dither + the paint
+   RETIRES with rod vision (0.012 -> 0.0018 scotopic). Same principle as
+   the interface dimming: nothing painted may compete with the computed.
+2. **Stars unreachable at slider pace.** TAU_DARK 12 s outlived every
+   pause a hand actually makes; the night was reachable only by buttons.
+   FIX (fork 28 amendment): 4.5 s — the transient stays a felt event, a
+   two-breath pause completes it. Measured: the slider terminus path now
+   reaches "scotopic" (probe), stars in pixels on every tested camera.
+3. **The nebula was invisible from the app's own default camera.** The
+   harness assumptions DECLARE altitude 25 deg with a note that a camera
+   looking down the fork-5 nebula axis can never frame the equatorial
+   waist — but the app booted at 0 deg: every verified composition
+   assumed a framing the shipped default never gave. From the pole axis
+   the declared C_EQ=3 waist is at its dens^2 minimum and the inside-shell
+   veil is a colourless wash. FIX: the app default altitude IS the
+   declared 25 deg (URL cam_alt still overrides). Measured: slider path
+   to the PN now shows the veil identically to the gate composition
+   (corner G-dominance 72% both; was 0%).
+
+Corrected measurement note: two earlier star counts on the close-in
+slider path (183, 461) were CONTAMINATED by disc pixels (mask did not
+exclude the d=4 disc). The honest close-in state is mesopic — the ember
+itself keeps the eye at a ~ 0.11, a dozen bright stars + faint tail
+(3632 by count), and the full night blooms on pull-back or via the
+composed button. That is fork-28 physics, kept.
+
+Suite 307 checks ALL GREEN; gate 9/9 (final-v). Stage-0 identity
+unchanged (render/presentation round).

@@ -33,7 +33,13 @@ const frag = /* glsl */ `
                 + vnoise(vNdc * 2.3, 11u) * 0.30 + vnoise(vNdc * 7.1, 23u) * 0.15;
     float vign = 1.0 - 0.35 * dot(vNdc, vNdc);
     float g = uLevel * (0.55 + 0.45 * depth) * vign;
-    gl_FragColor = vec4(vec3(g), 1.0);
+    // triangular ~1 LSB dither in DISPLAY space (this layer is written
+    // display-referred): without it the 1-3/255 mottle quantises into
+    // hard-edged blobs that read as cloud shapes — measured on a user
+    // frame as posterised contours with chroma fringing (fork 34)
+    uvec3 h = pcg3d(uvec3(uvec2(gl_FragCoord.xy), 3u));
+    float dth = ((float(h.x) + float(h.y)) * (1.0 / 4294967295.0) - 1.0) / 255.0;
+    gl_FragColor = vec4(vec3(clamp(g + dth, 0.0, 1.0)), 1.0);
   }
 `;
 
@@ -54,7 +60,14 @@ export class Void {
     scene.add(mesh);
   }
 
-  frame(time) {
+  // fork 34 — the paint yields to the sky: the void is declared
+  // presentation (a painterly depth for the darkness), and at deep
+  // adaptation it must not compete with the REAL sky — measured on a user
+  // frame, the mottle sat at the same 1-3/255 as the galaxy's own band
+  // and read as green-tinged cloud. As rod vision takes over, the paint
+  // retires and the data owns the dark.
+  frame(time, rod = 0) {
     this.uniforms.uTime.value = time;
+    this.uniforms.uLevel.value = 0.012 * (1.0 - 0.85 * rod);
   }
 }

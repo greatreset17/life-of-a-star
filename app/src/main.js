@@ -88,7 +88,12 @@ async function boot() {
   const cam = {
     d: parseFloat(params.get("cam_d") ?? "4"),
     az: (parseFloat(params.get("cam_az") ?? "0") * Math.PI) / 180,
-    alt: (parseFloat(params.get("cam_alt") ?? "0") * Math.PI) / 180,
+    // default altitude 25 deg — the DECLARED framing (harness assumptions):
+    // the fork-5 nebula axis is scene z, and a camera looking straight down
+    // that axis can never frame the equatorial waist; the app booted at 0
+    // while every verified composition assumed 25 (user-measured: "the
+    // nebula never appears from the slider")
+    alt: (parseFloat(params.get("cam_alt") ?? "25") * Math.PI) / 180,
     vAz: 0, vAlt: 0,
   };
   let s = 0;
@@ -200,7 +205,6 @@ async function boot() {
       contrast: convective,
     });
     const cellPx = star.frame(camera, { x: holder.clientWidth, y: holder.clientHeight }, time);
-    voidBg.frame(time);
     // the nebula: nearest solved step at this s (transient — outside its
     // ten-thousand-year window the interpolation reads nothing)
     let nstep = null;
@@ -228,6 +232,7 @@ async function boot() {
     const adaptation = eye.step(fieldLum, dtS);
     const magLimit = eye.magLimit();
     const rod = eye.rodFraction();
+    voidBg.frame(time, rod); // fork 34 — the paint yields to the sky
     if (skyField) skyField.update(ageYr, magLimit, rod, camera.position);
     // the chrome yields to the dark: at deep adaptation the instrument ink
     // dims so the interface cannot outshine the sky it reports on

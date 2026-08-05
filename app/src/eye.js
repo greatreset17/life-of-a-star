@@ -7,7 +7,12 @@
 // TRANSIENT is compressed: real dark adaptation takes tens of minutes; the
 // declared time constants below compress that to seconds so a hand on the
 // slider can feel it.
-const TAU_DARK_S = 12.0;   // compressed from ~20 min (declared)
+// fork 28 amendment (user-measured twice): at 12 s the slider's natural
+// pace never reached the dark sky at all — the transient outlived every
+// pause a hand actually makes, so the piece's own night was unreachable
+// except by the waypoint buttons. 4.5 s keeps the transient a felt event
+// (the sky still ARRIVES) while a two-breath pause completes it.
+const TAU_DARK_S = 4.5;    // compressed from ~20 min (declared)
 const TAU_LIGHT_S = 0.4;   // light adaptation is genuinely fast
 
 export class Eye {
