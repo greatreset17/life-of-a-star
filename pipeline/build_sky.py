@@ -94,6 +94,34 @@ def build():
     # positions — a spine-node Sun is up to 1/6 of an orbit (kpc) off the
     # true path between MS nodes and collapses every direction (measured)
     sun_epochs = np.stack([np.interp(t_out, t_sun, sun_pos[:, k]) for k in range(3)], axis=1)
+
+    # fork 33 — the stationary stand-in sky. Heliocentric state at the
+    # present epoch node:
+    k0 = int(np.argmin(np.abs(t_out)))
+    hel0 = pos_epochs[k0] - sun_epochs[k0]
+    d0 = np.linalg.norm(hel0, axis=1)
+    b0 = np.arcsin(np.clip(hel0[:, 2] / d0, -1, 1))
+    # longitude re-drawn by the golden-angle sequence: deterministic,
+    # equidistributed, and uncorrelated with the catalogue ordering's
+    # sky structure — the one declared draw of the piece (fork 33)
+    GOLDEN = 0.6180339887498949
+    ell_m = 2 * np.pi * np.modf((np.arange(len(d0)) + 1) * GOLDEN)[0]
+    standin = np.stack([d0 * np.cos(b0) * np.cos(ell_m),
+                        d0 * np.cos(b0) * np.sin(ell_m),
+                        d0 * np.sin(b0)], axis=1)
+    (ROOT / "app" / "data" / "sky_mixed.bin").write_bytes(
+        standin.astype("<f4").tobytes())
+    # per-epoch count of stars whose TRUE propagated apparent magnitude is
+    # still naked-eye — the identity profile the suite verifies and the
+    # stand-in rule complements
+    gmag_arr = np.array([r["gmag"] for r in rows])
+    hel_all = pos_epochs - sun_epochs[:, None, :]
+    d_all = np.linalg.norm(hel_all, axis=2)
+    m_all = gmag_arr[None, :] + 5 * np.log10(np.maximum(d_all, 1e-3)
+                                             / np.maximum(d0, 1e-3)[None, :])
+    identity_vis = (m_all <= 6.5).sum(axis=1)
+    print(f"identity profile: {identity_vis[k0]} now, "
+          f"{identity_vis[-1]} at the last epoch (fork 33 stand-ins carry the rest)")
     sun_cyl = np.stack([np.hypot(sun_epochs[:, 0], sun_epochs[:, 1]),
                         np.unwrap(np.arctan2(sun_epochs[:, 1], sun_epochs[:, 0])),
                         sun_epochs[:, 2]], axis=1)
@@ -108,6 +136,7 @@ def build():
         "solar_period_myr": round(float(period), 1),
         "corotating_period_myr": round(float(period), 4),
         "solar_circuits": round(float(total_turns), 2),
+        "identity_visible": [int(v) for v in identity_vis],
         "gmag": [round(r["gmag"], 3) for r in rows],
         "rgb_lin": rgbs,
         "scotopic_factor": scot,

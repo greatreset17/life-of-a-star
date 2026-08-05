@@ -138,6 +138,62 @@ check("t30-monotonic-decorrelation",
 print(f"      [mean bright-star displacement: {sep_deg[0.1]:.3f}° @0.1 Myr, "
       f"{sep_deg[1.0]:.2f}° @1 Myr, {sep_deg[30.0]:.1f}° @30 Myr, {sep_deg[1000.0]:.0f}° @1 Gyr]")
 
+# --- test 30 extension (fork 33): the stationary stand-in table. A star
+# that leaves the naked-eye sky is replaced by a stand-in with the SAME
+# catalogued magnitude, colour, distance and latitude — only the azimuth
+# (the quantity phase mixing scrambles) is a declared golden-angle draw.
+mixed = np.frombuffer((ROOT / "app/data/sky_mixed.bin").read_bytes(),
+                      dtype="<f4").reshape(n, 3)
+hel0 = pos[k0] - sun
+d0_all = np.linalg.norm(hel0, axis=1)
+b0 = np.arcsin(np.clip(hel0[:, 2] / d0_all, -1, 1))
+dm = np.linalg.norm(mixed, axis=1)
+# tolerance is set by f32 CANCELLATION, not physics: the table stores
+# galactocentric (~8 kpc) coordinates in f32; differencing them at parsec
+# scale leaves ~5e-3 pc of absolute noise, which is ~8e-3 RELATIVE for the
+# nearest star (measured) — the pipeline built the stand-ins from the f64
+# originals, this test recomputes from the shipped f32 tables
+check("t30-standin-distance-preserved",
+      bool(np.max(np.abs(dm / d0_all - 1)) < 2e-2),
+      f"max rel err {np.max(np.abs(dm / d0_all - 1)):.2e}")
+bm = np.arcsin(np.clip(mixed[:, 2] / dm, -1, 1))
+check("t30-standin-latitude-preserved",
+      bool(np.max(np.abs(bm - b0)) < 1e-2),
+      f"max |db| {np.max(np.abs(bm - b0)):.2e} rad")
+ellm = np.arctan2(mixed[:, 1], mixed[:, 0])
+u = np.sort((ellm / (2 * np.pi)) % 1.0)
+ks = float(np.max(np.abs(u - (np.arange(1, n + 1) - 0.5) / n)))
+check("t30-standin-longitude-equidistributed", ks < 0.01, f"KS {ks:.4f}")
+GOLDEN = 0.6180339887498949
+ell_ref = 2 * np.pi * np.modf((np.arange(n) + 1) * GOLDEN)[0]
+ref = np.stack([d0_all * np.cos(b0) * np.cos(ell_ref),
+                d0_all * np.cos(b0) * np.sin(ell_ref),
+                d0_all * np.sin(b0)], axis=1).astype("<f4")
+check("t30-standin-deterministic",
+      bool(np.max(np.abs(ref - mixed)) < 1e-3 * np.maximum(d0_all, 1)[:, None].max()),
+      "regenerated table does not match the shipped one")
+# the identity profile stored in the meta matches a recomputation
+iv = np.array(meta["identity_visible"])
+g_arr = np.array(meta["gmag"])
+sun_all = np.frombuffer((ROOT / "app/data/sun_epochs.bin").read_bytes(),
+                        dtype="<f4").reshape(ne, 3)
+sun_cart = np.stack([sun_all[:, 0] * np.cos(sun_all[:, 1]),
+                     sun_all[:, 0] * np.sin(sun_all[:, 1]), sun_all[:, 2]], axis=1)
+ok_iv = True
+for k in (k0, k0 + 3, ne - 1):
+    dk = np.linalg.norm(pos[k] - sun_cart[k], axis=1)
+    mk = g_arr + 5 * np.log10(np.maximum(dk, 1e-3) / np.maximum(d0_all, 1e-3))
+    ok_iv &= abs(int((mk <= 6.5).sum()) - int(iv[k])) <= 2
+check("t30-identity-profile-matches", bool(ok_iv),
+      f"meta identity_visible disagrees with recomputation")
+check("t30-identity-declines-then-persists",
+      iv[k0] == n and 20 < iv[-1] < 500,
+      f"now {iv[k0]}, last epoch {iv[-1]}")
+app_sf = (ROOT / "app/src/skyfield.js").read_text()
+check("t30-standin-declared-in-app",
+      "IDENTITY_MAG = 6.5" in app_sf and "fork 33" in app_sf
+      and "fork 33" in (ROOT / "app/src/panel.js").read_text(), "")
+
 # --- test 32: boundary integrity — no code path evolves luminosity/mass/
 # existence: the per-star photometry in the meta is a single static array
 # (structural: sky.json has exactly one gmag list and no time-indexed

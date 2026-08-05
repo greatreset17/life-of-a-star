@@ -13,6 +13,10 @@ import * as THREE from "three";
 
 const PC_TO_RSUN = 3.0856775814913673e16 / 6.957e8;
 const R_DRAW = 1.0e4; // camera-anchored shell radius, scene units
+// fork 33 — the identity horizon: while a star's true propagated apparent
+// magnitude stays naked-eye (the dark eye's own 6.5) it is drawn at its
+// true position; once it leaves, its stationary stand-in is drawn instead.
+const IDENTITY_MAG = 6.5;
 
 const vert = /* glsl */ `
   attribute vec3 rgb;
@@ -69,10 +73,11 @@ const frag = /* glsl */ `
 `;
 
 export class SkyField {
-  constructor(scene, skyMeta, positionsF32, sunEpochsF32) {
+  constructor(scene, skyMeta, positionsF32, sunEpochsF32, mixedF32) {
     this.meta = skyMeta;
     this.pos = positionsF32;      // [n_epoch][n_star][3] galactocentric pc
     this.sunE = sunEpochsF32;     // [n_epoch][3] — the Sun ON THE SAME GRID
+    this.mixed = mixedF32 ?? null; // [n_star][3] fork-33 stand-in offsets (pc)
     const n = skyMeta.n_star;
     // heliocentric quantities always pair star(epoch) with Sun(SAME epoch,
     // same interpolation weights). Any other pairing turns shared orbital
@@ -85,6 +90,7 @@ export class SkyField {
       // cylindrical storage: reconstruct Cartesian before differencing
       const sR0 = sunEpochsF32[k0 * 3], sP0 = sunEpochsF32[k0 * 3 + 1], sz0 = sunEpochsF32[k0 * 3 + 2];
       const sx = sR0 * Math.cos(sP0), sy = sR0 * Math.sin(sP0);
+      this.sPhi0 = sP0; // stand-in offsets stay rigid with the solar azimuth
       this.d0 = new Float32Array(n);
       for (let i = 0; i < n; i++) {
         const j = i * 3;
@@ -139,30 +145,52 @@ export class SkyField {
     const sx = sR * Math.cos(sPhi), sy = sR * Math.sin(sPhi);
     const P = this.posAttr.array;
     const MG = this.magAttr.array;
-    let visible = 0;
+    const M0 = this.mixed;
+    const cosD = Math.cos(sPhi - this.sPhi0), sinD = Math.sin(sPhi - this.sPhi0);
+    let visible = 0, standins = 0;
     const cx = camPos.x, cy = camPos.y, cz = camPos.z;
     for (let i = 0; i < n; i++) {
       const j = i * 3;
-      // heliocentric position in scene units, f64, then camera-relative:
-      // the direction from the CAMERA carries the true parallax
       const Rj = A[j] * (1 - f) + B[j] * f;
       const Pj = A[j + 1] * (1 - f) + B[j + 1] * f;
-      const x = (Rj * Math.cos(Pj) - sx) * PC_TO_RSUN - cx;
-      const y = (Rj * Math.sin(Pj) - sy) * PC_TO_RSUN - cy;
-      const z = ((A[j + 2] * (1 - f) + B[j + 2] * f) - sz) * PC_TO_RSUN - cz;
+      // heliocentric position (pc, f64) — the fork-33 identity test is
+      // camera-independent
+      const hx = Rj * Math.cos(Pj) - sx;
+      const hy = Rj * Math.sin(Pj) - sy;
+      const hz = (A[j + 2] * (1 - f) + B[j + 2] * f) - sz;
+      let dPc = Math.sqrt(hx * hx + hy * hy + hz * hz);
+      // apparent magnitude at this epoch: catalogue magnitude shifted by the
+      // changed distance (luminosity FROZEN at the present epoch — declared)
+      let mag = m.gmag[i] + 5 * Math.log10(Math.max(dPc, 1e-3) / Math.max(this.d0[i], 1e-3));
+      // camera-relative: the direction from the CAMERA carries the parallax
+      let x = hx * PC_TO_RSUN - cx;
+      let y = hy * PC_TO_RSUN - cy;
+      let z = hz * PC_TO_RSUN - cz;
+      if (M0 && mag > IDENTITY_MAG) {
+        // fork 33 — this name has left the naked-eye sky; its stationary
+        // stand-in is drawn instead: same frozen magnitude, colour,
+        // distance and latitude, longitude the declared golden-angle draw,
+        // rigid with the solar orbital azimuth like the band
+        const ox = M0[j] * cosD - M0[j + 1] * sinD;
+        const oy = M0[j] * sinD + M0[j + 1] * cosD;
+        dPc = this.d0[i];
+        mag = m.gmag[i];
+        x = ox * PC_TO_RSUN - cx;
+        y = oy * PC_TO_RSUN - cy;
+        z = M0[j + 2] * PC_TO_RSUN - cz;
+        standins++;
+      }
       const dScene = Math.sqrt(x * x + y * y + z * z);
       const k = R_DRAW / Math.max(dScene, 1e-3);
       P[j] = cx + x * k; P[j + 1] = cy + y * k; P[j + 2] = cz + z * k;
-      const dPc = dScene / PC_TO_RSUN;
-      // apparent magnitude at this epoch: catalogue magnitude shifted by the
-      // changed distance (luminosity FROZEN at the present epoch — declared)
-      MG[i] = m.gmag[i] + 5 * Math.log10(Math.max(dPc, 1e-3) / Math.max(this.d0[i], 1e-3));
-      if (MG[i] <= magLimit) visible++;
+      MG[i] = mag;
+      if (mag <= magLimit) visible++;
     }
     this.posAttr.needsUpdate = true;
     this.magAttr.needsUpdate = true;
     this.uniforms.uMagLimit.value = magLimit;
     this.uniforms.uRod.value = rod;
     this.visibleCount = visible;
+    this.standinCount = standins;
   }
 }

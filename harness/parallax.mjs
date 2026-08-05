@@ -33,7 +33,7 @@ function makeCopy(offset) {
     "return 9.0 - 0.0 * this.a; // PARALLAX SUBSTITUTION (9: unclamped brightness spread for pixel photometry)"));
   const skyPath = join(dir, "src", "skyfield.js");
   const sky = readFileSync(skyPath, "utf8");
-  const target = "const x = (Rj * Math.cos(Pj) - sx) * PC_TO_RSUN - cx;";
+  const target = "let x = hx * PC_TO_RSUN - cx;";
   if (!sky.includes(target)) {
     console.error("parallax: direction expression not found");
     process.exit(2);
@@ -42,7 +42,7 @@ function makeCopy(offset) {
   // anchored on the real camera (offsetting both moves the shell itself
   // and collapses the sky toward the offset direction — measured)
   writeFileSync(skyPath, sky.replace(target,
-    `const x = (Rj * Math.cos(Pj) - sx) * PC_TO_RSUN - cx - ${offset}; // PARALLAX SUBSTITUTION`));
+    `let x = hx * PC_TO_RSUN - cx - ${offset}; // PARALLAX SUBSTITUTION`));
   return dir;
 }
 

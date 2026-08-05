@@ -378,6 +378,32 @@ FORK 32 — Orbit epoch tables are stored CYLINDRICAL with the azimuth
   quantities are unchanged; only the sky position tables re-encode.
   [decided v0.4]
 
+FORK 33 — Beyond the identity horizon the sky is the population, not the
+  names: per-star STATIONARY STAND-INS. MEASURED (user-reported, verified
+  against the epoch tables): the tracked catalogue's naked-eye count falls
+  11905 -> 10123 by +1 Myr -> 385 by +100 Myr -> 85 at the terminus — the
+  ending sky held three to five points in view. That thinning is a
+  FINITE-SAMPLE ARTIFACT, not physics: the piece's own potential is static,
+  a phase-mixed disc population in a static potential is statistically
+  stationary, so the true naked-eye count is conserved while the IDENTITIES
+  churn — the catalogue tracks only today's ~12k names and cannot follow
+  the stars that would wander in. CHOSEN: while a star's true propagated
+  apparent magnitude stays inside the naked-eye limit (6.5, the dark eye's
+  own constant) it is drawn at its true position; once it leaves, a
+  STAND-IN from the same stationary population is drawn instead — same
+  frozen magnitude, same colour, same distance, same galactic latitude
+  (phase mixing preserves annulus and vertical amplitude, hence the d and
+  b marginals), longitude re-drawn by a deterministic golden-angle
+  sequence (phase mixing scrambles exactly the azimuth), rigid with the
+  solar orbital azimuth like the band. The swap is whole-point, per star,
+  memoryless, computed in Stage 0 — no randomness at runtime, nothing
+  invented: every drawn magnitude, colour, distance and latitude is a
+  catalogue value; only the unknowable azimuth is a declared draw, and the
+  panel states how many stand-ins are on screen. REASON: rendering the
+  bare subsample presents "the sky empties" — which is false — as if it
+  were data; the stand-in sky renders the theorem instead and is labelled.
+  [decided v0.4]
+
 ============================== END FORK BLOCK ==============================
 
 Remaining forks (2, 4, 5, 6, 8, 9, 10, 11, …) are declared here in the pass

@@ -40,18 +40,20 @@ async function boot() {
     console.error(`unavailable: nebula table — ${e.message}`);
   }
   // the sky: catalogue tables + orbit positions; absence is visible refusal
-  let skyMeta = null, skyPos = null, sunOrbit = null, sunEpochs = null, bandTex = null;
+  let skyMeta = null, skyPos = null, sunOrbit = null, sunEpochs = null, bandTex = null,
+    skyMixed = null;
   try {
-    const [rm, rp, rs, re, rb] = await Promise.all([
+    const [rm, rp, rs, re, rb, rx] = await Promise.all([
       fetch("./data/sky.json"), fetch("./data/sky_positions.bin"),
       fetch("./data/sun_orbit.bin"), fetch("./data/sun_epochs.bin"),
-      fetch("./data/band_tex.bin")]);
-    if (!rm.ok || !rp.ok || !rs.ok || !re.ok || !rb.ok) throw new Error("HTTP failure");
+      fetch("./data/band_tex.bin"), fetch("./data/sky_mixed.bin")]);
+    if (!rm.ok || !rp.ok || !rs.ok || !re.ok || !rb.ok || !rx.ok) throw new Error("HTTP failure");
     skyMeta = await rm.json();
     skyPos = new Float32Array(await rp.arrayBuffer());
     sunOrbit = new Float32Array(await rs.arrayBuffer());
     sunEpochs = new Float32Array(await re.arrayBuffer());
     bandTex = new Float32Array(await rb.arrayBuffer());
+    skyMixed = new Float32Array(await rx.arrayBuffer());
   } catch (e) {
     console.error(`unavailable: sky tables — ${e.message}`);
   }
@@ -69,7 +71,7 @@ async function boot() {
   const eye = new Eye();
   const ages = track.age_yr;
   const skyField = (skyMeta && sunEpochs)
-    ? new SkyField(scene, skyMeta, skyPos, sunEpochs) : null;
+    ? new SkyField(scene, skyMeta, skyPos, sunEpochs, skyMixed) : null;
   const milkyWay = bandTex ? new MilkyWay(scene, bandTex) : null;
   let eyeJump = true; // initial load is a cut: arrive adapted (fork 28)
 
@@ -94,6 +96,7 @@ async function boot() {
   if (wp && track.events_s[wp] !== undefined) s = track.events_s[wp];
   if (wp === "black_dwarf_terminus" && params.get("cam_d") === null) {
     cam.d = 26; cam.az = Math.PI / 2; // the ending faces the galaxy
+    if (params.get("cam_alt") === null) cam.alt = (25 * Math.PI) / 180;
   }
   if (params.get("s") !== null) s = parseFloat(params.get("s"));
 
@@ -107,7 +110,9 @@ async function boot() {
     b.textContent = name.replaceAll("_", " ");
     b.addEventListener("click", () => {
       s = sv; slider.value = String(sv); eyeJump = true;
-      if (name === "black_dwarf_terminus") { cam.d = 26; cam.az = Math.PI / 2; } // the ember sits under the galaxy
+      if (name === "black_dwarf_terminus") { // the ember sits under the galaxy
+        cam.d = 26; cam.az = Math.PI / 2; cam.alt = (25 * Math.PI) / 180;
+      }
     });
     wpBox.appendChild(b);
   }
@@ -265,6 +270,7 @@ async function boot() {
       nebula: nstep,
       adaptation,
       skyVisible: skyField ? skyField.visibleCount : -1,
+      skyStandins: skyField ? (skyField.standinCount ?? 0) : 0,
       frameMs: frameTimes.length > 20
         ? [...frameTimes].sort((a, b) => a - b)[Math.floor(frameTimes.length * 0.95)]
         : undefined,

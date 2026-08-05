@@ -98,3 +98,40 @@ the same pass; harness ALL GREEN, 293 checks; gate 9/9 (label final-t).
 became suite tests t-granule-pitch and the per-phase luminance budgets;
 items 1–2 met their declared thresholds during the ending pass). Open
 items: none. Honest residuals stand as declared in round 2.
+
+## Round 4 — self-review (the critic role retired by the user; defects
+user-reported, diagnosis and closure in-house)
+
+Reported: "the terminus button shows something cloud-like but no stars;
+reaching the terminus by the slider shows not even the cloud."
+Both verified true against the REAL app (no substitutions) and traced to
+one root cause plus one composition gap:
+
+1. **Root cause — the sky verification always substituted the eye.** The
+   census (magLimit 30) and parallax (magLimit 9) harnesses proved the
+   render path alive but never measured the real-eye frame. Measured from
+   the epoch tables: the tracked catalogue's naked-eye count falls
+   11905 -> 385 by +100 Myr -> 85 at the terminus (3-5 in frame). That
+   thinning is a FINITE-SAMPLE ARTIFACT: a phase-mixed disc in the
+   piece's own static potential is statistically stationary — the census
+   is conserved, the names churn. Rendering the bare subsample presented
+   "the sky empties" (false) as data. FIX: fork 33 stationary stand-ins —
+   a star that leaves the naked-eye sky is replaced by a stand-in with
+   the same catalogued magnitude, colour, distance and latitude; only
+   the phase-mixing-scrambled azimuth is a declared golden-angle draw,
+   Stage-0 computed, panel-labelled with the live stand-in count.
+2. **Composition gap — the ending was button-only.** The slider path kept
+   the user's close-in camera on a near-black 500 K ember facing the
+   galactic pole. With fork 33 the sky itself carries the scene from any
+   camera; the terminus button/deep-link now also sets the declared
+   altitude (25 deg) so "the ember under the galaxy" is the composed cut.
+
+Measurements (harness/userpaths.mjs — the two REPORTED paths, real app):
+button path 385 point sources + band at the gate camera (was 3-5);
+slider path 183 point sources after the adaptation transient (was 0),
+probe 3044 visible/11832 stand-ins, mesopic. New counter-tests:
+t42-terminus-real-eye-stars (>=150, no substitution), census recalibrated
+66 -> 1239 measured (threshold 300), t30 stand-in table checks
+(distance/latitude preserved, longitude equidistributed, deterministic,
+identity profile matches). Stage-0 identity hash 7e229316... INVARIANT.
+Suite 305 checks ALL GREEN; gate 9/9 (final-u).

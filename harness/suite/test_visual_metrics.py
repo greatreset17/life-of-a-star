@@ -365,9 +365,36 @@ try:
         if MEASURE:
             print(f"      [census (magLimit 30 substitution): {ncomp} bright components]")
         else:
-            check("t42-starfield-render-path-alive", ncomp >= 40,
+            # recalibrated after fork 33: the stand-in sky fills the forward
+            # cone (measured 1239 components; pre-fork-33 66; dead path 0)
+            check("t42-starfield-render-path-alive", ncomp >= 300,
                   f"{ncomp} bright components under an all-visible magnitude "
                   f"limit — a dead render path shows zero")
+
+    # fork 33 counter-test, REAL EYE, no substitution of any kind: the
+    # terminus gate capture itself must hold a starry sky. This is the
+    # user-reported defect ("the ending has cloud but no stars") converted
+    # to a pixel measurement: before fork 33 this frame held 3-5 points
+    # (the 85 surviving identities, mostly out of frame); after, the
+    # stationary stand-ins carry the census (measured 385 point-like
+    # components at the declared ending camera).
+    tpng = cap / "black_dwarf_terminus.png"
+    if tpng.exists():
+        a3 = np.asarray(Image.open(tpng).convert("RGB"), float)
+        L3 = a3.max(axis=2)
+        c3 = L3[90:720, 140:950]
+        lab3, n3 = _label(c3 > 90.0)
+        if n3:
+            sizes = ndimage.sum(c3 > 90.0, lab3, range(1, n3 + 1))
+            pts = int(((sizes >= 1) & (sizes <= 40)).sum())
+        else:
+            pts = 0
+        if MEASURE:
+            print(f"      [terminus real-eye point sources: {pts}]")
+        else:
+            check("t42-terminus-real-eye-stars", pts >= 150,
+                  f"{pts} point-like components in the real ending frame — "
+                  f"the pre-fork-33 sky held 3-5")
 except ImportError:
     check("t42-scipy-available", False, "scipy needed for the census")
 

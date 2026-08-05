@@ -106,7 +106,11 @@ export class Panel {
       + "grid track runs +76 K / +10.6% L of the observed Sun at 4.57 Gyr (fork 14). "
       + "At this viewpoint's real baselines, stellar parallax is sub-pixel — the sky's "
       + "3-D truth is carried in the computed directions, measured under an amplified "
-      + "baseline by the harness (fork 31).";
+      + "baseline by the harness (fork 31). Past the identity horizon, a star that has "
+      + "left the naked-eye sky is replaced by a stationary stand-in — same catalogued "
+      + "magnitude, colour, distance and latitude; only the unknowable azimuth is a "
+      + "declared draw (fork 33) — because a phase-mixed disc keeps its census while "
+      + "its names churn.";
     frag.appendChild(bd);
 
     // the harness-visible ready flag (set by main.js after first frame)
@@ -160,8 +164,12 @@ export class Panel {
     set("adaptation", p.adaptation !== undefined
       ? (p.adaptation > 0.6 ? "photopic" : p.adaptation > 0.12 ? "mesopic" : "scotopic")
       : "—", String(p.adaptation ?? ""));
-    set("sky_visible", p.skyVisible >= 0 ? String(p.skyVisible) : "unavailable",
-        String(p.skyVisible ?? -1));
+    set("sky_visible", p.skyVisible >= 0
+      ? (p.skyStandins > 0
+        ? `${p.skyVisible} (${p.skyStandins} stand-ins — identity horizon, fork 33)`
+        : String(p.skyVisible))
+      : "unavailable",
+    String(p.skyVisible ?? -1));
     set("frame_ms", p.frameMs !== undefined ? p.frameMs.toFixed(1) : "—",
         String(p.frameMs ?? ""));
     set("data_state", p.dataState);
