@@ -29,6 +29,11 @@ node harness/gate.mjs app <label>         # visual gate: 9 waypoints,
 Deep links are shipped functionality: `?wp=rgb_tip`, `?s=0.985`,
 `&cam_d=6&cam_az=40&cam_alt=15&tier=high|low`.
 
+## Documents
+
+- `docs/DESIGN.md` — 技術設計書 (開発回顧録付き)
+- `docs/MANUAL.md` — 操作手順書 (画面・ボタン・数式の意味)
+
 ## Layout
 
 - `harness/` — Stage −1, built first. Physics mirror (independent float64
