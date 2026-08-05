@@ -9,10 +9,19 @@
     "each capture's probe. The names are absolute; the numbers are derived data.",
     "Re-verify this file whenever a feature is added (see harness/run.py assumptions-check)."
   ],
-  "viewport": { "width": 1280, "height": 800, "deviceScaleFactor": 1 },
+  "viewport": {
+    "width": 1280,
+    "height": 800,
+    "deviceScaleFactor": 1
+  },
   "quality_tier": "high",
-  "camera": { "mode": "framed", "distance_rphoto_multiples": 4.0, "azimuth_deg": 0.0, "altitude_deg": 25.0,
-    "_altitude_note": "25 deg, not 0: the fork-5 nebula axis is scene z, and a camera looking straight down that axis can never frame the declared equatorial waist (critic round 2, NOT-MET 8)" },
+  "camera": {
+    "mode": "framed",
+    "distance_rphoto_multiples": 4.0,
+    "azimuth_deg": 0.0,
+    "altitude_deg": 25.0,
+    "_altitude_note": "25 deg, not 0: the fork-5 nebula axis is scene z, and a camera looking straight down that axis can never frame the declared equatorial waist (critic round 2, NOT-MET 8)"
+  },
   "waypoints": [
     "protostar_contraction",
     "zams",
@@ -25,13 +34,42 @@
     "black_dwarf_terminus"
   ],
   "probe_required_keys": [
-    "s", "age_yr", "teff_k", "log_g", "log_l", "r_rsun",
-    "chromaticity_srgb", "gamut_excursion",
-    "granules_derived", "granules_rendered", "instances_drawn",
-    "data_state", "phase",
-    "a_earth_au", "mdot", "mdot_sc05", "drag_state",
-    "crystal_frac", "neb_r", "neb_v", "neb_x", "adaptation", "sky_visible"
+    "s",
+    "age_yr",
+    "teff_k",
+    "log_g",
+    "log_l",
+    "r_rsun",
+    "chromaticity_srgb",
+    "gamut_excursion",
+    "granules_derived",
+    "granules_rendered",
+    "instances_drawn",
+    "data_state",
+    "phase",
+    "a_earth_au",
+    "mdot",
+    "mdot_sc05",
+    "drag_state",
+    "crystal_frac",
+    "neb_r",
+    "neb_v",
+    "neb_x",
+    "adaptation",
+    "sky_visible"
   ],
-  "gate_console_fail_patterns": ["error", "shader", "self-test fail", "unavailable:"],
-  "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]"
+  "gate_console_fail_patterns": [
+    "error",
+    "shader",
+    "self-test fail",
+    "unavailable:"
+  ],
+  "app_ready_selector": "[data-q=\"ready\"][data-value=\"1\"]",
+  "waypoint_camera": {
+    "black_dwarf_terminus": {
+      "distance_rphoto_multiples": 26.0,
+      "azimuth_deg": 90.0,
+      "_note": "the ending pulls back and faces the galactic plane (measured azimuth sweep): the ember sits quietly under the galaxy"
+    }
+  }
 }

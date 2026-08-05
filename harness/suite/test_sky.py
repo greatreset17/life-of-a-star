@@ -25,6 +25,11 @@ meta = json.loads((ROOT / "app/data/sky.json").read_text())
 n, ne = meta["n_star"], meta["n_epoch"]
 pos = np.frombuffer((ROOT / "app/data/sky_positions.bin").read_bytes(),
                     dtype="<f4").reshape(ne, n, 3)
+
+# cylindrical (R, phi_unwrapped, z) -> Cartesian
+_cyl = pos.copy()
+pos = np.stack([_cyl[..., 0] * np.cos(_cyl[..., 1]),
+                _cyl[..., 0] * np.sin(_cyl[..., 1]), _cyl[..., 2]], axis=-1)
 eps = np.array(meta["epochs_myr"])
 k0 = int(np.argmin(np.abs(eps)))
 

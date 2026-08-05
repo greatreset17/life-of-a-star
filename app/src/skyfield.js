@@ -51,13 +51,20 @@ const frag = /* glsl */ `
     vec3 cone = vRgb * lum;
     vec3 rod = vec3(lum * vScot * 0.8);
     vec3 lin = mix(cone, rod, uRod);
+    // scotopic display lift: a dark-adapted eye sees stars PLAINLY; the
+    // un-lifted mapping left all 21 visible stars ~3/255 over the sky —
+    // mechanically present, visually absent (critic's final verdict)
+    lin *= 1.0 + 6.0 * uRod;
     // soft round point
     vec2 d = gl_PointCoord - vec2(0.5);
     float fall = smoothstep(0.5, 0.15, length(d));
     lin *= fall;
     vec3 enc = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055,
                    step(0.0031308, lin));
-    gl_FragColor = vec4(enc, lum * fall);
+    // alpha carries only the point PROFILE: with additive blending the
+    // brightness lives in the colour — an alpha that also scales with lum
+    // squares the suppression (stars fell to ~1 count; measured)
+    gl_FragColor = vec4(enc, fall);
   }
 `;
 
@@ -75,11 +82,14 @@ export class SkyField {
       const eps = skyMeta.epochs_myr;
       const k0 = eps.reduce((b, v, idx) => Math.abs(v) < Math.abs(eps[b]) ? idx : b, 0);
       const Z = positionsF32.subarray(k0 * n * 3, (k0 + 1) * n * 3);
-      const sx = sunEpochsF32[k0 * 3], sy = sunEpochsF32[k0 * 3 + 1], sz = sunEpochsF32[k0 * 3 + 2];
+      // cylindrical storage: reconstruct Cartesian before differencing
+      const sR0 = sunEpochsF32[k0 * 3], sP0 = sunEpochsF32[k0 * 3 + 1], sz0 = sunEpochsF32[k0 * 3 + 2];
+      const sx = sR0 * Math.cos(sP0), sy = sR0 * Math.sin(sP0);
       this.d0 = new Float32Array(n);
       for (let i = 0; i < n; i++) {
         const j = i * 3;
-        this.d0[i] = Math.hypot(Z[j] - sx, Z[j + 1] - sy, Z[j + 2] - sz);
+        const xx = Z[j] * Math.cos(Z[j + 1]), yy = Z[j] * Math.sin(Z[j + 1]);
+        this.d0[i] = Math.hypot(xx - sx, yy - sy, Z[j + 2] - sz0);
       }
     }
     this.geo = new THREE.BufferGeometry();
@@ -119,10 +129,14 @@ export class SkyField {
     const n = m.n_star;
     const A = this.pos.subarray(lo * n * 3, (lo + 1) * n * 3);
     const B = this.pos.subarray(hi * n * 3, (hi + 1) * n * 3);
-    // the Sun with the SAME (lo, f) as the stars — the pairing invariant
-    const sx = this.sunE[lo * 3] * (1 - f) + this.sunE[hi * 3] * f;
-    const sy = this.sunE[lo * 3 + 1] * (1 - f) + this.sunE[hi * 3 + 1] * f;
+    // the Sun with the SAME (lo, f) as the stars — the pairing invariant.
+    // Storage is CYLINDRICAL with UNWRAPPED azimuth (build_sky: Cartesian
+    // interpolation chords whole orbits at the far epoch spacing); the
+    // reconstruction below makes steady rotation exactly linear per star.
+    const sR = this.sunE[lo * 3] * (1 - f) + this.sunE[hi * 3] * f;
+    const sPhi = this.sunE[lo * 3 + 1] * (1 - f) + this.sunE[hi * 3 + 1] * f;
     const sz = this.sunE[lo * 3 + 2] * (1 - f) + this.sunE[hi * 3 + 2] * f;
+    const sx = sR * Math.cos(sPhi), sy = sR * Math.sin(sPhi);
     const P = this.posAttr.array;
     const MG = this.magAttr.array;
     let visible = 0;
@@ -131,8 +145,10 @@ export class SkyField {
       const j = i * 3;
       // heliocentric position in scene units, f64, then camera-relative:
       // the direction from the CAMERA carries the true parallax
-      const x = ((A[j] * (1 - f) + B[j] * f) - sx) * PC_TO_RSUN - cx;
-      const y = ((A[j + 1] * (1 - f) + B[j + 1] * f) - sy) * PC_TO_RSUN - cy;
+      const Rj = A[j] * (1 - f) + B[j] * f;
+      const Pj = A[j + 1] * (1 - f) + B[j + 1] * f;
+      const x = (Rj * Math.cos(Pj) - sx) * PC_TO_RSUN - cx;
+      const y = (Rj * Math.sin(Pj) - sy) * PC_TO_RSUN - cy;
       const z = ((A[j + 2] * (1 - f) + B[j + 2] * f) - sz) * PC_TO_RSUN - cz;
       const dScene = Math.sqrt(x * x + y * y + z * z);
       const k = R_DRAW / Math.max(dScene, 1e-3);

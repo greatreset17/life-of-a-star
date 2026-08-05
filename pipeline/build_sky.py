@@ -73,8 +73,20 @@ def build():
     # energy / L_z drift over the forward span (suite test 28)
     e0, lz0 = sky.energy_lz(pos0, vel0)
 
+    # CYLINDRICAL UNWRAPPED-PHASE storage: the far epoch spacing (300 Myr)
+    # exceeds every star's galactic period (200-280 Myr, differential), so
+    # linear interpolation of Cartesian positions chords whole orbits and
+    # every late-epoch direction was geometry-free (front-cone 0/11905,
+    # measured; a single co-rotating frame still fails by differential
+    # rotation, 4/11905). Azimuth UNWRAPPED along the epoch axis makes the
+    # dominant motion — steady rotation — exactly linear per star; the app
+    # reconstructs x = R cos(phi). Residual error is the epicyclic wobble
+    # within one step, a small fraction of R.
+    R_cyl = np.hypot(pos_epochs[:, :, 0], pos_epochs[:, :, 1])
+    PHI = np.unwrap(np.arctan2(pos_epochs[:, :, 1], pos_epochs[:, :, 0]), axis=0)
+    cyl = np.stack([R_cyl, PHI, pos_epochs[:, :, 2]], axis=2)
     (ROOT / "app" / "data" / "sky_positions.bin").write_bytes(
-        pos_epochs.astype("<f4").tobytes())
+        cyl.astype("<f4").tobytes())
     (ROOT / "app" / "data" / "sun_orbit.bin").write_bytes(
         sun_spine.astype("<f4").tobytes())
     # the Sun ON THE SAME EPOCH GRID as the stars: heliocentric directions
@@ -82,8 +94,11 @@ def build():
     # positions — a spine-node Sun is up to 1/6 of an orbit (kpc) off the
     # true path between MS nodes and collapses every direction (measured)
     sun_epochs = np.stack([np.interp(t_out, t_sun, sun_pos[:, k]) for k in range(3)], axis=1)
+    sun_cyl = np.stack([np.hypot(sun_epochs[:, 0], sun_epochs[:, 1]),
+                        np.unwrap(np.arctan2(sun_epochs[:, 1], sun_epochs[:, 0])),
+                        sun_epochs[:, 2]], axis=1)
     (ROOT / "app" / "data" / "sun_epochs.bin").write_bytes(
-        sun_epochs.astype("<f4").tobytes())
+        sun_cyl.astype("<f4").tobytes())
 
     meta = {
         "n_star": len(rows), "n_epoch": len(t_out),
@@ -91,6 +106,7 @@ def build():
         "present_age_yr": PRESENT_AGE_YR,
         "excluded": excluded, "n_rv": n_rv,
         "solar_period_myr": round(float(period), 1),
+        "corotating_period_myr": round(float(period), 4),
         "solar_circuits": round(float(total_turns), 2),
         "gmag": [round(r["gmag"], 3) for r in rows],
         "rgb_lin": rgbs,

@@ -92,6 +92,9 @@ async function boot() {
   let s = 0;
   const wp = params.get("wp");
   if (wp && track.events_s[wp] !== undefined) s = track.events_s[wp];
+  if (wp === "black_dwarf_terminus" && params.get("cam_d") === null) {
+    cam.d = 26; cam.az = Math.PI / 2; // the ending faces the galaxy
+  }
   if (params.get("s") !== null) s = parseFloat(params.get("s"));
 
   const slider = document.getElementById("timeline");
@@ -102,7 +105,10 @@ async function boot() {
   for (const [name, sv] of Object.entries(track.events_s)) {
     const b = document.createElement("button");
     b.textContent = name.replaceAll("_", " ");
-    b.addEventListener("click", () => { s = sv; slider.value = String(sv); eyeJump = true; });
+    b.addEventListener("click", () => {
+      s = sv; slider.value = String(sv); eyeJump = true;
+      if (name === "black_dwarf_terminus") { cam.d = 26; cam.az = Math.PI / 2; } // the ember sits under the galaxy
+    });
     wpBox.appendChild(b);
   }
   const tog = document.createElement("button");
@@ -223,6 +229,8 @@ async function boot() {
     const uiDim = 0.45 + 0.55 * Math.min(adaptation / 0.2, 1);
     document.getElementById("agepane").style.opacity = String(uiDim);
     document.getElementById("controls").style.opacity = String(Math.max(uiDim, 0.6));
+    document.getElementById("panel").style.opacity = String(Math.max(uiDim * 0.7, 0.22));
+    document.getElementById("hr").style.opacity = String(Math.max(uiDim * 0.7, 0.22));
     if (milkyWay && sunOrbit) {
       const az = Math.atan2(sunOrbit[i * 3 + 1], sunOrbit[i * 3]) - Math.atan2(0, -1);
       milkyWay.update(adaptation, rod, az);

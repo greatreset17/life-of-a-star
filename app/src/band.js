@@ -20,7 +20,7 @@ const frag = /* glsl */ `
   uniform float uRod;
   void main() {
     vec4 t = texture2D(uMap, vUv);
-    float g = uGain * 0.8;
+    float g = uGain * 0.20;
     vec3 lin = mix(t.rgb * g, vec3(t.a * g), uRod);
     vec3 enc = mix(lin * 12.92, 1.055 * pow(lin, vec3(1.0 / 2.4)) - 0.055,
                    step(0.0031308, lin));

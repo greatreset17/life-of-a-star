@@ -138,6 +138,7 @@
 },
 "n_rv": 9186,
 "solar_period_myr": 243.9,
+"corotating_period_myr": 243.8661,
 "solar_circuits": 136.55,
 "gmag": [
 6.294,

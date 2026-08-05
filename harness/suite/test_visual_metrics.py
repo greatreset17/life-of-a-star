@@ -161,7 +161,7 @@ BUDGET = {  # measured on the accepted build, then DECLARED as ranges
     "wd_crystallisation": (0.0, 8.0),
     # floor 2.0 ASSERTS the galaxy's presence at the ending — the build in
     # which the band threshold withheld it measured 1.93 and must fail here
-    "black_dwarf_terminus": (2.0, 12.0),
+    "black_dwarf_terminus": (8.0, 34.0),
 }
 for wp, (lo, hi) in BUDGET.items():
     png = cap / f"{wp}.png"
@@ -354,20 +354,20 @@ try:
     else:
         a2 = np.asarray(Image.open(census_png).convert("RGB"), float)
         L2 = 0.2126 * a2[..., 0] + 0.7152 * a2[..., 1] + 0.0722 * a2[..., 2]
-        prom2 = L2 - median_filter(L2, size=9)
         m2 = np.ones_like(L2, bool)
         m2[:95, :] = False; m2[705:, :] = False; m2[:, 945:] = False
         m2[530:715, :495] = False
         from scipy.ndimage import label as _label
-        _, ncomp = _label(prom2 > 5.0)
-        n_px = int((prom2[m2] > 5.0).sum())
+        # component COUNT, not prominence: the all-visible sky is so crowded
+        # that a median filter absorbs it (its own success blinded the first
+        # metric); a dead render path still shows exactly zero components
+        _, ncomp = _label((L2 > 40.0) & m2)
         if MEASURE:
-            print(f"      [census (magLimit 30 substitution): {n_px} star pixels, "
-                  f"{ncomp} components]")
+            print(f"      [census (magLimit 30 substitution): {ncomp} bright components]")
         else:
-            check("t42-starfield-render-path-alive", n_px >= 200,
-                  f"{n_px} star pixels under an all-visible magnitude limit "
-                  f"— a dead render path shows zero")
+            check("t42-starfield-render-path-alive", ncomp >= 40,
+                  f"{ncomp} bright components under an all-visible magnitude "
+                  f"limit — a dead render path shows zero")
 except ImportError:
     check("t42-scipy-available", False, "scipy needed for the census")
 
@@ -382,7 +382,7 @@ if png.exists():
     if MEASURE:
         print(f"      [terminus block-mean span {span:.2f}/255]")
     else:
-        check("t44-terminus-light-structured", span >= 1.2,
+        check("t44-terminus-light-structured", span >= 8.0,
               f"block-mean span {span:.2f}/255 — a flat lamp reads < 0.5")
 
 print(f"\nvisual-metrics suite: {'ALL GREEN' if not failures else f'{len(failures)} FAILURE(S)'}")

@@ -51,8 +51,15 @@ meta = json.loads((ROOT / "app/data/sky.json").read_text())
 track = json.loads((ROOT / "app/data/track.json").read_text())
 pos = np.frombuffer((ROOT / "app/data/sky_positions.bin").read_bytes(),
                     dtype="<f4").reshape(meta["n_epoch"], meta["n_star"], 3).astype(np.float64)
+
+# cylindrical (R, phi_unwrapped, z) -> Cartesian
+_cyl = pos.copy()
+pos = np.stack([_cyl[..., 0] * np.cos(_cyl[..., 1]),
+                _cyl[..., 0] * np.sin(_cyl[..., 1]), _cyl[..., 2]], axis=-1)
 sun_e = np.frombuffer((ROOT / "app/data/sun_epochs.bin").read_bytes(),
                       dtype="<f4").reshape(-1, 3).astype(np.float64)
+sun_e = np.stack([sun_e[:, 0] * np.cos(sun_e[:, 1]),
+                  sun_e[:, 0] * np.sin(sun_e[:, 1]), sun_e[:, 2]], axis=1)
 eps = np.array(meta["epochs_myr"])
 s_wp = track["events_s"]["present_day"]
 sn = np.array(track["s"])

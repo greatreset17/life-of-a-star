@@ -63,8 +63,10 @@ for (const wp of A.waypoints) {
   const consoleLog = [];
   page.on("console", (m) => consoleLog.push(`[${m.type()}] ${m.text()}`));
   page.on("pageerror", (e) => consoleLog.push(`[pageerror] ${e.message}`));
+  const camD = A.waypoint_camera?.[wp]?.distance_rphoto_multiples ?? A.camera.distance_rphoto_multiples;
+  const camAz = A.waypoint_camera?.[wp]?.azimuth_deg ?? A.camera.azimuth_deg;
   const url = `http://127.0.0.1:${port}/index.html?wp=${wp}` +
-    `&cam_d=${A.camera.distance_rphoto_multiples}&cam_az=${A.camera.azimuth_deg}` +
+    `&cam_d=${camD}&cam_az=${camAz}` +
     `&cam_alt=${A.camera.altitude_deg}&tier=${A.quality_tier}`;
   const entry = { waypoint: wp, url, ok: false, console: consoleLog };
   try {
